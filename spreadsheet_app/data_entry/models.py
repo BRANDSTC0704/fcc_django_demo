@@ -44,21 +44,16 @@ class WorkHours(models.Model):
         return None
 
 
-class Count(models.Model):
-    CATEGORY_CHOICES = [
-        ('Alu', 'Alu'),
-        ('Holz', 'Holz'),
-        ('Karton', 'Karton'),
-        ('Magnetshrott', 'Magnetshrott'),
-        ('Kanister', 'Kanister')
-    ]
-    
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True)
-    count = models.IntegerField(default=0)
+class ContainerCount(models.Model):
+    alu = models.IntegerField(default=0, help_text="Alu Dosen (Kübel - 8,5 kg)")
+    holz = models.IntegerField(default=0, help_text="Holz (Container - 6 t)")
+    karton = models.IntegerField(default=0, help_text="Karton (Container - 6 t)")
+    magnetschrott = models.IntegerField(default=0, help_text="Magnetschrott (Container - 6 t)")
+    kanister = models.IntegerField(default=0, help_text="Kanister (1 Container = 5 Ballen)")
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
     def __str__(self):
-        return f"{self.created_at:%d.%m.%Y %H:%M:%S} {self.category}: {self.count}"
+        return f"{self.created_at:%d.%m.%Y %H:%M:%S} {self.alu}, {self.holz}, {self.karton}, {self.magnetschrott}, {self.kanister}"
 
-class Protocol(models.Model):
-    protocollist = models.TextField()
+class Protocollist(models.Model):
+    protocollist = models.TextField(null=False, help_text="Protokollführer")

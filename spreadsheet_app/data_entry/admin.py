@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Employee, WorkCategory, WorkHours, Count, Protocol
+from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocollist
 
 
 class EmployeeAdmin(admin.ModelAdmin):
@@ -9,7 +9,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 # admin.site.register(Employee)
 admin.site.register(WorkCategory)
 admin.site.register(WorkHours)
-admin.site.register(Count)
-admin.site.register(Protocol)
+admin.site.register(ContainerCount)
+admin.site.register(Protocollist)
 
 admin.site.register(Employee, EmployeeAdmin)
