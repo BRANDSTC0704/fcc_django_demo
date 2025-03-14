@@ -1,14 +1,14 @@
 from django.db import models
 from django.utils.timezone import now
-from datetime import timedelta, datetime
-
+from datetime import date, datetime, timedelta
+from django.utils import dateformat
 
 class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     work_start = models.TimeField()
     work_end = models.TimeField()
-    break_time = models.FloatField(help_text="Break time in hours (e.g., 0.5 for 30 min)", default=0.0)
+    break_time = models.FloatField(default=0.5, null=True)
     absence = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
@@ -37,11 +37,15 @@ class WorkHours(models.Model):
     def difference(self):
         """Calculate the difference between start and end time"""
         if self.start_time and self.end_time:
-            start_dt = timedelta(hours=self.start_time.hour, minutes=self.start_time.minute)
-            end_dt = timedelta(hours=self.end_time.hour, minutes=self.end_time.minute)
-            diff = end_dt - start_dt
-            return diff
-        return None
+            
+            dummy_date = datetime(2000, 1, 1).date()  # Use an arbitrary date
+
+            datetime1 = datetime.combine(dummy_date, self.start_time)
+            datetime2 = datetime.combine(dummy_date, self.end_time)
+
+            time_difference = datetime2 - datetime1
+            return str(time_difference)[:-3]  # Returns 'HH:MM' format
+        return "00:00"  
 
 
 class ContainerCount(models.Model):
@@ -56,4 +60,5 @@ class ContainerCount(models.Model):
         return f"{self.created_at:%d.%m.%Y %H:%M:%S} {self.alu}, {self.holz}, {self.karton}, {self.magnetschrott}, {self.kanister}"
 
 class Protocollist(models.Model):
-    protocollist = models.TextField(null=False, help_text="Protokollführer")
+    protocollist = models.TextField(help_text="Protokollführer", default='keine Angabe')
+    created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
