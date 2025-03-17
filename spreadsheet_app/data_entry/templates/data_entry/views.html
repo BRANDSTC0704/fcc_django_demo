@@ -59,9 +59,8 @@
                 <td class="cte">{{ form.break_time }}</td>
                 <td class="cte">{{ form.absence }}</td>                
                 <td>
-                    {{ form_e.DELETE }}  Markieren zum Löschen
+                {{ form.DELETE }} Markieren zum Löschen
                 </td>
-                <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
             </tr>
             {% endfor %}
         </tbody>
@@ -75,7 +74,7 @@
      <!-- Work Categories Table -->
       <h3>Modul 3 - Gewerbe - PET - Bonus</h3>
         {{ work_category_formset.management_form }}
-        <table class="table table-bordered">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>angelegt am</th>
@@ -103,8 +102,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-        <button id="add-work-category" type="button" class="btn btn-info">Weitere Übersicht anlegen</button>
+        <button type="submit" class="btn btn-success">Änderungen speichern</button>
+        <button id="add-work-category" type="button" class="btn btn-warning">Weitere Übersicht anlegen</button>
     </form>
  
     <form method="post">
@@ -185,14 +184,14 @@
                 {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-        <button id="add-container" type="button" class="btn btn-info">Weitere Containerliste anlegen</button>
+        <button type="submit" class="btn btn-success">Änderungen speichern</button>
+        <button id="add-container" type="button" class="btn btn-warning">Weitere Containerliste anlegen</button>
         </form>
 
 
         <!-- Protocollist -->
         <h3>protokolliert von</h3>
-        <form method="post">
+        <form method="post", label="protocollist">
         {% csrf_token %}
         {{ protocollist_formset.management_form }}
         <table class="table table-striped">
@@ -236,25 +235,28 @@
 </html>
 
 <script>
-        
-    // Delete row functionality
+    
+    // delete rows 
     document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".remove-row").forEach(button => {
-        button.addEventListener("click", function () {
-            let row = this.closest("tr");
-            let deleteInput = row.querySelector(".delete-input");
+    document.body.addEventListener("click", function (event) {
+        if (event.target.classList.contains("remove-row")) {
+            let row = event.target.closest("tr");
+            let deleteInput = row.querySelector("input[type='checkbox'][name$='-DELETE']");
+            
             if (deleteInput) {
-                deleteInput.value = "on";  // Mark for deletion
+                deleteInput.checked = true;  // Mark for deletion
             }
-            row.style.display = "none";  // Hide the row
+
+            // row.style.display = "none";  // Hide row from UI
             updateTotalForms();
-        });
+        }
     });
 
     function updateTotalForms() {
         document.querySelectorAll("[data-formset-prefix]").forEach(tableBody => {
-            let prefix = tableBody.getAttribute("data-formset-prefix");
-            let totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+            let prefix = tableBody.dataset.formsetPrefix;
+            let totalFormsInput = document.querySelector(`input[name="form-TOTAL_FORMS"]`);
+            
             if (totalFormsInput) {
                 let visibleRows = tableBody.querySelectorAll("tr:not([style='display: none;'])").length;
                 totalFormsInput.value = visibleRows;
@@ -262,8 +264,6 @@
         });
     }
 });
-
-
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll("input[name*='break_time']").forEach(input => {
             // Convert dot to comma when the page loads
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function setupFormset(tableBodyId, addButtonId, emptyFormHtml, formsetPrefix, isWorkHours = false) {
         let tableBody = document.getElementById(tableBodyId);
         let addButton = document.getElementById(addButtonId);
-        let totalForms = document.querySelector("input[name='form-TOTAL_FORMS']");
+        let totalForms = document.querySelector(`input[name="${formsetPrefix}-TOTAL_FORMS"]`);  // ✅ Correct TOTAL_FORMS field
         let formIdx = Number(totalForms.value);
 
         emptyFormHtml = decodeEntities(emptyFormHtml);
@@ -346,35 +346,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
 
                 function updateDifference(startInput, endInput, diffElement) {
-                if (startInput.value && endInput.value) {
-                    let startTime = parseTime(startInput.value);
-                    let endTime = parseTime(endInput.value);
-                    
-                    let diffMs = endTime - startTime;
-                    //if (diffMs < 0) {
-                    //    diffElement.textContent = "00:00"; // Prevent negative values
-                    //    return;
-                    //}
-                    
-                    let diffHours = Math.floor(diffMs / 3600000);
-                    let diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+                    if (startInput.value && endInput.value) {
+                        let startTime = parseTime(startInput.value);
+                        let endTime = parseTime(endInput.value);
+                        let diffMs = endTime - startTime;
+                        
+                        let diffHours = Math.floor(diffMs / 3600000);
+                        let diffMinutes = Math.floor((diffMs % 3600000) / 60000);
 
-                    diffElement.textContent = `${String(diffHours).padStart(2, "0")}:${String(diffMinutes).padStart(2, "0")}`;
+                        diffElement.textContent = `${String(diffHours).padStart(2, "0")}:${String(diffMinutes).padStart(2, "0")}`;
+                    }
                 }
-}
+
                 // Attach event listeners for real-time updates
                 setTimeout(() => {
-                        let startInput = tableBody.lastElementChild.querySelector(`input[name="${workStart.name}"]`);
-                        let endInput = tableBody.lastElementChild.querySelector(`input[name="${workEnd.name}"]`);
-                        let diffElement = tableBody.lastElementChild.querySelector(".difference-cell");
+                    let startInput = tableBody.lastElementChild.querySelector(`input[name="${workStart.name}"]`);
+                    let endInput = tableBody.lastElementChild.querySelector(`input[name="${workEnd.name}"]`);
+                    let diffElement = tableBody.lastElementChild.querySelector(".difference-cell");
 
-                        function onInputChange() {
-                            updateDifference(startInput, endInput, diffElement);
-                        }
+                    function onInputChange() {
+                        updateDifference(startInput, endInput, diffElement);
+                    }
 
-                        startInput.addEventListener("input", onInputChange);
-                        endInput.addEventListener("input", onInputChange);
-                    }, 0);
+                    startInput.addEventListener("input", onInputChange);
+                    endInput.addEventListener("input", onInputChange);
+                }, 0);
             } else {
                 formFields.forEach(field => rowContent += `<td class="cte">${field.outerHTML}</td>`);
             }
@@ -384,7 +380,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tableBody.appendChild(newRow);
 
             formIdx++;
-            totalForms.value = formIdx; // Update form count
+            totalForms.value = formIdx; // ✅ Correctly updates the TOTAL_FORMS for each formset
         });
     }
 
@@ -401,18 +397,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 🔥 Apply to all formsets dynamically
     let formsets = [
-        { tbodyId: "employee-tbody", buttonId: "add-employee", emptyForm: `{{ employee_formset.empty_form|escapejs }}` },
-        { tbodyId: "work-category-tbody", buttonId: "add-work-category",  emptyForm: `{{ work_category_formset.empty_form|escapejs }}` },
-        { tbodyId: "work-hours-tbody", buttonId: "add-work-hours",  emptyForm: `{{ work_hours_formset.empty_form|escapejs }}`, isWorkHours: true },
-        { tbodyId: "container-tbody", buttonId: "add-container",  emptyForm: `{{ container_count_formset.empty_form|escapejs }}` },
-        { tbodyId: "protocollist-tbody", buttonId: "add-protocollist", emptyForm: `{{ protocollist_formset.empty_form|escapejs }}` }
+        { tbodyId: "employee-tbody", buttonId: "add-employee", emptyForm: `{{ employee_formset.empty_form|escapejs }}`, prefix: "employee" },
+        { tbodyId: "work-category-tbody", buttonId: "add-work-category", emptyForm: `{{ work_category_formset.empty_form|escapejs }}`, prefix: "work_category" },
+        { tbodyId: "work-hours-tbody", buttonId: "add-work-hours", emptyForm: `{{ work_hours_formset.empty_form|escapejs }}`, prefix: "work_hours", isWorkHours: true },
+        { tbodyId: "container-tbody", buttonId: "add-container", emptyForm: `{{ container_count_formset.empty_form|escapejs }}`, prefix: "container" },
+        { tbodyId: "protocollist-tbody", buttonId: "add-protocollist", emptyForm: `{{ protocollist_formset.empty_form|escapejs }}`, prefix: "protocollist" }
     ];
 
-    formsets.forEach(({ tbodyId, buttonId, emptyForm, isWorkHours }) => {
+    formsets.forEach(({ tbodyId, buttonId, emptyForm, prefix, isWorkHours }) => {
         if (document.getElementById(tbodyId)) {
-            setupFormset(tbodyId, buttonId, emptyForm, isWorkHours);
+            setupFormset(tbodyId, buttonId, emptyForm, prefix, isWorkHours);
         }
     });
 });
+
 
 </script>

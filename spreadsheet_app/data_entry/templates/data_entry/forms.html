@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'data_entry/styles.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
+
 <body class="container mt-5">
     
     <div class="text-center">
@@ -149,6 +150,18 @@
         <button type="submit" class="btn btn-secondary">Speichere Einträge</button>
     </form>
 
+    
+{% if messages %}
+<div id="message-container">
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
     <ul class="text-center mt-3">
         <a href="{% url 'entrance_page' %}" class="btn btn-secondary">Startseite</a>
         <a href="{% url 'views_page' %}" class="btn btn-secondary">Tabellendarstellung</a>
@@ -189,6 +202,15 @@
         totalForms.value = formIdx; // Update total form count
     })
     }); 
+
+    document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+        let messageContainer = document.getElementById("message-container");
+        if (messageContainer) {
+            messageContainer.style.display = "none";
+        }
+    }, 5000); // Hides after 5 seconds
+});
     </script>
 
 

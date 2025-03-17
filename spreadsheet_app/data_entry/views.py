@@ -5,6 +5,7 @@ from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocoll
 from datetime import datetime
 from contextlib import contextmanager
 import locale
+from django.contrib import messages
 
 
 def entrance_page(request): 
@@ -20,14 +21,19 @@ def form_page(request):
 
         if not emp_formset.is_valid(): 
             print('Employee is wrong!')
+            messages.error(request, "❌ In der Mitarbeiter-Maske gibt es falsche Daten!")
         if not work_form.is_valid(): 
-            print('Work FOrm is wrong!')
+            print('Work Form is wrong!')
+            messages.error(request, "❌ In der Modul 3 Maske gibt es falsche Daten!")
         if not hours_form.is_valid(): 
             print('Hours is wrong!')
+            messages.error(request, "❌ In der Zählerstands-Maske gibt es falsche Daten!")
         if not container_form.is_valid(): 
             print('Container is wrong!')
+            messages.error(request, "❌ In der Container-Maske gibt es falsche Daten!")
         if not protocol_form.is_valid(): 
             print('Prot. is wrong!')
+            messages.error(request, "❌ In der Protokollisten-Maske gibt es falsche Daten!")
 
 
         if  emp_formset.is_valid() and work_form.is_valid() and\
@@ -114,11 +120,11 @@ def views_page(request):
         # protocollist_queryset = Protocollist.objects.all()  # FIXED: Correct model
 
     if request.method == "POST":
-        employee_formset = EmployeeFormset(request.POST, queryset=employee_queryset)
-        work_category_formset = WorkCategoryFormset(request.POST, queryset=work_category_queryset)
-        work_hours_formset = WorkHoursFormset(request.POST, queryset=work_hours_queryset)
-        container_count_formset = ContainerCountFormset(request.POST, queryset=container_count_queryset)
-        protocollist_formset = ProtocollistFormset(request.POST, queryset=protocollist_queryset)
+        employee_formset = EmployeeFormset(request.POST, queryset=employee_queryset, prefix='employee')
+        work_category_formset = WorkCategoryFormset(request.POST, queryset=work_category_queryset, prefix='work_category')
+        work_hours_formset = WorkHoursFormset(request.POST, queryset=work_hours_queryset, prefix='work_hours')
+        container_count_formset = ContainerCountFormset(request.POST, queryset=container_count_queryset, prefix='container')
+        protocollist_formset = ProtocollistFormset(request.POST, queryset=protocollist_queryset, prefix='protocollist')
         # work_hours_formset.is_valid() and 
         
         if employee_formset.is_valid():
@@ -170,11 +176,12 @@ def views_page(request):
         #ContainerCountFormset(pk=request.DELETE['delete-id'], queryset=container_count_queryset).delete()
 
     else:
-        employee_formset = EmployeeFormset(queryset=employee_queryset)
-        work_category_formset = WorkCategoryFormset(queryset=work_category_queryset)
-        work_hours_formset = WorkHoursFormset(queryset=work_hours_queryset)
-        container_count_formset = ContainerCountFormset(queryset=container_count_queryset)
-        protocollist_formset = ProtocollistFormset(queryset=protocollist_queryset)
+        employee_formset = EmployeeFormset(queryset=employee_queryset, prefix='employee')
+        work_category_formset = WorkCategoryFormset(queryset=work_category_queryset, prefix='work_category')
+        work_hours_formset = WorkHoursFormset(queryset=work_hours_queryset, prefix='work_hours')
+        container_count_formset = ContainerCountFormset(queryset=container_count_queryset, prefix='container')
+        protocollist_formset = ProtocollistFormset(queryset=protocollist_queryset, prefix='protocollist')
+        # work_hours_formset.is_valid() and 
 
     return render(request, 'data_entry/views.html', {
         'employee_formset': employee_formset,

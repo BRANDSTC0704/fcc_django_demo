@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.timezone import now
 import datetime
 
+# TODO: monatlich, wöchentliche Übersicht (inkl. Visuals) 
+
 class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
