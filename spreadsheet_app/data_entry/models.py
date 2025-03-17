@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
-from datetime import date, datetime, timedelta
-from django.utils import dateformat
+import datetime
 
 class Employee(models.Model):
     first_name = models.CharField(max_length=100)
@@ -26,8 +25,8 @@ class WorkCategory(models.Model):
 
 
 class WorkHours(models.Model):
-    start_time = models.TimeField(default=now)
-    end_time = models.TimeField(default=now)
+    start_time = models.TimeField(default=now, null=False)
+    end_time = models.TimeField(default=now, null=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
     def __str__(self):
@@ -38,13 +37,33 @@ class WorkHours(models.Model):
         """Calculate the difference between start and end time"""
         if self.start_time and self.end_time:
             
-            dummy_date = datetime(2000, 1, 1).date()  # Use an arbitrary date
+            dummy_date = datetime.datetime(2000, 1, 1).date()  # Use an arbitrary date
+            
+            if isinstance(self.start_time, datetime.time): 
+                stime = self.start_time
+            elif isinstance(self.start_time, datetime.datetime): 
+                stime = self.start_time.time
+            else: 
+                print(type(self.start_time))
+                stime = self.start_time
 
-            datetime1 = datetime.combine(dummy_date, self.start_time)
-            datetime2 = datetime.combine(dummy_date, self.end_time)
+            if isinstance(self.end_time, datetime.time): 
+                etime = self.end_time
+            elif isinstance(self.end_time, datetime.datetime): 
+                etime = self.end_time.time
+            else: 
+                print(type(self.end_time))
+                etime = self.end_time
+
+            # print(type(stime))
+            # print(type(etime))
+
+            datetime1 = datetime.datetime.combine(dummy_date, stime)
+            datetime2 = datetime.datetime.combine(dummy_date, etime)
 
             time_difference = datetime2 - datetime1
             return str(time_difference)[:-3]  # Returns 'HH:MM' format
+        
         return "00:00"  
 
 

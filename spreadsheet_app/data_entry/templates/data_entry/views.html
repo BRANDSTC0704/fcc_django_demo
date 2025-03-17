@@ -30,55 +30,50 @@
     </ul>
 
 
+    <form method="post", itemid="Employees">
+        {% csrf_token %}
+    <!-- Employees Table -->
+    <h3>Mitarbeiter</h3>
+    {{ employee_formset.management_form }}
+    <table class="table table-striped">
+        <thead>
+            <tr >
+                <th>angelegt am</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Arbeitsbeginn</th>
+                <th>Arbeitsende</th>
+                <th>Pause (h)</th>
+                <th>Abwesenheitsgrund</th>                
+            </tr>
+        </thead>
+        <tbody  id="employee-tbody" data-formset-prefix="employee_formset" data-empty-form="{{ employee_formset.empty_form|escapejs }}">
+            {% for form in employee_formset %}
+            <tr class="form-row">
+                {{ form.id }} 
+                <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                <td class="cte">{{ form.first_name }}</td>
+                <td class="cte">{{ form.surname }}</td>
+                <td class="cte">{{ form.work_start }}</td>
+                <td class="cte">{{ form.work_end }}</td>
+                <td class="cte">{{ form.break_time }}</td>
+                <td class="cte">{{ form.absence }}</td>                
+                <td>
+                    {{ form_e.DELETE }}  Markieren zum Löschen
+                </td>
+                <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    <button id="add-employee" type="button" class="btn btn-info">Weiteren Mitarbeiter anlegen</button>
+    </form>
+
     <form method="post">
         {% csrf_token %}
-        {{ employee_formset.management_form }}
-        {{ work_category_formset.management_form }}
-        {{ work_hours_formset.management_form }}
-        {{ container_count_formset.management_form }}
-        {{ protocollist_formset.management_form }}
-
-        <!-- Employees Table -->
-        <h3>Mitarbeiter</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>angelegt am</th>
-                    <th>Vorname</th>
-                    <th>Nachname</th>
-                    <th>Arbeitsbeginn</th>
-                    <th>Arbeitsende</th>
-                    <th>Pause (h)</th>
-                    <th>Abwesenheitsgrund</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody data-fromset-prefix="employee_formset">
-                {% for form in employee_formset %}
-                <tr>
-                    {{ form.id }}  <!-- ✅ Hidden ID field -->
-<!--                     {% for field in form.visible_fields %}
-                        <td>{{ field }}</td>
-                    {% endfor %} -->
-                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
-                    <td><input type="text" name="{{ form.first_name.html_name }}" value="{{ form.first_name.value|default:'' }}"></td>
-                    <td><input type="text" name="{{ form.surname.html_name }}" value="{{ form.surname.value|default:'' }}"></td>
-                    <td><input type="text" name="{{ form.work_start.html_name }}" value="{{ form.work_start.value|default:'' }}"></td>
-                    <td><input type="text" name="{{ form.work_end.html_name }}" value="{{ form.work_end.value|default:'' }}"></td>
-                    <td><input type="text" name="{{ form.break_time.html_name }}" value="{{ form.break_time.value|default:'' }}"></td>
-                    <td><input type="text" name="{{ form.absence.html_name }}" value="{{ form.absence.value|default:'' }}"></td>
-                    <td>
-                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
-                        <button type="button" class="remove-row btn btn-danger">X</button>
-                    </td>
-                
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Work Categories Table -->
-        <h3>Modul 3 - Gewerbe - PET - Bonus</h3>
+     <!-- Work Categories Table -->
+      <h3>Modul 3 - Gewerbe - PET - Bonus</h3>
         {{ work_category_formset.management_form }}
         <table class="table table-bordered">
             <thead>
@@ -87,28 +82,72 @@
                     <th>Reinigung (h)</th>
                     <th>Wartung / Reparatur (h)</th>
                     <th>Störung (h)</th>
-                    <th></th>
                 </tr>
             </thead>
-            <tbody data-fromset-prefix="work_category_formset">
+            <tbody 
+            id="work-category-tbody" data-formset-prefix="work_category_formset" 
+            data-empty-form="{{ work_category_formset.empty_form|escapejs }}">
+            </tbody>
                 {% for form in work_category_formset %}
                 <tr>
-                    {{ form.id }}  <!-- ✅ Hidden ID field -->
+                    {{ form.id }} 
                     <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ form.cleaning }}</td>
                     <td>{{ form.maintenance }}</td>
                     <td>{{ form.interruption }}</td>
                     <td>
-                        <form method="delete">
-                            <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
-                            <button type="Submit" class="remove-row btn btn-danger">X</button>
-                        </form>
+                        {{ form.DELETE }} Markieren zum Löschen
                     </td>
+                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+        <button id="add-work-category" type="button" class="btn btn-info">Weitere Übersicht anlegen</button>
+    </form>
+ 
+    <form method="post">
+        {% csrf_token %}
+    <!-- Work Hours Table -->
+    <h3>Zählerstand Betriebsstunden</h3>
+    {{ work_hours_formset.management_form }}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>angelegt am</th>
+                <th>Beginnzeit</th>
+                <th>Endzeit</th>
+                <th>Differenz</th>
+                <th></th>                
+            </tr>
+        </thead>
+        <tbody 
+            id="work-hours-tbody" data-formset-prefix="work_hours_formset" 
+            data-empty-form="{{ work_hours_formset.empty_form|escapejs }}">
+        </tbody>
+            {% for form in work_hours_formset %}
+            <tr>
+                {{ form.id }}  
+                <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                <td>{{ form.start_time }}</td>
+                <td>{{ form.end_time }}</td>
+                <td>{{ form.instance.difference  }} </td>
+                <td>
+                    {{ form.DELETE }} 
+                    Markieren zum Löschen
+                </td>
+                <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    <button id="add-work-hours" type="button" class="btn btn-info">Weitere Betriebsstundenliste anlegen</button>
+    </form>
 
+    <form method="post">
+        {% csrf_token %}
         <!-- Container Count Table -->
         <h3>Anzahl Container</h3>
         {{ container_count_formset.management_form }}
@@ -124,10 +163,13 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody data-fromset-prefix="container_count_formset">
+            <tbody id="container-tbody" data-formset-prefix="container_count_formset" 
+                   data-empty-form="{{ container_count_formset.empty_form|escapejs }}">
+            </tbody>
+
                 {% for form in container_count_formset %}
                 <tr>
-                    {{ form.id }}  <!-- ✅ Hidden ID field -->
+                    {{ form.id }} 
                     <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ form.alu }}</td>
                     <td>{{ form.holz }}</td>
@@ -135,46 +177,23 @@
                     <td>{{ form.magnetschrott }}</td>
                     <td>{{ form.kanister }}</td>
                     <td>
-                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
-                            <button type="button" class="remove-row btn btn-danger">X</button>
+                        {{ form.DELETE }} 
+                        Markieren zum Löschen
                     </td>
+                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+        <button id="add-container" type="button" class="btn btn-info">Weitere Containerliste anlegen</button>
+        </form>
 
-        <!-- Work Hours Table -->
-        <h3>Zählerstand Betriebsstunden</h3>
-        {{ work_hours_formset.management_form }}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>angelegt am</th>
-                    <th>Beginnzeit</th>
-                    <th>Endzeit</th>
-                    <th>Differenz</th>
-                    <th></th>                
-                </tr>
-            </thead>
-            <tbody data-fromset-prefix="work_hours_formset">
-                {% for form in work_hours_formset %}
-                <tr>
-                    {{ form.id }}  <!-- ✅ Hidden ID field -->
-                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
-                    <td>{{ form.start_time }}</td>
-                    <td>{{ form.end_time }}</td>
-                    <td>{{ form.instance.difference  }} </td>
-                    <td>
-                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
-                            <button type="button" class="remove-row btn btn-danger">X</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
 
         <!-- Protocollist -->
-        <h3>Protocollist</h3>
+        <h3>protokolliert von</h3>
+        <form method="post">
+        {% csrf_token %}
         {{ protocollist_formset.management_form }}
         <table class="table table-striped">
             <thead>
@@ -184,16 +203,20 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody data-fromset-prefix="protocollist_formset">
+                <tbody 
+                id="protocollist-tbody" data-formset-prefix="protocollist_formset" 
+                data-empty-form="{{ protocollist_formset.empty_form|escapejs }}">
+                </tbody>
                 {% for form in protocollist_formset %}
                 <tr>
-                    {{ form.id }}  <!-- ✅ Hidden ID field -->
+                    {{ form.id }}  
                     <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ form.protocollist }}</td>
                     <td>
-                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
-                            <button type="button" class="remove-row btn btn-danger">X</button>
+                        {{ form.DELETE }} 
+                        Markieren zum Löschen
                     </td>
+                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
@@ -201,6 +224,7 @@
 
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+        <button id="add-protocollist" type="button" class="btn btn-info">Weiteren Protokollisten anlegen</button>
     </form>
 
     <ul class="text-center mt-3">
@@ -212,28 +236,33 @@
 </html>
 
 <script>
-    
-    
-    document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll("tbody").forEach(tableBody => {
-        let formsetPrefix = tableBody.getAttribute("data-formset-prefix");
-        if (!formsetPrefix) return;
-        let totalForms = document.querySelector("input[name='form-TOTAL_FORMS']");
-
+        
     // Delete row functionality
-    tableBody.addEventListener("click", function(event) {
-        if (event.target.classList.contains("remove-row")) {
-            let row = event.target.closest("tr");
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".remove-row").forEach(button => {
+        button.addEventListener("click", function () {
+            let row = this.closest("tr");
             let deleteInput = row.querySelector(".delete-input");
             if (deleteInput) {
                 deleteInput.value = "on";  // Mark for deletion
             }
-            row.style.display = "none";  // Hide row instead of removing
-        }
+            row.style.display = "none";  // Hide the row
+            updateTotalForms();
+        });
     });
-                }
-               )
-            });
+
+    function updateTotalForms() {
+        document.querySelectorAll("[data-formset-prefix]").forEach(tableBody => {
+            let prefix = tableBody.getAttribute("data-formset-prefix");
+            let totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+            if (totalFormsInput) {
+                let visibleRows = tableBody.querySelectorAll("tr:not([style='display: none;'])").length;
+                totalFormsInput.value = visibleRows;
+            }
+        });
+    }
+});
+
 
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll("input[name*='break_time']").forEach(input => {
@@ -246,7 +275,7 @@
             });
         });
     });
-    
+          
     document.addEventListener("DOMContentLoaded", function () {
     let dateFilter = document.getElementById("date-filter");
 
@@ -273,6 +302,117 @@
             applyDateFilter(dateFilter.value, true); // Pass true to prevent reload
         }
     }
+});
+
+// Add new element
+document.addEventListener("DOMContentLoaded", function () {
+    function setupFormset(tableBodyId, addButtonId, emptyFormHtml, formsetPrefix, isWorkHours = false) {
+        let tableBody = document.getElementById(tableBodyId);
+        let addButton = document.getElementById(addButtonId);
+        let totalForms = document.querySelector("input[name='form-TOTAL_FORMS']");
+        let formIdx = Number(totalForms.value);
+
+        emptyFormHtml = decodeEntities(emptyFormHtml);
+
+        addButton.addEventListener("click", function () {
+            let newRow = document.createElement("tr");
+
+            let emptyForm = emptyFormHtml.replace(/__prefix__/g, formIdx);
+            let tempDiv = document.createElement("div");
+            tempDiv.innerHTML = emptyForm;
+            let formFields = Array.from(tempDiv.querySelectorAll("input, select, textarea"));
+
+            // 🔥 Filter out DELETE fields
+            formFields = formFields.filter(field => !field.name.includes("DELETE"));
+
+            // Get current date and time in format: "dd.mm.yyyy HH:MM:SS"
+            let now = new Date();
+            let formattedDate = now.toLocaleDateString("de-DE") + " " + now.toLocaleTimeString("de-DE");
+
+            let rowContent = `<td class="cte">${formattedDate}</td>`;
+
+            if (isWorkHours) {
+                // Find work_start and work_end fields
+                let workStart = formFields.find(f => f.name.includes("start_time"));
+                let workEnd = formFields.find(f => f.name.includes("end_time"));
+
+                // Create a column for difference calculation
+                let diffCell = `<td class="cte difference-cell">-</td>`;
+
+                rowContent += `
+                    <td class="cte">${workStart.outerHTML}</td>
+                    <td class="cte">${workEnd.outerHTML}</td>
+                    ${diffCell}
+                `;
+
+                function updateDifference(startInput, endInput, diffElement) {
+                if (startInput.value && endInput.value) {
+                    let startTime = parseTime(startInput.value);
+                    let endTime = parseTime(endInput.value);
+                    
+                    let diffMs = endTime - startTime;
+                    //if (diffMs < 0) {
+                    //    diffElement.textContent = "00:00"; // Prevent negative values
+                    //    return;
+                    //}
+                    
+                    let diffHours = Math.floor(diffMs / 3600000);
+                    let diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+
+                    diffElement.textContent = `${String(diffHours).padStart(2, "0")}:${String(diffMinutes).padStart(2, "0")}`;
+                }
+}
+                // Attach event listeners for real-time updates
+                setTimeout(() => {
+                        let startInput = tableBody.lastElementChild.querySelector(`input[name="${workStart.name}"]`);
+                        let endInput = tableBody.lastElementChild.querySelector(`input[name="${workEnd.name}"]`);
+                        let diffElement = tableBody.lastElementChild.querySelector(".difference-cell");
+
+                        function onInputChange() {
+                            updateDifference(startInput, endInput, diffElement);
+                        }
+
+                        startInput.addEventListener("input", onInputChange);
+                        endInput.addEventListener("input", onInputChange);
+                    }, 0);
+            } else {
+                formFields.forEach(field => rowContent += `<td class="cte">${field.outerHTML}</td>`);
+            }
+
+            newRow.innerHTML = rowContent;
+            newRow.classList.add("form-row");
+            tableBody.appendChild(newRow);
+
+            formIdx++;
+            totalForms.value = formIdx; // Update form count
+        });
+    }
+
+    function parseTime(timeStr) {
+        let [hours, minutes] = timeStr.split(":").map(Number);
+        return new Date(0, 0, 0, hours, minutes, 0);
+    }
+
+    function decodeEntities(encodedString) {
+        let textArea = document.createElement("textarea");
+        textArea.innerHTML = encodedString;
+        return textArea.value;
+    }
+
+    // 🔥 Apply to all formsets dynamically
+    let formsets = [
+        { tbodyId: "employee-tbody", buttonId: "add-employee", emptyForm: `{{ employee_formset.empty_form|escapejs }}` },
+        { tbodyId: "work-category-tbody", buttonId: "add-work-category",  emptyForm: `{{ work_category_formset.empty_form|escapejs }}` },
+        { tbodyId: "work-hours-tbody", buttonId: "add-work-hours",  emptyForm: `{{ work_hours_formset.empty_form|escapejs }}`, isWorkHours: true },
+        { tbodyId: "container-tbody", buttonId: "add-container",  emptyForm: `{{ container_count_formset.empty_form|escapejs }}` },
+        { tbodyId: "protocollist-tbody", buttonId: "add-protocollist", emptyForm: `{{ protocollist_formset.empty_form|escapejs }}` }
+    ];
+
+    formsets.forEach(({ tbodyId, buttonId, emptyForm, isWorkHours }) => {
+        if (document.getElementById(tbodyId)) {
+            setupFormset(tbodyId, buttonId, emptyForm, isWorkHours);
+        }
+    });
 });
 
 </script>

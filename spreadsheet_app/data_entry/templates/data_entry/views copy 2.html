@@ -1,0 +1,270 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCC DEMO - Datenerfassen Produktion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'data_entry/styles.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
+</head>
+
+<body class="container mt-5">
+    
+    <div class="text-center">
+        <img src="{% static 'logo.png' %}" alt="Logo" width="150">
+    </div>
+    &nbsp;
+
+    <h2 class="text-center">PROD/LINZ - Tagesbericht Sortierung - Datendarstellung</h2>
+
+    <label for="date-filter" value="{{ request.GET.date|default:'' }}">Filter nach Datum:</label>
+    <input type="date" id="date-filter" value="{{ selected_date|default:heute }}">
+
+    <ul class="text-center mt-3">
+        <a href="{% url 'entrance_page' %}" class="btn btn-secondary">Startseite</a>
+        <a href="{% url 'form_page' %}" class="btn btn-secondary">Dateneingabe</a>
+    </ul>
+
+
+    <form method="post">
+        {% csrf_token %}
+        <!-- {{ employee_formset.management_form }} -->
+       
+        <!-- Employees Table -->
+       <!--  <h3>Mitarbeiter</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>angelegt am</th>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>Arbeitsbeginn</th>
+                    <th>Arbeitsende</th>
+                    <th>Pause (h)</th>
+                    <th>Abwesenheitsgrund</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-formset-prefix="employee_formset">
+                {% for form in employee_formset %}
+                <tr>
+                    {{ form.id }}  
+                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                    <td><input type="text" name="{{ form.first_name.html_name }}" value="{{ form.first_name.value|default:'' }}"></td>
+                    <td><input type="text" name="{{ form.surname.html_name }}" value="{{ form.surname.value|default:'' }}"></td>
+                    <td><input type="text" name="{{ form.work_start.html_name }}" value="{{ form.work_start.value|default:'' }}"></td>
+                    <td><input type="text" name="{{ form.work_end.html_name }}" value="{{ form.work_end.value|default:'' }}"></td>
+                    <td><input type="text" name="{{ form.break_time.html_name }}" value="{{ form.break_time.value|default:'' }}"></td>
+                    <td><input type="text" name="{{ form.absence.html_name }}" value="{{ form.absence.value|default:'' }}"></td>
+                    <td>
+                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="remove-row btn btn-danger">X</button>
+                    </td>
+                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+ -->
+        <!-- Work Categories Table -->
+      <!--   <h3>Modul 3 - Gewerbe - PET - Bonus</h3>
+        {{ work_category_formset.management_form }}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>angelegt am</th>
+                    <th>Reinigung (h)</th>
+                    <th>Wartung / Reparatur (h)</th>
+                    <th>Störung (h)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-formset-prefix="work_category_formset">
+                {% for form in work_category_formset %}
+                <tr>
+                    {{ form.id }} 
+                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ form.cleaning }}</td>
+                    <td>{{ form.maintenance }}</td>
+                    <td>{{ form.interruption }}</td>
+                    <td>
+                        <form method="delete">
+                            <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                            <button type="Submit" class="remove-row btn btn-danger">X</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+ -->
+        <!-- Container Count Table -->
+        <h3>Anzahl Container</h3>
+        {{ container_count_formset.management_form }}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>angelegt am</th>
+                    <th>Alu Dosen (Kübel - 8,5 kg)</th>
+                    <th>Holz (Container - 6 t)</th>
+                    <th>Karton (Container - 6 t)</th>
+                    <th>Magnetschrott (Container - 6 t)</th>
+                    <th>Kanister (1 Container = 5 Ballen)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-formset-prefix="container_count_formset">
+                {% for form in container_count_formset %}
+                <tr>
+                    {{ form.id }}  <!-- ✅ Hidden ID field -->
+                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ form.alu }}</td>
+                    <td>{{ form.holz }}</td>
+                    <td>{{ form.karton }}</td>
+                    <td>{{ form.magnetschrott }}</td>
+                    <td>{{ form.kanister }}</td>
+                    <td>
+                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                            <button type="button" class="remove-row btn btn-danger">X</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+<!-- 
+        Work Hours Table
+        <h3>Zählerstand Betriebsstunden</h3>
+        {{ work_hours_formset.management_form }}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>angelegt am</th>
+                    <th>Beginnzeit</th>
+                    <th>Endzeit</th>
+                    <th>Differenz</th>
+                    <th></th>                
+                </tr>
+            </thead>
+            <tbody data-formset-prefix="work_hours_formset">
+                {% for form in work_hours_formset %}
+                <tr>
+                    {{ form.id }}  
+                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ form.start_time }}</td>
+                    <td>{{ form.end_time }}</td>
+                    <td>{{ form.instance.difference  }} </td>
+                    <td>
+                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="remove-row btn btn-danger">X</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+ -->
+        <!-- Protocollist -->
+        <h3>Protocollist</h3>
+        {{ protocollist_formset.management_form }}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>angelegt am</th>
+                    <th>Protokoll angelegt von</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-formset-prefix="protocollist_formset">
+                {% for form in protocollist_formset %}
+                <tr>
+                    {{ form.id }}  
+                    <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>{{ form.protocollist }}</td>
+                    <td>
+                        <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="remove-row btn btn-danger">X</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    </form>
+
+    <ul class="text-center mt-3">
+        <a href="{% url 'entrance_page' %}" class="btn btn-secondary">Startseite</a>
+        <a href="{% url 'form_page' %}" class="btn btn-secondary">Dateneingabe</a>
+    </ul>
+
+</body>
+</html>
+
+<script>
+        
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("tbody").forEach(tableBody => {
+        let formsetPrefix = tableBody.getAttribute("data-formset-prefix");
+        if (!formsetPrefix) return;
+        // let totalForms = document.querySelector("input[name='form-TOTAL_FORMS']");
+        let totalForms = document.querySelector(`input[name='${formsetPrefix}-TOTAL_FORMS']`);
+
+    // Delete row functionality
+    tableBody.addEventListener("click", function(event) {
+        if (event.target.classList.contains("remove-row")) {
+            let row = event.target.closest("tr");
+            let deleteInput = row.querySelector(".delete-input");
+            if (deleteInput) {
+                deleteInput.value = "on";  // Mark for deletion
+            }
+            // row.style.display = "none";  // Hide row instead of removing
+        }
+    });
+                }
+               )
+            });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll("input[name*='break_time']").forEach(input => {
+            // Convert dot to comma when the page loads
+            input.value = input.value.replace(".", ",");
+    
+            // Convert comma to dot before form submission
+            input.addEventListener("change", function() {
+                this.value = this.value.replace(",", ".");
+            });
+        });
+    });
+          
+    document.addEventListener("DOMContentLoaded", function () {
+    let dateFilter = document.getElementById("date-filter");
+
+    if (dateFilter) {
+        function applyDateFilter(selectedDate, preventReload = false) { // Added preventReload param
+            if (selectedDate) {
+                let newUrl = new URL(window.location.href);
+                newUrl.searchParams.set("date", selectedDate);
+                if (!preventReload) { // Only reload if preventReload is false
+                    window.location.href = newUrl.toString();
+                } else {
+                  //If we prevent reload, we may want to update the url bar without reloading.
+                  window.history.replaceState({}, document.title, newUrl.toString());
+                }
+            }
+        }
+
+        dateFilter.addEventListener("change", function () {
+            applyDateFilter(this.value);
+        });
+
+        // Check for initial value, but prevent reload on initial load
+        if (dateFilter.value) {
+            applyDateFilter(dateFilter.value, true); // Pass true to prevent reload
+        }
+    }
+});
+
+</script>
