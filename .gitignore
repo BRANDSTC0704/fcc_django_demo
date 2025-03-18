@@ -138,6 +138,6 @@ GitHub.sublime-settings
 .history
 
 # django static files 
-./static/
 ./spreadsheet_app/static/
-./data_entry/static/
+./spreadsheet_app/spreadsheet_app/static/
+./spreadsheet_app/data_entry/static/
