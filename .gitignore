@@ -136,3 +136,8 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# django static files 
+./static/
+./spreadsheet_app/static/
+./data_entry/static/
