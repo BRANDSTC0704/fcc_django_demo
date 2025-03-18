@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCC DEMO - Datenerfassen Produktion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'data_entry/styles.css' %}">
+
+</head>
+<body class="container mt-5">
+    
+    <div class="text-right">
+        <img src="{% static 'logo.png' %}" alt="Logo" width="150">
+    </div>
+
+    <h2 class="text-right">PROD/LINZ - Tagesbericht Sortierung am {{ heute }}</h2>
+
+    <!-- Employee Form as a Table -->
+    <h3>Mitarbeiter/in</h3>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                    <th>ArbeitsBeginn</th>
+                    <th>Arbeitsende</th>
+                    <th>Pause (h)</th>
+                    <th>Begründung Abwesenheit</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cte">{{ emp_form.first_name }}</td>
+                    <td class="cte">{{ emp_form.surname }}</td>
+                    <td class="cte">{{ emp_form.work_start }}</td>
+                    <td class="cte">{{ emp_form.work_end }}</td>
+                    <td class="cte">{{ emp_form.break_time }}</td>
+                    <td class="cte">{{ emp_form.absence }}</td>
+                    <td><button type="submit" class="btn btn-primary">Speichere Personalinfo</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <!-- Work Categories Form (Grouped) -->
+    <h3>Modul 3   -   Gewerbe   -   PET   -   Bonus</h3>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Reinigung (h)</th>
+                    <th>Wartung / Reparatur (h)</th>
+                    <th>Störung (h)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ work_form.cleaning }}</td>
+                    <td>{{ work_form.maintenance }}</td>
+                    <td>{{ work_form.interruption }}</td>
+                    <td><button type="submit" class="btn btn-success">Speichere Maschineninfo</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <!-- Work Hours Form -->
+    <h3>Zählerstand Betriebsstunden</h3>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Beginnzeit</th>
+                    <th>Endzeit</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ hours_form.start_time }}</td>
+                    <td>{{ hours_form.end_time }}</td>
+                    <td><button type="submit" class="btn btn-info">Speichere Betriebsstunden</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <!-- Count Form -->
+    <h3>Anzahl Container</h3>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Alu Dosen (Kübel - 8,5 kg)</th>
+                    <th>Holz (Container - 6 t)</th>
+                    <th>Karton (Container - 6 t)</th>
+                    <th>Magnetschrott (Container - 6 t)</th>
+                    <th>Kanister (1 Container = 5 Ballen)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ container_form.alu }}</td>
+                    <td>{{ container_form.holz }}</td>
+                    <td>{{ container_form.karton }}</td>
+                    <td>{{ container_form.magnetschrott }}</td>
+                    <td>{{ container_form.kanister }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-warning">Speichere Containerinfo</button>
+    </form>
+
+    <!-- Protocollist Form -->
+    <h3>Protokollist</h3>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ protocol_form.protocollist }}</td>
+                    <td><button type="submit" class="btn btn-secondary">Speichere Protokollist</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <!-- Employees Table -->
+    <h3>Mitarbeiter</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Arbeitsbeginn</th>
+                <th>Arbeitsende</th>
+                <th>Pause (h)</th>
+                <th>Abwesenheitsgrund</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.first_name }}</td>
+                <td>{{ emp.surname }}</td>
+                <td>{{ emp.work_start }}</td>
+                <td>{{ emp.work_end }}</td>
+                <td>{{ emp.break_time }}</td>
+                <td>{{ emp.absence }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Work Categories Table -->
+    <h3>Modul 3 - Gewerbe - PET - Bonus</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Reinigung (h)</th>
+                <th>Wartung / Reparatur (h)</th>
+                <th>Störung (h)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for work in work_categories %}
+            <tr>
+                <td>{{ work.cleaning }}</td>
+                <td>{{ work.maintenance }}</td>
+                <td>{{ work.interruption }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Work Hours Table -->
+    <h3>Zählerstand Betriebsstunden</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Beginnzeit</th>
+                <th>Endzeit</th>
+                <th>Differenz</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hours in work_hours %}
+            <tr>
+                <td>{{ hours.start_time }}</td>
+                <td>{{ hours.end_time }}</td>
+                <td>{{ hours.difference }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

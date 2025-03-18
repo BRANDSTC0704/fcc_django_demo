@@ -1,0 +1,73 @@
+{% load plotly_dash %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCC DEMO - Datenerfassen Produktion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'data_entry/styles.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
+
+</head>
+
+<body>
+
+<div class="text-center">
+    <img src="{% static 'logo.png' %}" alt="Logo" width="150">
+</div>
+&nbsp;
+<div class="container dashboard-container"></div>
+<h2 class="text-center">Dashboard - Darstellung</h2>
+
+<ul class="text-center mt-3">
+    <a href="{% url 'entrance_page' %}" class="btn btn-secondary">Startseite</a>
+    <a href="{% url 'views_page' %}" class="btn btn-secondary">Tabellendarstellung</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Dashboard</a>
+</ul>
+
+<h1 class="text-center my-4">Work Hours Dashboard</h1>
+<div>
+                {% plotly_app name="WorkHoursDashboard" ratio=1 %}
+</div>
+
+</body>
+</html>
+
+<!-- 
+
+{% block content %}
+    <h2>Work Hours Dashboard</h2>
+
+    🔥 Date Filter Form
+    <form method="get" id="date-filter-form">
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date" name="start_date" value="{{ start_date }}">
+
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date" name="end_date" value="{{ end_date }}">
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <div id="weekly-plot"></div>
+    <div id="monthly-plot"></div>
+
+    <img src="data:image/png;base64,{{ weekly_plot }}" class="img-fluid" alt="Weekly Work Hours">
+
+    <h3>Work Hours per Month</h3>
+    <img src="data:image/png;base64,{{ monthly_plot }}" class="img-fluid" alt="Monthly Work Hours"> 
+
+{% endblock %}
+
+<script>
+    var weeklyPlot = JSON.parse('{{ weekly_plot_json|safe }}');
+    var monthlyPlot = JSON.parse('{{ monthly_plot_json|safe }}');
+
+    Plotly.newPlot('weekly-plot', weeklyPlot.data, weeklyPlot.layout);
+    Plotly.newPlot('monthly-plot', monthlyPlot.data, monthlyPlot.layout);
+</script>
+-->
+
