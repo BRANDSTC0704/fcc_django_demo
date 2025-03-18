@@ -139,5 +139,5 @@ GitHub.sublime-settings
 
 # django static files 
 ./spreadsheet_app/static/
-./spreadsheet_app/spreadsheet_app/static/
 ./spreadsheet_app/data_entry/static/
+./data_entry/static
