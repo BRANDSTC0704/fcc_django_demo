@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "data_entry",
-    "django_plotly_dash.apps.DjangoPlotlyDashConfig",
+    'django_plotly_dash', 
+    # "django_plotly_dash.apps.DjangoPlotlyDashConfig",
     "dpd_static_support",  # Required for Dash static files
+    "data_entry",
     "spreadsheet_app",
+    "dashboards",
 ]
 
 MIDDLEWARE = [

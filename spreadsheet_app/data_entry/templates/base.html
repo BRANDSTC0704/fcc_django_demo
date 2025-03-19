@@ -32,7 +32,8 @@
             <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
             <a href="{% url 'form_page' %}" class="btn {% if request.path == '/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
             <a href="{% url 'views_page' %}" class="btn {% if request.path == '/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
-            <a href="{% url 'dashboard' %}" class="btn {% if request.path == '/dashboard/' %}btn-primary{% else %}btn-secondary{% endif %}">Dashboard</a>
+            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
+            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
         </ul>
     </header>
 
@@ -48,7 +49,8 @@
             <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
             <a href="{% url 'form_page' %}" class="btn {% if request.path == '/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
             <a href="{% url 'views_page' %}" class="btn {% if request.path == '/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
-            <a href="{% url 'dashboard' %}" class="btn {% if request.path == '/dashboard/' %}btn-primary{% else %}btn-secondary{% endif %}">Dashboard</a>
+            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
+            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
         </ul>
     </footer>
     {% endblock %}

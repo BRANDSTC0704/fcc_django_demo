@@ -8,7 +8,6 @@ urlpatterns = [
     path("forms/", views.form_page, name="form_page"),
     path("views/", views.views_page, name="views_page"),
     # path("debug/", views.debug_view, name="debug_page"),  # Add debug page
-    path("dashboard/", views.dashboard_view, name="dashboard"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

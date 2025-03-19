@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load plotly_dash %}
+
+{% block title %}Monatliches Dashboard{% endblock %}
+{% block header_title %}Monatliches Dashboard{% endblock %}
+
+{% block content %}
+    {% plotly_app name="MonthlyDashboard" ratio=1 %}
+{% endblock %}

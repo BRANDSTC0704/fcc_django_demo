@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load plotly_dash %}
+
+{% block title %}Wöchentliches Dashboard{% endblock %}
+{% block header_title %}Wöchentliches Dashboard{% endblock %}
+
+{% block content %}
+{% plotly_app name="WeeklyDashboard" ratio=1 %}
+{% endblock %}
