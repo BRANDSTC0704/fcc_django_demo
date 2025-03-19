@@ -6,22 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0003_count_protocol'),
+        ("data_entry", "0003_count_protocol"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='count',
-            name='entry',
+            model_name="count",
+            name="entry",
         ),
         migrations.AddField(
-            model_name='count',
-            name='category',
-            field=models.CharField(choices=[('Alu', 'Alu'), ('Holz', 'Holz'), ('Karton', 'Karton'), ('Magnetshrott', 'Magnetshrott'), ('Kanister', 'Kanister')], max_length=50, null=True),
+            model_name="count",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("Alu", "Alu"),
+                    ("Holz", "Holz"),
+                    ("Karton", "Karton"),
+                    ("Magnetshrott", "Magnetshrott"),
+                    ("Kanister", "Kanister"),
+                ],
+                max_length=50,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='count',
-            name='count',
+            model_name="count",
+            name="count",
             field=models.IntegerField(default=0),
         ),
     ]

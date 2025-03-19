@@ -7,40 +7,83 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0001_initial'),
+        ("data_entry", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Employee',
+            name="Employee",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=100)),
-                ('surname', models.CharField(max_length=100)),
-                ('work_start', models.TimeField()),
-                ('work_end', models.TimeField()),
-                ('break_time', models.FloatField(default=0.0, help_text='Break time in hours (e.g., 0.5 for 30 min)')),
-                ('absence', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=100)),
+                ("surname", models.CharField(max_length=100)),
+                ("work_start", models.TimeField()),
+                ("work_end", models.TimeField()),
+                (
+                    "break_time",
+                    models.FloatField(
+                        default=0.0,
+                        help_text="Break time in hours (e.g., 0.5 for 30 min)",
+                    ),
+                ),
+                ("absence", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='WorkCategory',
+            name="WorkCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cleaning', models.FloatField(default=0.0, help_text='Hours spent on cleaning')),
-                ('maintenance', models.FloatField(default=0.0, help_text='Hours spent on maintenance/repair')),
-                ('interruption', models.FloatField(default=0.0, help_text='Hours of work interruption')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "cleaning",
+                    models.FloatField(default=0.0, help_text="Hours spent on cleaning"),
+                ),
+                (
+                    "maintenance",
+                    models.FloatField(
+                        default=0.0, help_text="Hours spent on maintenance/repair"
+                    ),
+                ),
+                (
+                    "interruption",
+                    models.FloatField(
+                        default=0.0, help_text="Hours of work interruption"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='WorkHours',
+            name="WorkHours",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.TimeField(default=django.utils.timezone.now)),
-                ('end_time', models.TimeField(default=django.utils.timezone.now)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.TimeField(default=django.utils.timezone.now)),
+                ("end_time", models.TimeField(default=django.utils.timezone.now)),
             ],
         ),
         migrations.DeleteModel(
-            name='SpreadsheetEntry',
+            name="SpreadsheetEntry",
         ),
     ]

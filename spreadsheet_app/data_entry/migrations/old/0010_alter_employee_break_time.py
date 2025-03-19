@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0009_alter_protocollist_protocollist'),
+        ("data_entry", "0009_alter_protocollist_protocollist"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='employee',
-            name='break_time',
-            field=models.FloatField(default=0.5, help_text='Break time in hours (e.g., 0.5 for 30 min)'),
+            model_name="employee",
+            name="break_time",
+            field=models.FloatField(
+                default=0.5, help_text="Break time in hours (e.g., 0.5 for 30 min)"
+            ),
         ),
     ]

@@ -3,10 +3,20 @@ from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocoll
 
 
 class EmployeeAdmin(admin.ModelAdmin):
-  list_display = ("created_at", "first_name", "surname", "work_start","work_end", "break_time", "absence")
+    list_display = (
+        "created_at",
+        "first_name",
+        "surname",
+        "work_start",
+        "work_end",
+        "break_time",
+        "absence",
+    )
+
 
 class ProtocollistAdmin(admin.ModelAdmin):
-  list_display = ("created_at", "protocollist")
+    list_display = ("created_at", "protocollist")
+
 
 # Register your models here.
 # admin.site.register(Employee)

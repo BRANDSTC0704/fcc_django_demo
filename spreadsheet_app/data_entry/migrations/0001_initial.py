@@ -8,61 +8,141 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ContainerCount',
+            name="ContainerCount",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('alu', models.IntegerField(default=0, help_text='Alu Dosen (Kübel - 8,5 kg)')),
-                ('holz', models.IntegerField(default=0, help_text='Holz (Container - 6 t)')),
-                ('karton', models.IntegerField(default=0, help_text='Karton (Container - 6 t)')),
-                ('magnetschrott', models.IntegerField(default=0, help_text='Magnetschrott (Container - 6 t)')),
-                ('kanister', models.IntegerField(default=0, help_text='Kanister (1 Container = 5 Ballen)')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "alu",
+                    models.IntegerField(
+                        default=0, help_text="Alu Dosen (Kübel - 8,5 kg)"
+                    ),
+                ),
+                (
+                    "holz",
+                    models.IntegerField(default=0, help_text="Holz (Container - 6 t)"),
+                ),
+                (
+                    "karton",
+                    models.IntegerField(
+                        default=0, help_text="Karton (Container - 6 t)"
+                    ),
+                ),
+                (
+                    "magnetschrott",
+                    models.IntegerField(
+                        default=0, help_text="Magnetschrott (Container - 6 t)"
+                    ),
+                ),
+                (
+                    "kanister",
+                    models.IntegerField(
+                        default=0, help_text="Kanister (1 Container = 5 Ballen)"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Employee',
+            name="Employee",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=100)),
-                ('surname', models.CharField(max_length=100)),
-                ('attribut', models.CharField(default='', max_length=100)),
-                ('work_start', models.TimeField()),
-                ('work_end', models.TimeField()),
-                ('break_time', models.FloatField(default=0.5, null=True)),
-                ('absence', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=100)),
+                ("surname", models.CharField(max_length=100)),
+                ("attribut", models.CharField(default="", max_length=100)),
+                ("work_start", models.TimeField()),
+                ("work_end", models.TimeField()),
+                ("break_time", models.FloatField(default=0.5, null=True)),
+                ("absence", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Protocollist',
+            name="Protocollist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protocollist', models.TextField(default='keine Angabe', help_text='Protokollführer')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "protocollist",
+                    models.TextField(
+                        default="keine Angabe", help_text="Protokollführer"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='WorkCategory',
+            name="WorkCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cleaning', models.FloatField(default=0.0, help_text='Hours spent on cleaning')),
-                ('maintenance', models.FloatField(default=0.0, help_text='Hours spent on maintenance/repair')),
-                ('interruption', models.FloatField(default=0.0, help_text='Hours of work interruption')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "cleaning",
+                    models.FloatField(default=0.0, help_text="Hours spent on cleaning"),
+                ),
+                (
+                    "maintenance",
+                    models.FloatField(
+                        default=0.0, help_text="Hours spent on maintenance/repair"
+                    ),
+                ),
+                (
+                    "interruption",
+                    models.FloatField(
+                        default=0.0, help_text="Hours of work interruption"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='WorkHours',
+            name="WorkHours",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.TimeField(default=django.utils.timezone.now)),
-                ('end_time', models.TimeField(default=django.utils.timezone.now)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.TimeField(default=django.utils.timezone.now)),
+                ("end_time", models.TimeField(default=django.utils.timezone.now)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

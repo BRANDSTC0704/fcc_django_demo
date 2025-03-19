@@ -6,33 +6,72 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0005_count_created_at_employee_created_at_and_more'),
+        ("data_entry", "0005_count_created_at_employee_created_at_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Container_Count',
+            name="Container_Count",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('alu', models.IntegerField(default=0, help_text='Alu Dosen (Kübel - 8,5 kg)')),
-                ('holz', models.IntegerField(default=0, help_text='Holz (Container - 6 t)')),
-                ('karton', models.IntegerField(default=0, help_text='Karton (Container - 6 t)')),
-                ('magnetschrott', models.IntegerField(default=0, help_text='Magnetschrott (Container - 6 t)')),
-                ('kanister', models.IntegerField(default=0, help_text='Kanister (1 Container = 5 Ballen)')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "alu",
+                    models.IntegerField(
+                        default=0, help_text="Alu Dosen (Kübel - 8,5 kg)"
+                    ),
+                ),
+                (
+                    "holz",
+                    models.IntegerField(default=0, help_text="Holz (Container - 6 t)"),
+                ),
+                (
+                    "karton",
+                    models.IntegerField(
+                        default=0, help_text="Karton (Container - 6 t)"
+                    ),
+                ),
+                (
+                    "magnetschrott",
+                    models.IntegerField(
+                        default=0, help_text="Magnetschrott (Container - 6 t)"
+                    ),
+                ),
+                (
+                    "kanister",
+                    models.IntegerField(
+                        default=0, help_text="Kanister (1 Container = 5 Ballen)"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Protocollist',
+            name="Protocollist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protocollist', models.TextField(help_text='Protokollführer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("protocollist", models.TextField(help_text="Protokollführer")),
             ],
         ),
         migrations.DeleteModel(
-            name='Count',
+            name="Count",
         ),
         migrations.DeleteModel(
-            name='Protocol',
+            name="Protocol",
         ),
     ]

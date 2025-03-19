@@ -6,22 +6,50 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0002_employee_workcategory_workhours_and_more'),
+        ("data_entry", "0002_employee_workcategory_workhours_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Count',
+            name="Count",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('entry', models.CharField(choices=[('Alu', 'Alu'), ('Holz', 'Holz'), ('Karton', 'Karton'), ('Magnetschrott', 'Magnetschrott'), ('Kanister', 'Kanister')], max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "entry",
+                    models.CharField(
+                        choices=[
+                            ("Alu", "Alu"),
+                            ("Holz", "Holz"),
+                            ("Karton", "Karton"),
+                            ("Magnetschrott", "Magnetschrott"),
+                            ("Kanister", "Kanister"),
+                        ],
+                        max_length=100,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Protocol',
+            name="Protocol",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('protocollist', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("protocollist", models.TextField()),
             ],
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_entry', '0011_alter_employee_break_time'),
+        ("data_entry", "0011_alter_employee_break_time"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='employee',
-            name='attribut',
-            field=models.CharField(default='', max_length=100),
+            model_name="employee",
+            name="attribut",
+            field=models.CharField(default="", max_length=100),
         ),
     ]

@@ -4,10 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/clearcache/', include('clearcache.urls')),
-    path('admin/', admin.site.urls),
-    path('', include('data_entry.urls')),
-    path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    path("admin/clearcache/", include("clearcache.urls")),
+    path("admin/", admin.site.urls),
+    path("", include("data_entry.urls")),
+    path("django_plotly_dash/", include("django_plotly_dash.urls")),
 ]
 
 
