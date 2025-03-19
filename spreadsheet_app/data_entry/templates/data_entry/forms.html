@@ -6,6 +6,12 @@
 {% block content %}
 
 
+<div class="alert alert-info" role="alert">
+    Beim Drücken auf "Speichere Einträge" werden alle Formulare auf dieser Seite gemeinsam gespeichert.  
+    <br>
+    *: zwingend erforderlich
+</div>
+
     {% if messages %}
     <div class="alert alert-success fixed-top text-center" role="alert" style="z-index: 1000; width: 100%;">
         {% for message in messages %}
@@ -24,8 +30,8 @@
         <table class="table table-bordered" >
             <thead>
                 <tr>
-                    <th class="thc">Vorname</th>
-                    <th class="thc">Nachname</th>
+                    <th class="thc">Vorname*</th>
+                    <th class="thc">Nachname*</th>
                     <th class="thc">Art</th>
                     <th class="thc">Arbeitsbeginn <br> [hh:mm]</th>
                     <th class="thc">Arbeitsende <br> [hh:mm]</th>
@@ -56,7 +62,7 @@
             </tbody>
         </table>
         <div align='center'>
-        <button id="add-row" type="button" class="btn btn-info">Weiteren Mitarbeiter anlegen</button>
+        <button id="add-row" type="button" class="btn btn-warning">Weiteren Mitarbeiter anlegen</button>
         </div>
     <!-- Work Categories Form (Grouped) -->
     <h3 style="text-align:left">Modul 3   -   Gewerbe   -   PET   -   Bonus</h3>
@@ -189,7 +195,25 @@
     });
 
         // Neue Einträge anlegen
-    document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+    function addDeleteFunctionality(button) {
+        button.addEventListener("click", function (event) {
+            let row = event.target.closest("tr");
+            let deleteInput = row.querySelector("input[name$='-DELETE']");
+
+            if (deleteInput) {
+                deleteInput.value = "on";  
+                row.style.display = "none";
+            } else {
+                console.warn("No DELETE field found in row:", row);
+            }
+        });
+    }
+
+    // Apply delete function to existing rows
+    document.querySelectorAll(".delete-row").forEach(addDeleteFunctionality);
+
+
     let addButton = document.getElementById("add-row"); // Ensure correct ID!
     let tableBody = document.getElementById("employee-tbody"); // Ensure correct ID!
 
@@ -221,6 +245,7 @@
             <td class="cte">${formFields[4].outerHTML}</td>
             <td class="cte">${formFields[5].outerHTML}</td>
             <td class="cte">${formFields[6].outerHTML}</td>
+            <input type="hidden" name="form-${formIdx}-DELETE" class="delete-input">
             <td><button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button></td>
         `;
         
@@ -238,9 +263,10 @@
         newInputs[6].value = defaultValues.absence;
 
         document.getElementById("id_form-TOTAL_FORMS").value = parseInt(formIdx) + 1;
+
+        let newDeleteButton = newRow.querySelector(".delete-row");
+        addDeleteFunctionality(newDeleteButton);
     });
-
-
 });
 
     document.addEventListener("DOMContentLoaded", function () {

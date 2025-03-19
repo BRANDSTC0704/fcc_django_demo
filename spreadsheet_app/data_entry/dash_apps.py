@@ -33,21 +33,7 @@ df["difference"] = [wh.difference for wh in work_hours_data]
 df["difference"] = df["difference"].apply(lambda x: convert_time_difference(x))
 df["difference"] = df["difference"].astype(float)  # Convert to numeric
 
-print(df['date'].min(), df['date'].max())
-
-# # Group data by **week or month**
-# df["week"] = df["date"].dt.strftime("%Y-W%U")  # Group by week
-# df["month"] = df["date"].dt.strftime("%Y-%m")  # Group by month
-
-# weekly_data = df.groupby("week", as_index=False)["difference"].sum().reset_index(drop=True)
-# monthly_data = df.groupby("month", as_index=False)["difference"].sum().reset_index(drop=True)
-# weekly_data['difference'] = weekly_data['difference'].astype(float)
-# monthly_data['difference'] = monthly_data['difference'].astype(float)
-
-# monthly_data.columns = ["month", "Total Hours"]
-# weekly_data.columns = ["week", "Total Hours"]
-    
-# print("⚡ Loading WorkHoursDashboard...")  # Debug message
+# print(df['date'].min(), df['date'].max())
 
 # Create Dash App
 app = DjangoDash("WorkHoursDashboard", 
@@ -74,7 +60,7 @@ app.layout = html.Div([
     dcc.Store(id="filtered-data"),  # Store filtered data
     
       html.Div([
-        html.Button("Excel-Download", id="download-btn", n_clicks=0, className="btn btn-primary"),
+        html.Button("Excel-Download", id="download-btn", n_clicks=0, className="btn btn-success"),
         dcc.Download(id="download"),
     ], style={"textAlign": "center", "marginTop": "15px"}),
 ])

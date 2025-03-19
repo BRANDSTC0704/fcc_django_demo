@@ -40,19 +40,19 @@ def form_page(request):
         if not emp_formset.is_valid(): 
             print('Employee is wrong!')
             print(emp_formset.errors)
-            messages.error(request, "❌ In der Mitarbeiter-Maske gibt es falsche Daten!")
+            messages.error(request, "❌ In der Mitarbeiter-Maske gibt es falsche oder fehlende Daten!")
         if not work_form.is_valid(): 
             print('Work Form is wrong!')
-            messages.error(request, "❌ In der Modul 3 Maske gibt es falsche Daten!")
+            messages.error(request, "❌ In der Modul 3 Maske gibt es falsche oder fehlende Daten!")
         if not hours_form.is_valid(): 
             print('Hours is wrong!')
-            messages.error(request, "❌ In der Zählerstands-Maske gibt es falsche Daten!")
+            messages.error(request, "❌ In der Zählerstands-Maske gibt es falsche oder fehlende Daten!")
         if not container_form.is_valid(): 
             print('Container is wrong!')
-            messages.error(request, "❌ In der Container-Maske gibt es falsche Daten!")
+            messages.error(request, "❌ In der Container-Maske gibt es falsche oder fehlende Daten!")
         if not protocol_form.is_valid(): 
             print('Prot. is wrong!')
-            messages.error(request, "❌ In der Protokollisten-Maske gibt es falsche Daten!")
+            messages.error(request, "❌ In der Protokollisten-Maske gibt es falsche oder fehlende Daten!")
 
         if  emp_formset.is_valid() and work_form.is_valid() and\
             hours_form.is_valid() and container_form.is_valid() and\
@@ -139,6 +139,7 @@ def views_page(request):
         container_count_formset = ContainerCountFormset(request.POST, queryset=container_count_queryset, prefix='container')
         protocollist_formset = ProtocollistFormset(request.POST, queryset=protocollist_queryset, prefix='protocollist')
         # work_hours_formset.is_valid() and 
+        
         
         if employee_formset.is_valid():
             print("Arbeiter gespeichert")

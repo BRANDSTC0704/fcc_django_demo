@@ -34,8 +34,8 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         fields = ['first_name', 'surname', 'attribut', 'work_start', 'work_end', 'break_time', 'absence']
         widgets = {
-            'first_name': forms.TextInput(attrs={'rows': 1, 'cols': 10, 'style':'width:80px'}),
-            'surname': forms.TextInput(attrs={'rows': 1, 'cols': 10, 'style':'width:80px'}),
+            'first_name': forms.TextInput(attrs={'rows': 1, 'cols': 10, 'style':'width:80px', 'required': 'required'}),
+            'surname': forms.TextInput(attrs={'rows': 1, 'cols': 10, 'style':'width:80px', 'required': 'required'}),
             'absence': forms.TextInput(attrs={'rows': 1, 'cols': 20, 'style':'width:200px'}),
         }
         localized_fields = ['break_time']
@@ -90,6 +90,13 @@ class ContainerCountForm(forms.ModelForm):
     class Meta:
         model = ContainerCount
         fields = ['alu', 'holz', 'karton', 'magnetschrott', 'kanister']
+        widgets = {
+            field: forms.NumberInput(attrs={'min': '0', 
+                                            'oninvalid': "this.setCustomValidity('Bitte eine Zahl >= 0 eingeben')", 
+                                            'oninput': "this.setCustomValidity('')"})
+            for field in ['alu', 'holz', 'karton', 'magnetschrott', 'kanister']
+        }
+    
 
 class ProtocollistForm(forms.ModelForm):
     class Meta:

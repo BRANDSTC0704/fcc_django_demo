@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 import datetime
+from django.core.validators import MinValueValidator
 
 # TODO: monatlich, wöchentliche Übersicht (inkl. Visuals) 
 
@@ -71,11 +72,11 @@ class WorkHours(models.Model):
 
 
 class ContainerCount(models.Model):
-    alu = models.IntegerField(default=0, help_text="Alu Dosen (Kübel - 8,5 kg)")
-    holz = models.IntegerField(default=0, help_text="Holz (Container - 6 t)")
-    karton = models.IntegerField(default=0, help_text="Karton (Container - 6 t)")
-    magnetschrott = models.IntegerField(default=0, help_text="Magnetschrott (Container - 6 t)")
-    kanister = models.IntegerField(default=0, help_text="Kanister (1 Container = 5 Ballen)")
+    alu = models.IntegerField(default=0, help_text="Alu Dosen (Kübel - 8,5 kg)", validators=[MinValueValidator(0)])
+    holz = models.IntegerField(default=0, help_text="Holz (Container - 6 t)", validators=[MinValueValidator(0)])
+    karton = models.IntegerField(default=0, help_text="Karton (Container - 6 t)", validators=[MinValueValidator(0)])
+    magnetschrott = models.IntegerField(default=0, help_text="Magnetschrott (Container - 6 t)", validators=[MinValueValidator(0)])
+    kanister = models.IntegerField(default=0, help_text="Kanister (1 Container = 5 Ballen)", validators=[MinValueValidator(0)])
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
     def __str__(self):

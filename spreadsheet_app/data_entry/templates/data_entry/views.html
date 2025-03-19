@@ -9,6 +9,13 @@
     <label for="date-filter" value="{{ request.GET.date|default:'' }}">Filter nach Datum:</label>
     <input type="date" id="date-filter" value="{{ selected_date|default:heute }}">
     </div>
+    &nbsp;
+
+    <div class="alert alert-info" role="alert">
+        Beim Anlegen eines neuen Datensatzes muss etwas geändert werden, sonst wird nicht gespeichert. 
+        <br>
+        Nach dem Löschen einer Zeile muss man noch auf Änderungen speichern drücken, sonst kommt sie wieder!
+    </div>
 
     <form method="post", itemid="Employees">
         {% csrf_token %}
@@ -21,33 +28,36 @@
                 <th>angelegt am</th>
                 <th>Vorname</th>
                 <th>Nachname</th>
+                <th>Art</th>
                 <th>Arbeitsbeginn</th>
                 <th>Arbeitsende</th>
                 <th>Pause (h)</th>
                 <th>Abwesenheitsgrund</th>                
             </tr>
         </thead>
-        <tbody  id="employee-tbody" data-formset-prefix="employee_formset" data-empty-form="{{ employee_formset.empty_form|escapejs }}">
+        <tbody  id="employee-tbody" data-formset-prefix="employee" data-empty-form="{{ employee_formset.empty_form|escapejs }}">
             {% for form in employee_formset %}
             <tr class="form-row">
                 {{ form.id }} 
                 <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
                 <td class="cte">{{ form.first_name }}</td>
                 <td class="cte">{{ form.surname }}</td>
+                <td class="cte">{{ form.attribut }}</td>
                 <td class="cte">{{ form.work_start }}</td>
                 <td class="cte">{{ form.work_end }}</td>
                 <td class="cte">{{ form.break_time }}</td>
                 <td class="cte">{{ form.absence }}</td>                
                 <td>
-                {{ form.DELETE }} Markieren zum Löschen
+                    <input type="hidden" name="employee-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                    <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <div style="text-align:left">
-        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-        <button id="add-employee" type="button" class="btn btn-info">Weiteren Mitarbeiter anlegen</button>
+        <button type="submit" class="btn btn-info">Änderungen speichern</button>
+        <button id="add-employee" type="button" class="btn btn-warning">Weiteren Mitarbeiter anlegen</button>
     </div>
     </form>
 
@@ -66,9 +76,9 @@
                 </tr>
             </thead>
             <tbody 
-            id="work-category-tbody" data-formset-prefix="work_category_formset" 
+            id="work-category-tbody" data-formset-prefix="work_category" 
             data-empty-form="{{ work_category_formset.empty_form|escapejs }}">
-            </tbody>
+            
                 {% for form in work_category_formset %}
                 <tr>
                     {{ form.id }} 
@@ -77,15 +87,15 @@
                     <td>{{ form.maintenance }}</td>
                     <td>{{ form.interruption }}</td>
                     <td>
-                        {{ form.DELETE }} Markieren zum Löschen
+                        <input type="hidden" name="work_category-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
                     </td>
-                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div style="text-align:left">
-            <button type="submit" class="btn btn-success">Änderungen speichern</button>
+            <button type="submit" class="btn btn-info">Änderungen speichern</button>
             <button id="add-work-category" type="button" class="btn btn-warning">Weitere Übersicht anlegen</button>
         </div>
     </form>
@@ -106,9 +116,9 @@
             </tr>
         </thead>
         <tbody 
-            id="work-hours-tbody" data-formset-prefix="work_hours_formset" 
+            id="work-hours-tbody" data-formset-prefix="work_hours" 
             data-empty-form="{{ work_hours_formset.empty_form|escapejs }}">
-        </tbody>
+        
             {% for form in work_hours_formset %}
             <tr>
                 {{ form.id }}  
@@ -117,17 +127,16 @@
                 <td>{{ form.end_time }}</td>
                 <td>{{ form.instance.difference  }} </td>
                 <td>
-                    {{ form.DELETE }} 
-                    Markieren zum Löschen
+                    <input type="hidden" name="work_hours-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                    <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
                 </td>
-                <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <div style="text-align:left">
-        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-        <button id="add-work-hours" type="button" class="btn btn-info">Weitere Betriebsstundenliste anlegen</button>
+        <button type="submit" class="btn btn-info">Änderungen speichern</button>
+        <button id="add-work-hours" type="button" class="btn btn-warning">Weitere Betriebsstundenliste anlegen</button>
     </div>
     </form>
 
@@ -148,10 +157,8 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="container-tbody" data-formset-prefix="container_count_formset" 
+            <tbody id="container-tbody" data-formset-prefix="container" 
                    data-empty-form="{{ container_count_formset.empty_form|escapejs }}">
-            </tbody>
-
                 {% for form in container_count_formset %}
                 <tr>
                     {{ form.id }} 
@@ -162,20 +169,18 @@
                     <td>{{ form.magnetschrott }}</td>
                     <td>{{ form.kanister }}</td>
                     <td>
-                        {{ form.DELETE }} 
-                        Markieren zum Löschen
+                        <input type="hidden" name="container-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
                     </td>
-                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div style="text-align:left">
-        <button type="submit" class="btn btn-success">Änderungen speichern</button>
+        <button type="submit" class="btn btn-info">Änderungen speichern</button>
         <button id="add-container" type="button" class="btn btn-warning">Weitere Containerliste anlegen</button>
         </div>
         </form>
-
 
         <!-- Protocollist -->
         <h3 style="text-align:left">protokolliert von</h3>
@@ -191,19 +196,18 @@
                 </tr>
             </thead>
                 <tbody 
-                id="protocollist-tbody" data-formset-prefix="protocollist_formset" 
+                id="protocollist-tbody" data-formset-prefix="protocollist" 
                 data-empty-form="{{ protocollist_formset.empty_form|escapejs }}">
-                </tbody>
+                
                 {% for form in protocollist_formset %}
                 <tr>
                     {{ form.id }}  
                     <td>{{ form.instance.created_at|date:"d.m.Y H:i" }}</td>
                     <td>{{ form.protocollist }}</td>
                     <td>
-                        {{ form.DELETE }} 
-                        Markieren zum Löschen
+                        <input type="hidden" name="protocollist-{{ forloop.counter0 }}-DELETE" class="delete-input">
+                        <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
                     </td>
-                    <input type="hidden" name="form-{{ forloop.counter0 }}-DELETE" class="delete-input">
                 </tr>
                 {% endfor %}
             </tbody>
@@ -211,45 +215,48 @@
 
         <!-- Submit Button -->
         <div style="text-align:left">
-            <button type="submit" class="btn btn-primary">Änderungen speichern</button>
-            <button id="add-protocollist" type="button" class="btn btn-info">Weiteren Protokollisten anlegen</button>
+            <button type="submit" class="btn btn-info">Änderungen speichern</button>
+            <button id="add-protocollist" type="button" class="btn btn-warning">Weiteren Protokollisten anlegen</button>
         </div>
     </form>
     {% endblock %}
-
     
 {% block extra_js %}
 
 <script>
     
     // delete rows 
-    document.addEventListener("DOMContentLoaded", function () {
     document.body.addEventListener("click", function (event) {
-        if (event.target.classList.contains("remove-row")) {
-            let row = event.target.closest("tr");
-            let deleteInput = row.querySelector("input[type='checkbox'][name$='-DELETE']");
-            
-            if (deleteInput) {
-                deleteInput.checked = true;  // Mark for deletion
-            }
-
-            // row.style.display = "none";  // Hide row from UI
-            updateTotalForms();
+    if (event.target.classList.contains("delete-row")) {
+        let row = event.target.closest("tr");
+        let formsetPrefix = row.closest("tbody")?.dataset.formsetPrefix;
+        if (!formsetPrefix) {
+            console.warn("⚠️ Formset Prefix not found for row:", row);
+            return; // Prevent further errors
         }
-    });
+      
+        let deleteInput = row.querySelector(`input[name^="${formsetPrefix}"][name$="-DELETE"]`);
 
-    function updateTotalForms() {
-        document.querySelectorAll("[data-formset-prefix]").forEach(tableBody => {
-            let prefix = tableBody.dataset.formsetPrefix;
-            let totalFormsInput = document.querySelector(`input[name="form-TOTAL_FORMS"]`);
-            
-            if (totalFormsInput) {
-                let visibleRows = tableBody.querySelectorAll("tr:not([style='display: none;'])").length;
-                totalFormsInput.value = visibleRows;
-            }
-        });
+        if (deleteInput) {
+            // console.log("DELETE input found!", deleteInput);
+            deleteInput.value = "on";  // Mark for deletion
+            row.style.display = "none";  // Hide row from UI
+        } 
+
+        updateTotalForms(formsetPrefix);
     }
 });
+
+function updateTotalForms(prefix) {
+    let tableBody = document.querySelector(`[data-formset-prefix="${prefix}"]`);
+    let totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+
+    if (totalFormsInput) {
+        let allRows = tableBody.querySelectorAll("tr").length;  // Count ALL rows, even hidden ones
+        totalFormsInput.value = allRows;
+    }
+}
+
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll("input[name*='break_time']").forEach(input => {
             // Convert dot to comma when the page loads
@@ -298,6 +305,14 @@ document.addEventListener("DOMContentLoaded", function () {
         let totalForms = document.querySelector(`input[name="${formsetPrefix}-TOTAL_FORMS"]`);  // ✅ Correct TOTAL_FORMS field
         let formIdx = Number(totalForms.value);
 
+        // Add DELETE hidden input and button at the correct position
+        let deleteCell = `
+                <td>
+                    <input type="hidden" name="${formsetPrefix}-${formIdx}-DELETE" class="delete-input">
+                    <button type="button" class="btn btn-danger btn-sm delete-row">Löschen</button>
+                </td>
+            `;
+
         emptyFormHtml = decodeEntities(emptyFormHtml);
 
         addButton.addEventListener("click", function () {
@@ -313,10 +328,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Get current date and time in format: "dd.mm.yyyy HH:MM:SS"
             let now = new Date();
-            let formattedDate = now.toLocaleDateString("de-DE") + " " + now.toLocaleTimeString("de-DE");
+            let day = String(now.getDate()).padStart(2, "0");  // Ensure two digits
+            let month = String(now.getMonth() + 1).padStart(2, "0");  // Ensure two digits
+            let year = now.getFullYear();
+            let hours = String(now.getHours()).padStart(2, "0");
+            let minutes = String(now.getMinutes()).padStart(2, "0");
 
-            let rowContent = `<td class="cte">${formattedDate}</td>`;
-
+            //let formattedDate = now.toLocaleDateString("de-DE") + " " + now.toLocaleTimeString("de-DE", { month: "2-digit", hour: "2-digit", minute: "2-digit" });
+            let formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+            let rowContent = `<td class="cte" style="font-size: inherit;">${formattedDate}</td>`;
+        
             if (isWorkHours) {
                 // Find work_start and work_end fields
                 let workStart = formFields.find(f => f.name.includes("start_time"));
@@ -330,7 +351,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td class="cte">${workEnd.outerHTML}</td>
                     ${diffCell}
                 `;
-
+                rowContent += deleteCell; 
+                
                 function updateDifference(startInput, endInput, diffElement) {
                     if (startInput.value && endInput.value) {
                         let startTime = parseTime(startInput.value);
@@ -342,6 +364,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         diffElement.textContent = `${String(diffHours).padStart(2, "0")}:${String(diffMinutes).padStart(2, "0")}`;
                     }
+
+                    
                 }
 
                 // Attach event listeners for real-time updates
@@ -358,11 +382,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     endInput.addEventListener("input", onInputChange);
                 }, 0);
             } else {
-                formFields.forEach(field => rowContent += `<td class="cte">${field.outerHTML}</td>`);
-            }
-
+        // ✅ Ensure delete button is added **before the last field**
+        if (formFields.length > 1) {
+            let lastField = formFields.pop();  // Temporarily remove last field
+            formFields.forEach(field => rowContent += `<td class="cte">${field.outerHTML}</td>`);
+            rowContent += deleteCell;  // ✅ Insert delete button here
+            rowContent += `<td class="cte">${lastField.outerHTML}</td>`;  // ✅ Re-add last field
+        } else {
+            // If only one field exists, just add normally
+            formFields.forEach(field => rowContent += `<td class="cte">${field.outerHTML}</td>`);
+            rowContent += deleteCell;  // ✅ Add delete button at the end
+        }
+    }
+           
             newRow.innerHTML = rowContent;
             newRow.classList.add("form-row");
+
             tableBody.appendChild(newRow);
 
             formIdx++;
@@ -392,9 +427,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     formsets.forEach(({ tbodyId, buttonId, emptyForm, prefix, isWorkHours }) => {
         if (document.getElementById(tbodyId)) {
-            setupFormset(tbodyId, buttonId, emptyForm, prefix, isWorkHours);
+            setupFormset(tbodyId, buttonId, emptyForm, prefix, isWorkHours);        
         }
     });
-});
+}
+
+);
 </script>
 {% endblock %}
