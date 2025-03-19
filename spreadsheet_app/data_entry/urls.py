@@ -7,8 +7,8 @@ urlpatterns = [
     path('', views.entrance_page, name='entrance_page'),
     path('forms/', views.form_page, name='form_page'),
     path('views/', views.views_page, name='views_page'),
+    # path("debug/", views.debug_view, name="debug_page"),  # Add debug page
     path('dashboard/', views.dashboard_view, name='dashboard'),
-    path('django_plotly_dash/', include('django_plotly_dash.urls')),
 
 ]
 

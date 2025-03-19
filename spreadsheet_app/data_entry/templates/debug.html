@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dash Debug</title>
+</head>
+<body>
+    <h1>Registered Dash Apps</h1>
+    <ul>
+        {% for app in apps %}
+            <li>{{ app }}</li>  <!-- Changed this to print the app object -->
+        {% empty %}
+            <li>No Dash apps found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

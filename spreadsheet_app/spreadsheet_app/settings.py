@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'data_entry',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     "dpd_static_support",  # Required for Dash static files
-
+    "spreadsheet_app",
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'spreadsheet_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,6 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'de-DE'
 TIME_ZONE = 'Europe/Vienna'
+USE_L10N = True
 USE_I18N = True
 USE_TZ = True
 
@@ -143,3 +144,5 @@ STATICFILES_FINDERS = [
     'django_plotly_dash.finders.DashAssetFinder',
     'django_plotly_dash.finders.DashComponentFinder',
 ]
+
+TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]

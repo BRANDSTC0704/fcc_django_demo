@@ -7,6 +7,7 @@ import datetime
 class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
+    attribut = models.CharField(max_length=100, default="")
     work_start = models.TimeField()
     work_end = models.TimeField()
     break_time = models.FloatField(default=0.5, null=True)

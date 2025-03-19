@@ -1,27 +1,35 @@
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
-from .forms import EmployeeForm, EmployeeFormset, WorkCategoryForm, WorkHoursForm, ContainerCountForm, ProtocollistForm
+from .forms import EmployeeForm, WorkCategoryForm, WorkHoursForm, ContainerCountForm, ProtocollistForm
 from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocollist
 from datetime import datetime
 from contextlib import contextmanager
 import locale
 from django.contrib import messages
-# import seaborn as sns
-# import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.io as pio
-import pandas as pd
-import io
-import base64
 from django.utils.timezone import now
 from django.utils.dateparse import parse_date
-import data_entry.dash_apps  # 👈 This ensures Dash is registered
-
+from django_plotly_dash.models import StatelessApp
+import data_entry.dash_apps  # This ensures the app gets registered
 
 def entrance_page(request): 
     return render(request, 'data_entry/entrance.html')
 
 def form_page(request):
+
+    initial_data = [ 
+        {"first_name": "Hamdi", "surname": "Kanak", "attribut": ""},
+        {"first_name": "Kurt", "surname": "Kadir", "attribut": ""},
+        {"first_name": "Murat", "surname": "Rashidbekov", "attribut": ""},
+        {"first_name": "Ali Riza", "surname": "Yaldizli", "attribut": ""},
+        {"first_name": "Maher", "surname": "Jendoubi", "attribut": ""},
+        {"first_name": "Marko", "surname": "Pranjkovic", "attribut": "Leasing"},
+        {"first_name": "Mario", "surname": "Erceg", "attribut": "Leasing"},
+        {"first_name": "Engin", "surname": "Enez", "attribut": "Aufgeber"},
+        
+        ]
+
+    EmployeeFormset = modelformset_factory(Employee, form=EmployeeForm, extra=len(initial_data), can_delete=True)
+
     if request.method == "POST":
         emp_formset = EmployeeFormset(request.POST)  # Fix: Use only one instance
         work_form = WorkCategoryForm(request.POST)
@@ -31,6 +39,7 @@ def form_page(request):
 
         if not emp_formset.is_valid(): 
             print('Employee is wrong!')
+            print(emp_formset.errors)
             messages.error(request, "❌ In der Mitarbeiter-Maske gibt es falsche Daten!")
         if not work_form.is_valid(): 
             print('Work Form is wrong!')
@@ -54,14 +63,16 @@ def form_page(request):
             hours_form.save()
             container_form.save()
             protocol_form.save()
+
+            messages.success(request, "Daten erfolgreich gespeichert!")
+
             return redirect('form_page')
-        
         
         else: 
             print('Something is wrong!')
 
     else:
-        emp_formset = EmployeeFormset(queryset=Employee.objects.none())
+        emp_formset = EmployeeFormset(queryset=Employee.objects.none(), initial=initial_data)
         work_form = WorkCategoryForm()
         hours_form = WorkHoursForm()
         container_form = ContainerCountForm()
@@ -106,7 +117,7 @@ def views_page(request):
         print('no parsed date!')
 
     # Define formsets
-    EmployeeFormset = modelformset_factory(Employee, form=EmployeeForm, fields=('first_name', 'surname', 'work_start', 'work_end', 'break_time', 'absence'), 
+    EmployeeFormset = modelformset_factory(Employee, form=EmployeeForm, fields=('first_name', 'surname', 'attribut', 'work_start', 'work_end', 'break_time', 'absence'), 
                                            extra=0, can_delete=True)
     WorkCategoryFormset = modelformset_factory(WorkCategory, fields=('cleaning', 'maintenance', 'interruption'), extra=0, can_delete=True)
     WorkHoursFormset = modelformset_factory(WorkHours, form=WorkHoursForm, fields=('start_time', 'end_time'), extra=0, can_delete=True)
@@ -121,13 +132,6 @@ def views_page(request):
         container_count_queryset = ContainerCount.objects.filter(created_at__date=parsed_date)
         protocollist_queryset = Protocollist.objects.filter(created_at__date=parsed_date)  # FIXED: Correct model
     
-    # else:
-        # employee_queryset = Employee.objects.all()
-        # work_category_queryset = WorkCategory.objects.all()
-        # work_hours_queryset = WorkHours.objects.all()
-        # container_count_queryset = ContainerCount.objects.all()
-        # protocollist_queryset = Protocollist.objects.all()  # FIXED: Correct model
-
     if request.method == "POST":
         employee_formset = EmployeeFormset(request.POST, queryset=employee_queryset, prefix='employee')
         work_category_formset = WorkCategoryFormset(request.POST, queryset=work_category_queryset, prefix='work_category')
@@ -207,6 +211,11 @@ def dashboard_view(request):
     return render(request, "data_entry/dashboard.html")
 
 """ 
+def debug_view(request):
+    apps = StatelessApp.objects.all()  # Get all registered Dash apps
+    print("DEBUG: Registered Dash Apps ->", apps)  # Debugging output
+    return render(request, "debug.html", {"apps": apps})
+
 def dashboard_view(request):
     # Get all work hours data
     # employee_data = Employee.objects.all()

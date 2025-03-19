@@ -10,6 +10,7 @@ from dash.exceptions import PreventUpdate
 
 from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocollist
 
+
 work_hours_data = WorkHours.objects.all()
 
 #selected_start_date = request.GET.get("start_date")
@@ -46,13 +47,15 @@ print(df['date'].min(), df['date'].max())
 # monthly_data.columns = ["month", "Total Hours"]
 # weekly_data.columns = ["week", "Total Hours"]
     
+# print("⚡ Loading WorkHoursDashboard...")  # Debug message
 
 # Create Dash App
 app = DjangoDash("WorkHoursDashboard", 
                  external_stylesheets=["https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"])  # Unique name for each Dash app
 
+
 app.layout = html.Div([
-    html.H1("Work Hours Dashboard", className="text-center"),
+    # html.H1("Work Hours Dashboard", className="text-center"),
     
     # Date Picker
     html.Div([
@@ -77,6 +80,7 @@ app.layout = html.Div([
 ])
 
 # Callback to generate Excel file
+# print("✅ WorkHoursDashboard Loaded Successfully!")
 
 @app.callback(
     Output("download", "data"),
