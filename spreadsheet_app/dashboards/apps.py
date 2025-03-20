@@ -6,4 +6,5 @@ class DashboardsConfig(AppConfig):
     name = "dashboards"
 
     def ready(self):
-        import dashboards.dash_apps  # 👈 Import dash_apps.py when Django starts
+        import dashboards.dash_apps.weekly_dashboard
+        import dashboards.dash_apps.monthly_dashboard

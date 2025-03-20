@@ -29,11 +29,11 @@
             </h1> 
         </div>    
         <ul class="text-center mt-3">
-            <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'form_page' %}" class="btn {% if request.path == '/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
-            <a href="{% url 'views_page' %}" class="btn {% if request.path == '/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
-            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
-            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
+            <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/data_entry/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
+            <a href="{% url 'form_page' %}" class="btn {% if request.path == '/data_entry/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
+            <a href="{% url 'views_page' %}" class="btn {% if request.path == '/data_entry/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
+            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly/' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
+            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly/' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
         </ul>
     </header>
 
@@ -46,11 +46,11 @@
     {% block footer %}
     <footer>
         <ul class="text-center mt-3">
-            <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'form_page' %}" class="btn {% if request.path == '/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
-            <a href="{% url 'views_page' %}" class="btn {% if request.path == '/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
-            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
-            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
+            <a href="{% url 'entrance_page' %}" class="btn {% if request.path == '/data_entry/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
+            <a href="{% url 'form_page' %}" class="btn {% if request.path == '/data_entry/forms/' %}btn-primary{% else %}btn-secondary{% endif %}">Dateneingabe</a>
+            <a href="{% url 'views_page' %}" class="btn {% if request.path == '/data_entry/views/' %}btn-primary{% else %}btn-secondary{% endif %}">Tabellendarstellung</a>
+            <a href="{% url 'weekly_dashboard' %}" class="btn {% if request.path == '/dashboards/weekly/' %}btn-primary{% else %}btn-secondary{% endif %}">Wochen-Dashboard</a>
+            <a href="{% url 'monthly_dashboard' %}" class="btn {% if request.path == '/dashboards/monthly/' %}btn-primary{% else %}btn-secondary{% endif %}">Monats-Dashboard</a>
         </ul>
     </footer>
     {% endblock %}
