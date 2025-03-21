@@ -2,12 +2,9 @@ from dash import dcc, html, Output, Input, State
 import pandas as pd
 import io
 import dash
-from dash.dash_table import DataTable
 from django_plotly_dash import DjangoDash
 import plotly.express as px
 from .models import WorkHours
-from dash.exceptions import PreventUpdate
-from .models import Employee, WorkCategory, WorkHours, ContainerCount, Protocollist
 
 
 work_hours_data = WorkHours.objects.all()

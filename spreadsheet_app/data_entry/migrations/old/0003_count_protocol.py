@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("data_entry", "0002_employee_workcategory_workhours_and_more"),
     ]

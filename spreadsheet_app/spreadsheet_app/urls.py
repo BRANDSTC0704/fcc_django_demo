@@ -10,7 +10,6 @@ urlpatterns = [
     path("django_plotly_dash/", include("django_plotly_dash.urls")),
     path("data_entry/", include("data_entry.urls")),
     path("dashboards/", include("dashboards.urls")),
-
 ]
 
 

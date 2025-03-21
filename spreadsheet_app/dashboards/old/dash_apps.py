@@ -9,14 +9,16 @@ import io
 df = get_cleaned_work_hours()
 
 # Weekly Dashboard
-weekly_app = DjangoDash("WeeklyDashboard", 
-                        external_stylesheets=[
+weekly_app = DjangoDash(
+    "WeeklyDashboard",
+    external_stylesheets=[
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    ],)  # Ensure correct name!
+    ],
+)  # Ensure correct name!
 
-#weekly_app.layout = html.Div([
+# weekly_app.layout = html.Div([
 #    dcc.Graph(id="weekly-graph")
-#])
+# ])
 
 weekly_app.layout = html.Div(
     [
@@ -103,13 +105,12 @@ def update_graphs(start_date, end_date, df=df):
     filtered_df["week"] = filtered_df["date"].dt.strftime("%Y-W%U")
     filtered_df["month"] = filtered_df["date"].dt.strftime("%Y-%m")
 
-    
     weekly_data = (
         filtered_df.groupby("week", as_index=False)["difference"]
         .sum()
         .reset_index(drop=True)
     )
-    
+
     weekly_data.columns = ["week", "Total Hours"]
     # Weekly Figure
     weekly_fig = px.bar(
@@ -125,15 +126,16 @@ def update_graphs(start_date, end_date, df=df):
         hovertemplate="Week: %{x} <br>Total Hours: %{y:.0f} Stunden",
     )
     weekly_fig.update_yaxes(range=[0, weekly_data["Total Hours"].max() + 5])
-    
+
     return weekly_fig, filtered_df.to_json()
 
 
-
-monthly_app = DjangoDash("MonthlyDashboard", 
-                        external_stylesheets=[
+monthly_app = DjangoDash(
+    "MonthlyDashboard",
+    external_stylesheets=[
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    ],)  
+    ],
+)
 
 
 monthly_app.layout = html.Div(
@@ -170,6 +172,7 @@ monthly_app.layout = html.Div(
         ),
     ]
 )
+
 
 @monthly_app.callback(
     Output("download", "data"),
@@ -220,7 +223,6 @@ def update_graphs(start_date, end_date, df=df):
     filtered_df["week"] = filtered_df["date"].dt.strftime("%Y-W%U")
     filtered_df["month"] = filtered_df["date"].dt.strftime("%Y-%m")
 
-   
     monthly_data = (
         filtered_df.groupby("month", as_index=False)["difference"]
         .sum()
@@ -244,4 +246,3 @@ def update_graphs(start_date, end_date, df=df):
     monthly_fig.update_yaxes(range=[0, monthly_data["Total Hours"].max() + 5])
 
     return monthly_fig, filtered_df.to_json()
-

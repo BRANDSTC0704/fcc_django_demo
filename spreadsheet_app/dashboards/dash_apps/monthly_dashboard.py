@@ -8,10 +8,12 @@ import io
 
 df = get_cleaned_work_hours()
 
-monthly_app = DjangoDash("MonthlyDashboard", 
-                        external_stylesheets=[
+monthly_app = DjangoDash(
+    "MonthlyDashboard",
+    external_stylesheets=[
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    ],)  
+    ],
+)
 
 
 monthly_app.layout = html.Div(
@@ -48,6 +50,7 @@ monthly_app.layout = html.Div(
         ),
     ]
 )
+
 
 @monthly_app.callback(
     Output("download", "data"),
@@ -98,7 +101,6 @@ def update_graphs(start_date, end_date, df=df):
     filtered_df["week"] = filtered_df["date"].dt.strftime("%Y-W%U")
     filtered_df["month"] = filtered_df["date"].dt.strftime("%Y-%m")
 
-   
     monthly_data = (
         filtered_df.groupby("month", as_index=False)["difference"]
         .sum()
@@ -122,4 +124,3 @@ def update_graphs(start_date, end_date, df=df):
     monthly_fig.update_yaxes(range=[0, monthly_data["Total Hours"].max() + 5])
 
     return monthly_fig, filtered_df.to_json()
-

@@ -102,7 +102,6 @@ class EmployeeForm(forms.ModelForm):
 
 
 class WorkCategoryForm(forms.ModelForm):
-
     cleaning = CommaFloatField(
         decimal_places=1,
         localize=True,
@@ -146,7 +145,6 @@ class WorkCategoryForm(forms.ModelForm):
 
 
 class WorkHoursForm(forms.ModelForm):
-
     start_time = forms.TimeField(
         widget=forms.TimeInput(format="%H:%M", attrs={"type": "time"}),
         initial="00:00",

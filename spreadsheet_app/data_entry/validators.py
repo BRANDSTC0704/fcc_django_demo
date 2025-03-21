@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 
 
 def validate_time(value):
-
     stunden = value.hour
     minuten = value.minute
 

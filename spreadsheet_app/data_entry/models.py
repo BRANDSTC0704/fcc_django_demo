@@ -52,7 +52,6 @@ class WorkHours(models.Model):
     def difference(self):
         """Calculate the difference between start and end time"""
         if self.start_time and self.end_time:
-
             dummy_date = datetime.datetime(2000, 1, 1).date()  # Use an arbitrary date
 
             if isinstance(self.start_time, datetime.time):

@@ -12,8 +12,6 @@ from datetime import datetime
 from contextlib import contextmanager
 import locale
 from django.contrib import messages
-from django.utils.timezone import now
-from django.utils.dateparse import parse_date
 
 
 def entrance_page(request):
@@ -21,7 +19,6 @@ def entrance_page(request):
 
 
 def form_page(request):
-
     initial_data = [
         {"first_name": "Hamdi", "surname": "Kanak", "attribut": ""},
         {"first_name": "Kurt", "surname": "Kadir", "attribut": ""},
@@ -82,7 +79,6 @@ def form_page(request):
             and container_form.is_valid()
             and protocol_form.is_valid()
         ):
-
             emp_formset.save()
             work_form.save()
             hours_form.save()
