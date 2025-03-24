@@ -45,8 +45,6 @@ weekly_app.layout = html.Div(
         
         dcc.Graph(id="employee_plot"),
         dcc.Graph(id="workhours_plot"),
-        dcc.Graph(id="workcat_plot"),
-        dcc.Graph(id="cont_plot"),
         dcc.Store(id="json_data_workhours"),  # Store filtered data
         dcc.Store(id="json_data_employee"),  # Store filtered data
         dcc.Store(id="json_data_wcat"),  # Store filtered data
@@ -64,6 +62,8 @@ weekly_app.layout = html.Div(
             ],
             style={"textAlign": "center", "marginTop": "15px"},
         ),
+        dcc.Graph(id="workcat_plot"),
+        dcc.Graph(id="cont_plot"),
     ]
 )
 
