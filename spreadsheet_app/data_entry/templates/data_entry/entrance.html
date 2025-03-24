@@ -2,9 +2,48 @@
 
 {% block content %}
 
+
+<h3 style="text-align:center; margin-top:2cm;">Erläuterung</h3>
+
 {% with "Startseite" as page_title %}
         {{ block.super }}
     {% endwith %}
+
+    <div class="container" style="width:70%;">
+    <table class="table table-hover" style="margin-top:1cm;">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Seite</th>
+            <th scope="col">Beschreibung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Dateneingabe</td>
+            <td>Eingabemaske für erstes Betriebstagebuch Linz</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Tabellendarstellung</td>
+            <td>Übersichtsdarstellung für Standort-Manager</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Wochen-Dashboard</td>
+            <td>Wöchentliche Zusammenfassung mit Excel-Download (Dashboard)</td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Monats-Dashboard</td>
+            <td>Monatliche Zusammenfassung mit Excel-Download (Dashboard)</td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+
 
 {% endblock %}
 
