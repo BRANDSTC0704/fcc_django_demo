@@ -360,7 +360,8 @@ def update_graphs_wcat(selected_date):
     
     # print(plot_dat['date'].dtype)
     plot_dat['date'] = pd.to_datetime(plot_dat['date'], utc=True)
-    plot_dat['date'] = plot_dat['date'].dt.strftime("%Y-%m-%d")
+    # plot_dat['date'] = plot_dat['date'].dt.strftime("%Y-%m-%d")
+    plot_dat['date'] = plot_dat['date'].dt.strftime("%d.%m.%Y")
 
     # Monthly Figure
     monthly_fig = go.Figure(layout=dict(template="plotly"))
@@ -441,8 +442,8 @@ def update_graphs_container(selected_date):
     
     # print(plot_dat['date'].dtype)
     plot_dat['date'] = pd.to_datetime(plot_dat['date'], utc=True)
-    plot_dat['date'] = plot_dat['date'].dt.strftime("%Y-%m-%d")
-
+    #plot_dat['date'] = plot_dat['date'].dt.strftime("%Y-%m-%d")
+    plot_dat['date'] = plot_dat['date'].dt.strftime("%d.%m.%Y")
     # Monthly Figure
     monthly_fig = go.Figure(layout=dict(template="plotly"))
     monthly_fig = px.line(
