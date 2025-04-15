@@ -10,3 +10,5 @@ python manage.py shell
 python manage.py createsuperuser
 
 py manage.py sqlmigrate members 0001
+
+# durch Änderung der Projektstruktur musste manage.py die settings-datei angepasst werden!
