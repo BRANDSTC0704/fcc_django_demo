@@ -1,0 +1,33 @@
+<!-- templates/dateneingaben/kuebel_aktivitaet.html -->
+
+<form method="post">
+    {% csrf_token %}
+    {{ log_form.as_p }}
+  
+    <table>
+      <thead>
+        <tr>
+          <th>Kübelbezeichnung</th>
+          <th>Waschen [h]</th>
+          <th>Waschen [Stk]</th>
+          <th>Instandh. [h]</th>
+          <th>Instandh. [Stk]</th>
+          <th>Zerlegen [h]</th>
+          <th>Zerlegen [Stk]</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ formset.management_form }}
+        {% for form in formset %}
+          <tr>
+            {% for field in form %}
+              <td>{{ field }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
+    <button type="submit">Submit</button>
+  </form>
+  

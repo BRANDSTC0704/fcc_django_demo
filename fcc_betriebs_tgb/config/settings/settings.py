@@ -10,12 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+import sys 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.insert(0, str(BASE_DIR + "/fcc_betriebs_tgb"))
+sys.path.insert(0, str(BASE_DIR))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -39,8 +41,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_plotly_dash",
+    'clearcache',
     "dpd_static_support",  # Required for Dash static files
-
+    # "fcc_betriebs_tgb", 
+    "dateneingaben",
 ]
 
 MIDDLEWARE = [
@@ -56,11 +60,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        # "DIRS": [os.path.join(BASE_DIR, "templates")],
+        # "DIRS": [], 
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -126,9 +133,11 @@ USE_TZ = True
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "static/"
+LOGIN_URL = "/login/"
+# LOGIN_REDIRECT_URL = '/your-target-url-after-login/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "fcc_betriebs_tgb", "static"),  # Ensure correct path
+    os.path.join(BASE_DIR, "static"),  # Ensure correct path
     # os.path.join(BASE_DIR, "spreadsheet_app", "static"),  # If needed
 ]
 
