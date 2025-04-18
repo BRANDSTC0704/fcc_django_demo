@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import KuebelSessionForm, KuebelEintragFormSet
-from .models import KuebelSession, KuebelEintrag
+from .models import KuebelSession, KuebelEintrag, KuebelArt
 from django.http import HttpResponse
 
 @login_required
@@ -25,10 +25,12 @@ def kuebel_page(request):
                     zerlegen_h=form.cleaned_data['zerlegen_h'],
                     zerlegen_count=form.cleaned_data['zerlegen_count'], 
                 )
-            return redirect('success_page')  # or wherever you want
+            return redirect('dateneingaben/kuebel_aktivitaet.html')  # or wherever you want
     else:
         log_form = KuebelSessionForm()
-        formset = KuebelEintragFormSet()
+
+        initial_data = [{'kuebel_art': art} for art in KuebelArt.objects.all()]
+        formset = KuebelEintragFormSet(initial=initial_data)
 
     return render(request, 'dateneingaben/kuebel_aktivitaet.html', {
         'log_form': log_form,

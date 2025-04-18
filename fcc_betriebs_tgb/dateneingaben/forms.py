@@ -1,13 +1,17 @@
 from django import forms
 from django.forms import formset_factory
-# from .models import KuebelEintrag
+from .models import KuebelEintrag
 
 class KuebelSessionForm(forms.Form):
-    name = forms.CharField()
-    comments = forms.CharField(widget=forms.Textarea, required=False)
+    name = forms.CharField(required=True)
+    comments = forms.CharField()
 
 class KuebelEintragForm(forms.Form):
-    kuebel_art = forms.CharField()
+
+    class Meta:
+        model = KuebelEintrag
+        
+    kuebel_art = forms.CharField(required=True)
     waschen_h = forms.FloatField()
     waschen_count = forms.IntegerField()
     instandh_h = forms.FloatField()
@@ -15,4 +19,10 @@ class KuebelEintragForm(forms.Form):
     zerlegen_h = forms.FloatField()
     zerlegen_count = forms.IntegerField()
 
-KuebelEintragFormSet = formset_factory(KuebelEintragForm)  # allow 3 rows by default
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['kuebel_art'].disabled = True  # 👈 makes it read-only
+
+
+KuebelEintragFormSet = formset_factory(KuebelEintragForm, extra=0)  # allow 3 rows by default
+

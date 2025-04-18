@@ -5,22 +5,30 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Kübelwaschen 
+class KuebelArt(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['id']  # preserves insert order
+
+    def __str__(self):
+        return self.name
+
 class KuebelSession(models.Model):
     name = models.CharField(max_length=100)  # e.g. session name or user-provided
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
     comments = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
 class KuebelEintrag(models.Model):
     log = models.ForeignKey(KuebelSession, related_name='kuebel', on_delete=models.CASCADE)
-    kuebel_art = models.CharField(max_length=100)
+    kuebel_art = models.ForeignKey(KuebelArt, on_delete=models.PROTECT)
     waschen_h = models.FloatField(default=0)
     waschen_count = models.IntegerField(default=0)
     instandh_h = models.FloatField(default=0)
     instandh_count = models.IntegerField(default=0)
     zerlegen_h = models.FloatField(default=0)
     zerlegen_count = models.IntegerField(default=0)
-
 
 #     def __str__(self):
 #         return f"{self.created_at:%d.%m.%Y %H:%M:%S} {self.first_name} {self.surname}"

@@ -17,5 +17,4 @@ py manage.py sqlmigrate members 0001
 $env:DJANGO_SETTINGS_MODULE = "config.settings.settings"
 $env:PYTHONPATH = "C:\Users\BRANDSTC0704\OneDrive - FCC\wd\djangodemo\fcc_betriebs_tgb"
 django-admin migrate
-
-django-admin startapp dateneingaben
+# django-admin startapp dateneingaben
