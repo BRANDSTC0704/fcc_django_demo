@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="kuebel",
-                        to="dateneingaben.kuebelsession",
+                        to="kuebelwaschen_him2.kuebelsession",
                     ),
                 ),
             ],

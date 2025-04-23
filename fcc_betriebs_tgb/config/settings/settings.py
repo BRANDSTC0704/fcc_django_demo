@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin', 
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'clearcache',
     "dpd_static_support",  # Required for Dash static files
     # "fcc_betriebs_tgb", 
-    "dateneingaben",
+    "kuebelwaschen_him2",
 ]
 
 MIDDLEWARE = [

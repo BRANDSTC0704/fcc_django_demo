@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class DateneingabenConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "dateneingaben"
+    name = "kuebelwaschen_him2"

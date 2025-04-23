@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("dateneingaben", "0001_initial"),
+        ("kuebelwaschen_him2", "0001_initial"),
     ]
 
     operations = [
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             name="kuebel_art",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.PROTECT,
-                to="dateneingaben.kuebelart",
+                to="kuebelwaschen_him2.kuebelart",
             ),
         ),
     ]

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("dateneingaben", "0002_kuebelart_alter_kuebeleintrag_kuebel_art"),
+        ("kuebelwaschen_him2", "0002_kuebelart_alter_kuebeleintrag_kuebel_art"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

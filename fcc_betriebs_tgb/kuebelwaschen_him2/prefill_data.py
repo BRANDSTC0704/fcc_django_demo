@@ -38,5 +38,5 @@ def run_all_prefills():
 ## EXECUTION WITH MANAGE.PY: 
 # to be ran with django shell: 
 # python manage.py shell then: 
-# from dateneingaben.prefill_data import run_all_prefills
+# from kuebelwaschen_him2.prefill_data import run_all_prefills
 # run_all_prefills()

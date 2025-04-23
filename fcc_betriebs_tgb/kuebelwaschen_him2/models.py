@@ -10,19 +10,32 @@ class KuebelArt(models.Model):
 
     class Meta:
         ordering = ['id']  # preserves insert order
-
+        verbose_name = 'Behältertyp'
+        verbose_name_plural = 'Behältertypen'
     def __str__(self):
         return self.name
 
 class KuebelSession(models.Model):
+
+    class Meta:
+        verbose_name = 'Kübel-Tagesübersicht'
+        verbose_name_plural = 'Kübel-Tagesübersichten'
+
     name = models.CharField(max_length=100)  # e.g. session name or user-provided
     user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
-    comments = models.TextField(blank=True)
+    comments = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
 class KuebelEintrag(models.Model):
+    
+    class Meta:
+        verbose_name = 'Kübel-Detaileintrag'
+        verbose_name_plural = 'Kübel-Detaileinträge'
+
     log = models.ForeignKey(KuebelSession, related_name='kuebel', on_delete=models.CASCADE)
     kuebel_art = models.ForeignKey(KuebelArt, on_delete=models.PROTECT)
+    sonstiges_h = models.FloatField(default=0)
+    reinigung_h = models.FloatField(default=0)
     waschen_h = models.FloatField(default=0)
     waschen_count = models.IntegerField(default=0)
     instandh_h = models.FloatField(default=0)
