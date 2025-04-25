@@ -21,9 +21,9 @@ class KuebelSession(models.Model):
         verbose_name = 'Kübel-Tagesübersicht'
         verbose_name_plural = 'Kübel-Tagesübersichten'
 
-    name = models.CharField(max_length=100)  # e.g. session name or user-provided
+    name = models.CharField(max_length=100, verbose_name='Verantwortlicher')  # e.g. session name or user-provided
     user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
-    comments = models.TextField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True, verbose_name='Kommentar')
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
 class KuebelEintrag(models.Model):

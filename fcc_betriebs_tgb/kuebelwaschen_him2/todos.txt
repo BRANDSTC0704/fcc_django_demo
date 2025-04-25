@@ -1,8 +1,8 @@
 Maske: 
-1. Name und Comments nebeneinander 
-2. Überschrift mit Tagesdatum - Kübelwaschplatz HIM2 - DATUM 
-3. pdf-druck 
-4. eingabefelder breite reduzieren 
+1. Name und Comments nebeneinander - done
+2. Überschrift mit Tagesdatum - Kübelwaschplatz HIM2 - DATUM - done
+3. pdf-druck - done 
+4. eingabefelder breite reduzieren - done 
 5. dashboard-demo 
 - gesamtanzahl / gesamtstunden kübel pro periode
 - anzahl / stunden kübel pro periode

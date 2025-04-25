@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @page {
+    size: A4;
+    margin: 1cm;  /* Adjust to your desired margin */
+    }
+    body { font-family: sans-serif; padding: 2rem;}
+   .logo { width: 150px; text-align: center;}
+  
+  @page {
+    size: A4;
+    margin: 0cm;
+  }
+
+  .table-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+
+  th, td {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+
+  table, tr, td {
+    page-break-inside: avoid;
+  }
+  
+  td:first-child {
+    font-weight: bold;
+  }
+
+  /* Centering the logo */
+  .header-container {
+    text-align: center;
+    margin-bottom: 20px; /* Add spacing below the logo if needed */
+  }
+
+  .header-container img {
+    max-width: 100%;  /* Ensure it scales down if too large */
+    height: auto;     /* Maintain aspect ratio */
+  }
+
+  .centered-paragraph {
+  width: 60%;
+  margin: 0 auto;  /* This centers the element horizontally */
+  text-align: center;  /* Optionally, you can center the text inside the paragraph */
+  font-size: 10px;
+  }
+  </style>
+  
+</head>
+<body>
+    <div class="header-container">
+    <img src="{% static 'logo.png' %}" class="logo" alt="Logo">
+    <h2>Kübelwaschplatz HIM2</h2> 
+    <h2>{% now "d.m.Y" %} </h2>
+    <p style="font-size: 10px; font-weight: bold;">pdf-Druck</p>
+    <p class="centered-paragraph">(falls gewünscht, bitte selbst herunterladen und abspeichern - sonst Tab schließen).</p>
+</div>
+
+  <p><strong>Verantwortlicher:</strong> {{ name }}</p>
+  <p><strong>Kommentar:</strong> {{ comments }}</p>
+
+  <div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Kübelbezeichnung</th>
+        <th>Sonstiges [h]</th>
+        <th>Reinigung [h]</th>
+        <th>Waschen [h]</th>
+        <th>Waschen [Stk]</th>
+        <th>Instandh. [h]</th>
+        <th>Instandh. [Stk]</th>
+        <th>Zerlegen [h]</th>
+        <th>Zerlegen [Stk]</th>
+      </tr>
+    </thead>
+<tbody>
+  {% for row in rows %}
+  <tr>
+    <td>{{ row.kuebel_art }}</td>
+    <td>{{ row.sonstiges_h }}</td>
+    <td>{{ row.reinigung_h }}</td>
+    <td>{{ row.waschen_h }}</td>
+    <td>{{ row.waschen_count }}</td>
+    <td>{{ row.instandh_h }}</td>
+    <td>{{ row.instandh_count }}</td>
+    <td>{{ row.zerlegen_h }}</td>
+    <td>{{ row.zerlegen_count }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+  </table>
+</div>
+</body>
+</html>

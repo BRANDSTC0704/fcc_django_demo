@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from dateneingaben import views
+from kuebelwaschen_him2 import views
 
 
 urlpatterns = [

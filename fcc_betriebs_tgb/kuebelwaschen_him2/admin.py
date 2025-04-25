@@ -31,6 +31,8 @@ class KuebelEintragInline(admin.TabularInline):
 
 class KuebelSessionAdmin(admin.ModelAdmin):
     site_title = 'Kübel-Metadaten'
+    search_fields = ['created_at']
+    list_filter = ['created_at']
     list_display = ['created_at', 'name', 'user', 'comments', 'entry_count']  # Customize as needed
     inlines = [KuebelEintragInline]
 

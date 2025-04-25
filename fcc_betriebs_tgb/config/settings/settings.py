@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_plotly_dash",
     'clearcache',
+    'corsheaders',
     "dpd_static_support",  # Required for Dash static files
     # "fcc_betriebs_tgb", 
     "kuebelwaschen_him2",
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_plotly_dash.middleware.BaseMiddleware",
     "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -156,3 +158,9 @@ STATICFILES_FINDERS = [
 ]
 
 TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",  # example for frontend
+]
+
+CORS_ALLOW_ALL_ORIGINS = True

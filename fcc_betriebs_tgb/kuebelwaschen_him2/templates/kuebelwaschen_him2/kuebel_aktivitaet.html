@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="text-center">
+  <h1>
+      {% block header_title %} Kübelwaschplatz HIM2 - {% now "d.m.Y" %}  {% endblock %}</h1>
+  </h1> 
+</div>    
+
+<form id="kuebel-form" method="post" action="{% url 'kuebel_aktivitaet' %}">
+    
+  {% csrf_token %}
+    <!-- {{ log_form.as_p }} -->
+    <div class="form-wrapper">
+    <div class="form-row">
+      <div class="form-group">
+    <label for="{{ log_form.name.id_for_label }}">
+      {{ log_form.fields.name.label }}
+    </label>
+    {{ log_form.name }}
+      </div>
+  
+      <div class="form-group">
+    <label for="{{ log_form.comments.id_for_label }}">
+      {{ log_form.fields.comments.label }}
+    </label>
+  {{ log_form.comments }}
+</div>
+</div>
+</div>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Kübelbezeichnung</th>
+          <th>Sonstiges [h]</th>
+          <th>Reinigung [h]</th>
+          <th>Waschen [h]</th>
+          <th>Waschen [Stk]</th>
+          <th>Instandh. [h]</th>
+          <th>Instandh. [Stk]</th>
+          <th>Zerlegen [h]</th>
+          <th>Zerlegen [Stk]</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ formset.management_form }}
+        {% for form in formset %}
+          {{ form.id }}
+          {% for field in form.hidden_fields %}
+            {{ field }}
+          {% endfor %}
+          <tr>
+      <!-- <td colspan="9">{{ form.kuebel_art.value }}</td>  -->
+            {% for field in form %}
+              <td
+                {% if field.name == "sonstiges_h" %}
+                  style="background-color: #f0f8ff;"  
+                {% elif field.name == "waschen_h" %}
+                  style="background-color: #f0f8ff;"  
+                {% elif field.name == "instandh_h" %}
+                  style="background-color: #f0f8ff;"  
+                {% elif field.name == "zerlegen_h" %}
+                  style="background-color: #f0f8ff;"  
+                {% elif field.name == "reinigung_h" %}
+                  style="background-color: #f0f8ff;"  
+                {% endif %}
+              >
+                {{ field }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+  
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </form>
+  
+  <!-- {% if log_form.errors %}
+  <div class="error">{{ log_form.errors }}</div>
+{% endif %}
+
+{% for form in formset %}
+  {% if form.errors %}
+    <div class="error">{{ form.errors }}</div>
+  {% endif %}
+{% endfor %}
+ -->
+  {% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('kuebel-form');
+  
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();  // 🛑 prevent normal form submission
+  
+      const formData = new FormData(form);
+  
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': '{{ csrf_token }}',  // pass CSRF token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.log_id) {
+          // Open the PDF in a new tab using `window.open`
+          const pdfWindow = window.open(`/open-pdf/${data.log_id}/`, '_blank');
+  
+          // Wait for a brief moment to ensure the PDF has started loading
+          setTimeout(() => {
+            // Now that the PDF is opened, redirect to the home page
+            window.location.href = '/';  // Redirect to the home page
+          }, 1000);  // Adjust the timeout as needed (1000ms = 1 second)
+        } else {
+          console.error('Error: No log_id returned');
+        }
+      })
+      .catch(error => {
+        console.error('Request failed', error);
+      });
+    });
+  });
+    
+  </script>
+  
+  
+  {% endblock %}

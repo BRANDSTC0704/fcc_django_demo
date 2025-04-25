@@ -9,7 +9,7 @@ The second app is a data entrance app for Himberg 2 operational data.
 The forms were provided by Franz Aschenbrenner on 14.04.2025. 
 
 Currently, there are 3 apps included: 
-- dateneingaben - for data entry forms
+- kuebelwaschen_him2 - for data entry form kübelwaschen
 - dashboards - for visuals
 - darstellungen - for editable list views
 

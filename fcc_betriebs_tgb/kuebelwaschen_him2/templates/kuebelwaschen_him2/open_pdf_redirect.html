@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    window.onload = function() {
+      var pdfWindow = window.open("{{ pdf_url }}", "_blank");
+  
+      // Check if the popup was blocked
+      if (!pdfWindow) {
+        alert("Popup was blocked! Please allow popups for this site.");
+        // Optionally redirect the current tab to the home page if popup is blocked
+        // window.location.href = "{{ home_url }}";
+      } else {
+        // Close the original window if the popup opened successfully
+        window.close();
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Opening your PDF...</p>
+</body>
+</html>
