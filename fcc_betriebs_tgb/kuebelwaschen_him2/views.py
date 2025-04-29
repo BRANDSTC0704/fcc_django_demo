@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import KuebelSessionForm, KuebelEintragFormSet
@@ -7,12 +7,18 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 
-def start_page(request):
-    return render(request, "kuebelwaschen_him2/start_page.html")
-
 
 @login_required
 def kuebel_page(request):
+    """Links the model to the form page. Both, the session as the detailed buckets are displayed. 
+    A prefilled list is generated based on kuebel-types. 
+
+    Args:
+        request (HttpRequest): a created request object. 
+
+    Returns:
+        view: A rendered view object, including both a log-form (session) as a detailed entry formset. 
+    """
     if request.method == 'POST':
         log_form = KuebelSessionForm(request.POST)
         print(log_form)
@@ -88,6 +94,15 @@ def kuebel_page(request):
     })
 
 def open_pdf_redirect(request, log_id):
+    """Function to create the pdf-report and open it in a new browser tab.
+    At the same time the current view is closed and the page returns to the application start page. 
+
+    Args:
+        log_id (int): Session_ID for creating individual reports. 
+
+    Returns:
+        view: both the pdf url and the home page. 
+    """
     pdf_url = reverse('generate_pdf', args=[log_id])
     home_url = reverse('start_page')
     return render(request, 'kuebelwaschen_him2/open_pdf_redirect.html', {
@@ -95,11 +110,16 @@ def open_pdf_redirect(request, log_id):
         'home_url': home_url,
     })
 
-def home(request): 
-    return HttpResponse("View is working")
-
 
 def generate_pdf(request, log_id):
+    """Generates a pdf from a django form. 
+
+    Args:
+        log_id (int): Session_ID. 
+
+    Returns:
+        httpResponse: a html-page that gets converted into pdf. 
+    """
     log = KuebelSession.objects.get(id=log_id)
     eintraege = KuebelEintrag.objects.filter(log=log)
 

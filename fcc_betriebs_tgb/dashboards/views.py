@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import DateRangeForm
-from .utils import get_kuebel_data, plot_tages_werte_nach_aktivitaet, plot_tages_werte_aktivitaet_anzahl
+from .utils import get_kuebel_data, plot_tages_werte_nach_aktivitaet, plot_tages_werte_aktivitaet_anzahl, generate_excel_table
 import pandas as pd
 from django.utils.timezone import make_aware
 from datetime import datetime, time, timedelta
@@ -9,6 +9,14 @@ from pytz import timezone
 
 
 def grouped_dashboard(request):
+    """View for dashboards. Includes tabular calculation and plots. Date filtering is used and then functions from utils.py are applied.
+
+    Args:
+        request (_type_): Request object. 
+
+    Returns:
+        View: Containing multiple elements. 
+    """
     plot_base64 = None
     filtered_df = pd.DataFrame()
 
@@ -44,23 +52,25 @@ def grouped_dashboard(request):
         activity_sums = filtered_df[activity_columns].sum()
         count_sums = filtered_df[count_columns].sum()
 
-
         if 'download' in request.GET:
-            response = HttpResponse(content_type='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment; filename="kuebel_report.xlsx"'
             filtered_df['created_at'] = filtered_df['created_at'].dt.tz_localize(None)
-            filtered_df.to_excel(response, index=False)
+            output = generate_excel_table(filtered_df)
+            response = HttpResponse(
+                output,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename="Kuebeleingaben_Details.xlsx"'
             return response
+
 
         if not filtered_df.empty:
             plot1_base64 = plot_tages_werte_aktivitaet_anzahl(filtered_df)
             plot2_base64 = plot_tages_werte_nach_aktivitaet(filtered_df)
 
     return render(request, 'dashboards/grouped_dashboard.html', {
-        'form': form,
-        'plot1': plot1_base64,
-        'plot2': plot2_base64,
-        'data': filtered_df.to_dict(orient='records'), 
-        'activity_sums': activity_sums,
+        'form': form, # date widget 
+        'plot1': plot1_base64, # totals time series 
+        'plot2': plot2_base64, # time series per category 
+        'activity_sums': activity_sums, # 
         'count_sums': count_sums,
     })

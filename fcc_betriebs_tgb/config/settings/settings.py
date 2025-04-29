@@ -18,7 +18,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # sys.path.insert(0, str(BASE_DIR + "/fcc_betriebs_tgb"))
 sys.path.insert(0, str(BASE_DIR))
-
+# print('base-dir:', BASE_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -41,11 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_plotly_dash",
     'clearcache',
     'corsheaders',
-    "dpd_static_support",  # Required for Dash static files
-    # "fcc_betriebs_tgb", 
+    'django.contrib.admindocs', 
     "kuebelwaschen_him2",
     "dashboards", 
 ]
@@ -58,8 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_plotly_dash.middleware.BaseMiddleware",
-    "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
+    "django.contrib.admindocs.middleware.XViewMiddleware", 
     'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -154,8 +151,6 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "django_plotly_dash.finders.DashAssetFinder",
-    "django_plotly_dash.finders.DashComponentFinder",
 ]
 
 TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]

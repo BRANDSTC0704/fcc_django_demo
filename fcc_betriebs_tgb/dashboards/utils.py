@@ -5,7 +5,9 @@ import matplotlib
 matplotlib.use('Agg')  # Use a non-GUI backend suitable for scripts and servers
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import io, base64
+import io
+import base64
+from django.db.models import F
 
 
 from kuebelwaschen_him2.models import (
@@ -16,6 +18,14 @@ from kuebelwaschen_him2.models import (
 
 
 def convert_qs_to_df(qs): 
+    """Conversion from queryset to dataframe. 
+
+    Args:
+        qs (Query set): A generic django query set. 
+
+    Returns:
+        pd.DataFrame: The query set is transformed into a dataframe. 
+    """
     # Convert Queryset to DataFrame
     df = pd.DataFrame.from_records(
          qs.values()
@@ -45,9 +55,9 @@ def get_kuebel_data():
     """
 
     kuebel_art_qs = KuebelArt.objects.all()
-    kuebel_session_qs = KuebelSession.objects.all()
+    kuebel_session_qs = KuebelSession.objects.all().select_related('user').annotate(username=F('user__username'))
     kuebel_eintrag_qs = KuebelEintrag.objects.all()
-
+    
     kuebel_art_df = convert_qs_to_df(kuebel_art_qs)
     kuebel_session_df = convert_qs_to_df(kuebel_session_qs)
     kuebel_eintrag_df = convert_qs_to_df(kuebel_eintrag_qs)
@@ -55,10 +65,6 @@ def get_kuebel_data():
     kuebel_art_df.rename(columns={'id': 'kuebel_art_id'}, inplace=True)
     kuebel_session_df.rename(columns={'id': 'log_id'}, inplace=True)
     kuebel_eintrag_df.rename(columns={'id': 'kuebel_eintrag_id'}, inplace=True)
-
-    # print(kuebel_art_df.head(2))
-    # print(kuebel_session_df.head(2))
-    # print(kuebel_eintrag_df.head(2))
 
     step1 = pd.merge(kuebel_eintrag_df, kuebel_art_df, on='kuebel_art_id', how='left')
     step2 = pd.merge(step1, kuebel_session_df, on='log_id', how='left')
@@ -72,6 +78,15 @@ def get_kuebel_data():
     return(step2)
 
 def plot_tages_werte_aktivitaet_anzahl(df):
+    """Time Series Plot-Function for aggregated data view. 
+       Data is summed up per day, including activites and counts. 
+
+    Args:
+        df (pd.DataFrame): DataFrame with raw data prior to aggregation. 
+
+    Returns:
+        image_png: A static image with a plot. 
+    """
     df['created_at'] = pd.to_datetime(df['created_at'])
 
     # Group by date and sum relevant activity columns
@@ -127,6 +142,15 @@ def plot_tages_werte_aktivitaet_anzahl(df):
 
 
 def plot_tages_werte_nach_aktivitaet(df):
+    """Time Series Plot-Function for aggregated data view. 
+       Data is summed up per day, including detailed activites and counts. 
+
+    Args:
+        df (pd.DataFrame): DataFrame with raw data prior to aggregation. 
+
+    Returns:
+        image_png: A static image containing two figures. 
+    """
 
     df['created_at'] = pd.to_datetime(df['created_at'])
 
@@ -194,3 +218,40 @@ def plot_tages_werte_nach_aktivitaet(df):
     image_png = base64.b64encode(buf.getvalue()).decode('utf-8')
     buf.close()
     return image_png
+
+
+def generate_excel_table(df):
+    """Reorders DataFrame and saves it to IO-Buffer for download. 
+
+    Args:
+        df (pd.Dataframe): Super-Dataset from Kübelwaschen. 
+
+    Returns:
+        BytesIO: in-memory Byte Buffer of excel-file (formatted as excel-table).
+    """
+    # Create an in-memory bytes buffer
+    output = io.BytesIO()
+
+    spalten = ['username', 'user_name_manuell', 'created_at', 
+               'comments', 'Anzahl_gesamt', 'Stunden_gesamt', 
+               'sonstiges_h', 'reinigung_h', 'waschen_h', 
+               'instandh_h', 'zerlegen_h', 'kuebel_name',
+               'waschen_count', 'instandh_count', 'zerlegen_count',
+               'user_id', 'log_id', 'kuebel_eintrag_id', 
+               'kuebel_art_id']
+
+    # Use Excel writer with buffer
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df[spalten].to_excel(writer, sheet_name='Rohdaten', startrow=1, header=False, index=False)
+        # workbook = writer.book
+        worksheet = writer.sheets['Rohdaten']
+
+        (max_row, max_col) = df.shape
+        column_settings = [{'header': col} for col in df[spalten].columns]
+
+        worksheet.add_table(0, 0, max_row, max_col - 1, {'columns': column_settings})
+        worksheet.set_column(0, max_col - 1, 12)
+
+    # Rewind the buffer
+    output.seek(0)
+    return output

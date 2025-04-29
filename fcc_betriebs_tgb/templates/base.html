@@ -22,13 +22,10 @@
         </div>
         &nbsp;
         
-        <!-- <h2 class="text-center">PROD/LINZ - Tagesbericht Sortierung - Datendarstellung</h2> -->
-        
-        
         <ul class="text-center mt-3">
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
-            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard/' %}btn-primary{% else %}btn-secondary{% endif %}">Dashboard</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebelwaschen_him2/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dateneingabe</a>
+            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>
         </ul>
     </header>
 
@@ -42,7 +39,8 @@
     <footer>
         <ul class="text-center mt-3">
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == 'kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
+            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>
         </ul>
     </footer>
     {% endblock %}

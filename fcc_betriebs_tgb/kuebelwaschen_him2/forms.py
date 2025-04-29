@@ -3,8 +3,11 @@ from django.forms import formset_factory
 from .models import KuebelEintrag, KuebelSession
 
 class KuebelSessionForm(forms.ModelForm):
-    # name = forms.CharField(required=True)
-    # comments = forms.CharField(required=False)
+    """Session Form including user name and comments; timestamp and user-name from login are saved in background. 
+
+    Args:
+        forms (django.forms.ModelForm): a modelform object. 
+    """
     
     class Meta:
         model = KuebelSession
@@ -23,6 +26,11 @@ class KuebelSessionForm(forms.ModelForm):
         }
 
 class KuebelEintragForm(forms.Form):
+    """Detailed 
+
+    Args:
+        forms (_type_): _description_
+    """
 
     class Meta:
         model = KuebelEintrag

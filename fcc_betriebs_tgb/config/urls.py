@@ -20,16 +20,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from views import start_page
 
 urlpatterns = [
+    path("admin/doc/", include('django.contrib.admindocs.urls')),
     path("admin/clearcache/", include("clearcache.urls")),
     path("admin/", admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path("", include("kuebelwaschen_him2.urls")),
-    path("django_plotly_dash/", include("django_plotly_dash.urls")),
+    path("kuebelwaschen_him2/", include("kuebelwaschen_him2.urls")),
+    path("", start_page, name="start_page"),
     path("dashboards/", include("dashboards.urls")),
-]
 
-# Serve static files (for Plotly)
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
