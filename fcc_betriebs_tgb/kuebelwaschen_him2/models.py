@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 
 # Kübelwaschen 
 class KuebelArt(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    kuebel_name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         ordering = ['id']  # preserves insert order
         verbose_name = 'Behältertyp'
         verbose_name_plural = 'Behältertypen'
     def __str__(self):
-        return self.name
+        return self.kuebel_name
 
 class KuebelSession(models.Model):
 
@@ -21,7 +21,7 @@ class KuebelSession(models.Model):
         verbose_name = 'Kübel-Tagesübersicht'
         verbose_name_plural = 'Kübel-Tagesübersichten'
 
-    name = models.CharField(max_length=100, verbose_name='Verantwortlicher')  # e.g. session name or user-provided
+    user_name_manuell = models.CharField(max_length=100, verbose_name='Verantwortlicher')  # e.g. session name or user-provided
     user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
     comments = models.TextField(blank=True, null=True, verbose_name='Kommentar')
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)

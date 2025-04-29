@@ -8,6 +8,12 @@ from data_entry.models import (
 )
 
 
+# 5. dashboard-demo 
+# - gesamtanzahl / gesamtstunden kübel pro periode
+# - anzahl / stunden kübel pro periode und Kategorie
+# - durschchnittswerte pro Kategorie und Zeiteinheit 
+
+
 def get_cleaned_work_hours():
     """Fetch and preprocess work hours data from the database."""
     work_hours_data = WorkHours.objects.all()

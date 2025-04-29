@@ -26,6 +26,9 @@ urlpatterns = [
     # path("", views.kuebel_page, name="Kuebelstation"),
     # path("", views.start_page, name="home"),
     path("", include("kuebelwaschen_him2.urls")),
+    path("django_plotly_dash/", include("django_plotly_dash.urls")),
+    path("dashboards/", include("dashboards.urls")),
+
     # path("admin/clearcache/", include("clearcache.urls")),
     # path("admin/", admin.site.urls),
     # path("", include("fcc_betriebs_tgb.urls")),

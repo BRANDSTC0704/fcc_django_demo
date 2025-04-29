@@ -26,9 +26,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path("", include("kuebelwaschen_him2.urls")),
-    # path("django_plotly_dash/", include("django_plotly_dash.urls")),
-    # path("fcc_betriebs_tgb/", include("fcc_betriebs_tgb.urls")),
-    # path("dashboards/", include("dashboards.urls")),
+    path("django_plotly_dash/", include("django_plotly_dash.urls")),
+    path("dashboards/", include("dashboards.urls")),
 ]
 
 # Serve static files (for Plotly)

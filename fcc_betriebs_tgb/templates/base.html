@@ -25,8 +25,9 @@
         
         
         <ul class="text-center mt-3">
-            <a href="{% url 'start_page' %}" class="btn {% if request.path == '/kuebelwaschen_him2/start_page/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebelwaschen_him2/kuebel_aktivitaet/' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
+            <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
+            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard/' %}btn-primary{% else %}btn-secondary{% endif %}">Dashboard</a>
         </ul>
     </header>
 
@@ -39,8 +40,8 @@
     {% block footer %}
     <footer>
         <ul class="text-center mt-3">
-            <a href="{% url 'start_page' %}" class="btn {% if request.path == '/kuebelwaschen_him2/start_page/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebelwaschen_him2/kuebel_aktivitaet/' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
+            <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
         </ul>
     </footer>
     {% endblock %}

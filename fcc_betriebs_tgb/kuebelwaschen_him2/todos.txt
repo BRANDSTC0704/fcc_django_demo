@@ -5,5 +5,5 @@ Maske:
 4. eingabefelder breite reduzieren - done 
 5. dashboard-demo 
 - gesamtanzahl / gesamtstunden kübel pro periode
-- anzahl / stunden kübel pro periode
+- anzahl / stunden kübel pro periode und Kategorie
 - durschchnittswerte pro Kategorie und Zeiteinheit 

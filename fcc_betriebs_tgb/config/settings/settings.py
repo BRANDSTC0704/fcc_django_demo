@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "dpd_static_support",  # Required for Dash static files
     # "fcc_betriebs_tgb", 
     "kuebelwaschen_him2",
+    "dashboards", 
 ]
 
 MIDDLEWARE = [
@@ -159,8 +160,8 @@ STATICFILES_FINDERS = [
 
 TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  # example for frontend
-]
+#CORS_ALLOWED_ORIGINS = [
+#    "http://localhost:8000",  # example for frontend
+#]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True

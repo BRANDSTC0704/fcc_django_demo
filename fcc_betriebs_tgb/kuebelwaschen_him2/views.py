@@ -20,7 +20,7 @@ def kuebel_page(request):
         if log_form.is_valid() and formset.is_valid():
             # Save the session log
             log = KuebelSession.objects.create(
-                name=log_form.cleaned_data['name'],
+                user_name_manuell=log_form.cleaned_data['user_name_manuell'],
                 user=request.user,
                 comments=log_form.cleaned_data['comments']
             )
@@ -32,7 +32,7 @@ def kuebel_page(request):
 
                     # If it's a string (e.g., due to read-only rendering), fetch the instance
                     if isinstance(kuebel_art_value, str):
-                        kuebel_art_instance = KuebelArt.objects.get(name=kuebel_art_value)
+                        kuebel_art_instance = KuebelArt.objects.get(kuebel_name=kuebel_art_value)
                     else:
                         kuebel_art_instance = kuebel_art_value
 
@@ -103,7 +103,7 @@ def generate_pdf(request, log_id):
     eintraege = KuebelEintrag.objects.filter(log=log)
 
     html_string = render_to_string('kuebelwaschen_him2/pdf_template.html', {
-        'name': log.name,
+        'user_name_manuell': log.user_name_manuell,
         'comments': log.comments,
         'rows': eintraege,
     })
