@@ -1,0 +1,6 @@
+/* Custom highlight row style */
+.table-striped tr.highlight-row {
+  --bs-table-bg: #005A9C;
+  --bs-table-color: #FFFFFF;
+  font-weight: bold; /* Optional: Make the text bold */
+}

@@ -1,9 +1,98 @@
 {% extends 'base.html' %}
-{% load plotly_dash %}
+{% load static %}
 
-{% block title %}Monatliches Dashboard{% endblock %}
-{% block header_title %}Dashboard Kübel-Platz{% endblock %}
 
 {% block content %}
+<div class="text-center">
+    <h1>
+        {% block header_title %} Dashboard Kübelwaschplatz HIM2 {% endblock %}</h1>
+    </h1> 
+  </div>    
+  
+<form method="get" class="my-3">
+    <div class="d-flex flex-column align-items-center">
+      
+      <!-- Date Fields Row -->
+      <div class="form-row mb-3">
+        <div class="col-auto mx-2 text-center">
+          <label for="{{ form.start_date.id_for_label }}">Anfangsdatum</label>
+          {{ form.start_date }}
+        </div>
+        <div class="col-auto mx-2 text-center">
+          <label for="{{ form.end_date.id_for_label }}">Enddatum</label>
+          {{ form.end_date }}
+        </div>
+      </div>
+  
+      <!-- Buttons Row -->
+      <div class="form-row">
+        <div class="col-auto mx-2">
+          <button type="submit" class="btn btn-secondary">
+            Filter (notwendig bei Datums-Änderung)
+          </button>
+        </div>
+        <div class="col-auto mx-2">
+          <button type="submit" name="download" value="1" class="btn btn-info">
+            Excel Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+<!-- Row for Activity and Counts Tables -->
+<div class="row d-flex justify-content-center mb-3">
+    <!-- Table for Activity Sums -->
+    <div class="col-md-5 text-center">
+      <h3>Aktivitätsstunden (Summe)</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Aktivität</th>
+            <th>Summe Stunden [h]</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for activity, sum in activity_sums.items %}
+            <tr class="{% if activity == 'Stunden_gesamt' %}highlight-row{% endif %}">
+              <td>{{ activity|capfirst }}</td>
+              <td>{{ sum }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Table for Counts Sums -->
+    <div class="col-md-5 text-center">
+      <h3>Anzahl (Summe)</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Aktivität</th>
+            <th>Summe Anzahl [#]</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for count, sum in count_sums.items %}
+            <tr class="{% if count == 'Anzahl_gesamt' %}highlight-row{% endif %}">
+              <td>{{ count|capfirst }}</td>
+              <td>{{ sum }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Abbildungen</h2>
+    <h4>Übersicht</h4>
+    {% if plot1 %}
+        <img src="data:image/png;base64,{{ plot1 }}" alt="Plot Tagessummen">
+    {% endif %}
+    <h4>pro Kategorie</h4>
+    {% if plot2 %}
+        <img src="data:image/png;base64,{{ plot2 }}" alt="Plot Tagessummen nach Aktivität">
+    {% endif %}
 
 {% endblock %}

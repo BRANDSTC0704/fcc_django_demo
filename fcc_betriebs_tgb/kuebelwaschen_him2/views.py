@@ -15,6 +15,7 @@ def start_page(request):
 def kuebel_page(request):
     if request.method == 'POST':
         log_form = KuebelSessionForm(request.POST)
+        print(log_form)
         formset = KuebelEintragFormSet(request.POST)
 
         if log_form.is_valid() and formset.is_valid():

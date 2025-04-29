@@ -6,4 +6,4 @@ Maske:
 5. dashboard-demo 
 - gesamtanzahl / gesamtstunden kübel pro periode
 - anzahl / stunden kübel pro periode und Kategorie
-- durschchnittswerte pro Kategorie und Zeiteinheit 
+- durchschnittswerte pro Kategorie und Zeiteinheit 
