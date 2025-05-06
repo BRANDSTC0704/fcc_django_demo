@@ -63,9 +63,9 @@ def grouped_dashboard(request):
             return response
 
 
-        if not filtered_df.empty:
-            plot1_base64 = plot_tages_werte_aktivitaet_anzahl(filtered_df)
-            plot2_base64 = plot_tages_werte_nach_aktivitaet(filtered_df)
+        plot1_base64 = plot_tages_werte_aktivitaet_anzahl(filtered_df)
+        plot2_base64 = plot_tages_werte_nach_aktivitaet(filtered_df)
+
 
     return render(request, 'dashboards/grouped_dashboard.html', {
         'form': form, # date widget 
