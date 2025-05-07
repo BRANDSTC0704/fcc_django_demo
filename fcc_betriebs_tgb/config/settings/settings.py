@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.admindocs', 
     "kuebelwaschen_him2",
     "dashboards", 
+    "pressenlinie"
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,9 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "static/"
 LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # LOGIN_REDIRECT_URL = '/your-target-url-after-login/'
 
 STATICFILES_DIRS = [

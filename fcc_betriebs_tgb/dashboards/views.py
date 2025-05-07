@@ -6,8 +6,10 @@ import pandas as pd
 from django.utils.timezone import make_aware
 from datetime import datetime, time, timedelta
 from pytz import timezone 
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def grouped_dashboard(request):
     """View for dashboards. Includes tabular calculation and plots. Date filtering is used and then functions from utils.py are applied.
 

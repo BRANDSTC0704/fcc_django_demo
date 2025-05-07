@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from .forms import KuebelSessionForm, KuebelEintragFormSet
 from .models import KuebelSession, KuebelEintrag, KuebelArt
@@ -131,3 +132,7 @@ def generate_pdf(request, log_id):
 
     pdf = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+def admin_view(request):
+    return redirect(reverse('admin:index'))

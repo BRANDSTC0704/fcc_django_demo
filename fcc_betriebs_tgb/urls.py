@@ -20,7 +20,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from kuebelwaschen_him2 import views
-
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LoginView
+from .views import logout_view
 
 urlpatterns = [
     # path("", views.kuebel_page, name="Kuebelstation"),
@@ -28,6 +30,9 @@ urlpatterns = [
     path("kuebelwaschen_him2/", include("kuebelwaschen_him2.urls")),
     path("", views.start_page, name="start_page"),
     path("dashboards/", include("dashboards.urls")),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', logout_view, name='logout'),
+    path("pressenlinie/", include("pressenlinie.urls")),
 
     # path("admin/clearcache/", include("clearcache.urls")),
     # path("admin/", admin.site.urls),

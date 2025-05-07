@@ -18,8 +18,9 @@ class KuebelArt(models.Model):
 
     class Meta:
         ordering = ['id']  # preserves insert order
-        verbose_name = 'Behältertyp'
-        verbose_name_plural = 'Behältertypen'
+        verbose_name = 'Referenzdaten: Behältertyp'
+        verbose_name_plural = 'Referenzdaten: Behältertypen'
+    
     def __str__(self):
         return self.kuebel_name
 

@@ -15,14 +15,43 @@
 
 <body class="container mt-5">
     
-    <header>
+<!-- Navigation bar -->
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'start_page' %}">FCC - <i>Django Unchained</i></a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">User: {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <header>
+        &nbsp;
         <div class="text-center">
             <img src="{% static 'logo.png' %}" alt="Logo" width="150">
         </div>
         &nbsp;
         
         <ul class="text-center mt-3">
+            {% load membership_filter %}
+            {% if request.user|has_group:"Site-Manager" or request.user.is_superuser %}
+                <a href="{% url 'admin' %}" class="btn btn-success">Admin-Seite</a>
+            {% endif %}
+
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
             <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/kuebelwaschen_him2/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dateneingabe</a>
             <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>
@@ -38,6 +67,11 @@
     {% block footer %}
     <footer>
         <ul class="text-center mt-3">
+            {% load membership_filter %}
+            {% if request.user|has_group:"Site-Manager" or request.user.is_superuser %}
+                <a href="{% url 'admin' %}" class="btn btn-success">Admin-Seite</a>
+            {% endif %}
+
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
             <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == 'kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
             <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/dashboards/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>

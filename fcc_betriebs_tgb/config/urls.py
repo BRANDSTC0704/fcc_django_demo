@@ -21,14 +21,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from views import start_page
+from django.contrib.auth.views import LoginView
+from views import logout_view
+
 
 urlpatterns = [
     path("admin/doc/", include('django.contrib.admindocs.urls')),
     path("admin/clearcache/", include("clearcache.urls")),
     path("admin/", admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path("kuebelwaschen_him2/", include("kuebelwaschen_him2.urls")),
+    path("pressenlinie/", include("pressenlinie.urls")),
     path("", start_page, name="start_page"),
     path("dashboards/", include("dashboards.urls")),
-
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', logout_view, name='logout'),
 ]

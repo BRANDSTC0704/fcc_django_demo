@@ -34,7 +34,7 @@ class KuebelSessionAdminForm(forms.ModelForm):
         self.fields['created_at_date'].initial = created_at.strftime('%Y-%m-%d') # created_at.date()
         self.fields['created_at_time'].initial = created_at.time().replace(second=0, microsecond=0)            
         
-            # self.fields['created_at_override'].initial = self.instance.created_at
+        # self.fields['created_at_override'].initial = self.instance.created_at
         # self.fields['created_at_date'] = forms.DateField(widget=SelectDateWidget(), label="Datum")
         # self.fields['created_at_time'] = forms.TimeField(widget=forms.TimeInput(format='%H:%M'), label="Zeit [HH:MM]")
         

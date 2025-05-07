@@ -1,6 +1,47 @@
-<h2></h2h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log in</button>
-</form>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Demo FCC-Dateneingabe {% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'kuebelwaschen_him2/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboards/styles.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
+</head>
+
+<body class="container mt-5">
+
+<header>
+  &nbsp;
+  <div class="text-center">
+      <img src="{% static 'logo.png' %}" alt="Logo" width="150">
+  </div>
+  &nbsp;
+</header>
+
+<div class="d-flex justify-content-center mt-5">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-body" style="width: 400px;">
+      {% for f in form %}
+        <div class="form-row">
+          <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+          <div class="form-input">
+            {{ f }}
+            <div class="form-error">{{ f.errors }}</div>
+          </div>  
+        </div>
+      {% endfor %}
+
+      <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-info" type="submit">Log in</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+</body>
