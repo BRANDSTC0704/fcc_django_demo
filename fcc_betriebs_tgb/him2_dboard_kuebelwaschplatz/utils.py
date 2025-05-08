@@ -88,7 +88,7 @@ def plot_tages_werte_aktivitaet_anzahl(df):
         image_png: A static image with a plot. 
     """
     if not df.empty: 
-        df['created_at'] = pd.to_datetime(df['created_at'])
+        df.loc[:, 'created_at'] = pd.to_datetime(df['created_at'])
 
         # Group by date and sum relevant activity columns
         grouped = df.groupby(df['created_at'].dt.date)[
@@ -154,7 +154,7 @@ def plot_tages_werte_nach_aktivitaet(df):
     """
 
     if not df.empty: 
-        df['created_at'] = pd.to_datetime(df['created_at'])
+        df.loc[:, 'created_at'] = pd.to_datetime(df['created_at'])
 
         # Group by date and sum all relevant activity columns
         grouped = df.groupby(df['created_at'].dt.date)[

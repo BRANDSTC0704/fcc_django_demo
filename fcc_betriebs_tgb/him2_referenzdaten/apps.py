@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DarstellungenConfig(AppConfig):
+class ReferenzdatenHim2Config(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "darstellungen"
+    name = "referenzdaten_him2"

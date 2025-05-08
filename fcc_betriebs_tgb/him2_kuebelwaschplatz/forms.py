@@ -36,13 +36,14 @@ class KuebelEintragForm(forms.Form):
         model = KuebelEintrag
         
     kuebel_art = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'infofield'}))
-    sonstiges_h = forms.FloatField(required=False, initial=0, min_value=0,  widget=forms.NumberInput(attrs={'step': '0.5'}))
-    reinigung_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.5'}))
-    waschen_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.5'}))
+    # sonstiges_h = forms.FloatField(required=False, initial=0, min_value=0,  widget=forms.NumberInput(attrs={'step': '0.25'}))
+    # Rückmeldung Franz: kann weg 
+    reinigung_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.25'}))
+    waschen_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.25'}))
     waschen_count = forms.IntegerField(required=False, initial=0, min_value=0)
-    instandh_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.5'}))
+    instandh_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.25'}))
     instandh_count = forms.IntegerField(required=False, initial=0, min_value=0)
-    zerlegen_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.5'}))
+    zerlegen_h = forms.FloatField(required=False, initial=0, min_value=0, widget=forms.NumberInput(attrs={'step': '0.25'}))
     zerlegen_count = forms.IntegerField(required=False, initial=0, min_value=0)
 
     def __init__(self, *args, **kwargs):

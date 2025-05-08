@@ -82,7 +82,7 @@ class KuebelSessionAdmin(admin.ModelAdmin):
     site_title = 'Kübel-Metadaten'
     search_fields = ['created_at']
     list_filter = ['created_at']
-    list_display = ['user_name_manuell', 'user', 'comments', 'entry_count'] 
+    list_display = ['created_at', 'user_name_manuell', 'user', 'comments', 'entry_count'] 
     fields = ['created_at_date', 'created_at_time', 'user_name_manuell', 'user', 'comments']  
     readonly_fields = ['entry_count']
     inlines = [KuebelEintragInline]

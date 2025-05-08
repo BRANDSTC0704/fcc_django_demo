@@ -7,7 +7,7 @@ from .models import KuebelSession, KuebelEintrag, KuebelArt
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
-
+from django.http import HttpResponseRedirect
 
 @login_required
 def kuebel_page(request):
@@ -135,4 +135,4 @@ def generate_pdf(request, log_id):
 
 
 def admin_view(request):
-    return redirect(reverse('admin:index'))
+    return HttpResponseRedirect(reverse('admin:index'))

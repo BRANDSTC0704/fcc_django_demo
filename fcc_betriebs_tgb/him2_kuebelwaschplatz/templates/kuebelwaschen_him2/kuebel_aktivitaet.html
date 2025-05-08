@@ -11,31 +11,32 @@
 </div>    
 
 <form id="kuebel-form" method="post" action="{% url 'kuebel_aktivitaet' %}">
-    
   {% csrf_token %}
-    <!-- {{ log_form.as_p }} -->
-    <div class="form-wrapper">
-    <div class="form-row">
-      <div class="form-group">
-    <label for="{{ log_form.name.id_for_label }}">
-      {{ log_form.fields.user_name_manuell.label }}
-    </label>
-    {{ log_form.user_name_manuell }}
+
+  <div class="form-wrapper">
+    <div class="form-row d-flex justify-content-center gap-4">
+  
+      <div class="form-group text-center" style="width: 200px;">
+        <label for="{{ log_form.name.id_for_label }}" class="form-label">
+          {{ log_form.fields.user_name_manuell.label }}
+        </label>
+        {{ log_form.user_name_manuell }}
       </div>
-      <div class="form-group">
-    <label for="{{ log_form.comments.id_for_label }}">
-      {{ log_form.fields.comments.label }}
-    </label>
-  {{ log_form.comments }}
-</div>
-</div>
-</div>
+  
+      <div class="form-group text-center" style="width: 400px;">
+        <label for="{{ log_form.comments.id_for_label }}" class="form-label">
+          {{ log_form.fields.comments.label }}
+        </label>
+        {{ log_form.comments }}
+      </div>
+  
+    </div>
+  </div>
   
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Kübelbezeichnung</th>
-          <th>Sonstiges [h]</th>
           <th>Reinigung [h]</th>
           <th>Waschen [h]</th>
           <th>Waschen [Stk]</th>
@@ -56,16 +57,14 @@
       <!-- <td colspan="9">{{ form.kuebel_art.value }}</td>  -->
             {% for field in form %}
               <td
-                {% if field.name == "sonstiges_h" %}
-                  style="background-color: #f0f8ff;"  
-                {% elif field.name == "waschen_h" %}
-                  style="background-color: #f0f8ff;"  
+                {% if field.name == "waschen_h" %}
+                  style="background-color: #a8c8e4;"  
                 {% elif field.name == "instandh_h" %}
-                  style="background-color: #f0f8ff;"  
+                  style="background-color: #a8c8e4;"  
                 {% elif field.name == "zerlegen_h" %}
-                  style="background-color: #f0f8ff;"  
+                  style="background-color: #a8c8e4;"  
                 {% elif field.name == "reinigung_h" %}
-                  style="background-color: #f0f8ff;"  
+                  style="background-color: #a8c8e4;"  
                 {% endif %}
               >
                 {{ field }}
