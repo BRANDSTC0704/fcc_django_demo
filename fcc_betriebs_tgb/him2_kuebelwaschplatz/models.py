@@ -3,7 +3,7 @@ from django.db import models
 #import datetime
 #from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
-from him2_referenzdaten.models import KuebelArt
+from him2_referenzdaten.models import KuebelArt, Mitarbeiter, Betankung
 
 # Kübelwaschen 
 class KuebelSession(models.Model):
@@ -20,8 +20,9 @@ class KuebelSession(models.Model):
         verbose_name = 'Kübel-Tagesübersicht'
         verbose_name_plural = 'Kübel-Tagesübersichten'
 
-    user_name_manuell = models.CharField(max_length=100, verbose_name='Verantwortlicher', blank=False, null=False)  # e.g. session name or user-provided
+    mitarbeiter = models.ForeignKey(Mitarbeiter, verbose_name='Mitarbeiter', blank=False, null=False, on_delete=models.PROTECT)  # e.g. session name or user-provided
     user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
+    tank = models.ForeignKey(Betankung, on_delete=models.PROTECT, null=True, blank=True) 
     comments = models.TextField(blank=True, null=True, verbose_name='Kommentar')
     created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 

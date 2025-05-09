@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from .forms import KuebelSessionForm, KuebelEintragFormSet
+from .forms import KuebelSessionForm, KuebelEintragFormSet, BetankungForm
 from .models import KuebelSession, KuebelEintrag, KuebelArt
+from him2_referenzdaten.models import Betankung
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -22,16 +23,29 @@ def kuebel_page(request):
     """
     if request.method == 'POST':
         log_form = KuebelSessionForm(request.POST)
-        print(log_form)
         formset = KuebelEintragFormSet(request.POST)
+        tank_form = BetankungForm(request.POST)
 
-        if log_form.is_valid() and formset.is_valid():
+        if log_form.is_valid() and formset.is_valid() and tank_form.is_valid():
+            # print('we came here! ')
             # Save the session log
             log = KuebelSession.objects.create(
-                user_name_manuell=log_form.cleaned_data['user_name_manuell'],
+                mitarbeiter=log_form.cleaned_data['mitarbeiter'],
                 user=request.user,
                 comments=log_form.cleaned_data['comments']
             )
+
+        tank = None
+        if tank_form.is_valid():
+            fahrzeug = tank_form.cleaned_data.get('fahrzeug')
+            amount_fuel = tank_form.cleaned_data.get('amount_fuel')
+
+            if fahrzeug or (amount_fuel and amount_fuel > 0):
+                tank = Betankung.objects.create(
+                    fahrzeug=fahrzeug,
+                    amount_fuel=amount_fuel or 0,
+                    daten_eingabe_von='test_app'
+                )
 
             # Loop through each form in the formset
             for form in formset:
@@ -76,7 +90,11 @@ def kuebel_page(request):
             print("Data saved")
             # return redirect('generate_pdf', log_id=log.id)
             # return JsonResponse({'pdf_url': reverse('generate_pdf', args=[log.id])})
-            return JsonResponse({'log_id': log.id})
+            response_data = {'log_id': log.id}
+            if tank:
+                print('tank:', tank.id)
+                response_data['tank_id'] = tank.id
+            return JsonResponse(response_data)
             # JSON response for AJAX
             # if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             #     return JsonResponse({'pdf_url': reverse('generate_pdf', args=[log.id])})
@@ -86,12 +104,14 @@ def kuebel_page(request):
             print("Form is not valid!")
     else:
         log_form = KuebelSessionForm()
+        tank_form = BetankungForm()
         initial_data = [{'kuebel_art': art} for art in KuebelArt.objects.all()]
         formset = KuebelEintragFormSet(initial=initial_data)
 
     return render(request, 'him2_kuebelwaschplatz/kuebel_aktivitaet.html', {
         'log_form': log_form,
-        'formset': formset
+        'formset': formset, 
+        'tank_form': tank_form
     })
 
 def open_pdf_redirect(request, log_id):
@@ -112,21 +132,28 @@ def open_pdf_redirect(request, log_id):
     })
 
 
-def generate_pdf(request, log_id):
-    """Generates a pdf from a django form. 
-
-    Args:
-        log_id (int): Session_ID. 
-
-    Returns:
-        httpResponse: a html-page that gets converted into pdf. 
-    """
+def generate_pdf(request, log_id, tank_id=None):
     log = KuebelSession.objects.get(id=log_id)
     eintraege = KuebelEintrag.objects.filter(log=log)
 
+    fahrzeug = None
+    amount_fuel = None
+
+    # Try to find a Betankung object related to this session or ID
+    if tank_id:
+        try:
+            tank = Betankung.objects.get(id=tank_id)
+            fahrzeug = tank.fahrzeug
+            amount_fuel = tank.amount_fuel
+        except Betankung.DoesNotExist:
+            pass
+
+
     html_string = render_to_string('him2_kuebelwaschplatz/pdf_template.html', {
-        'user_name_manuell': log.user_name_manuell,
+        'mitarbeiter': log.mitarbeiter,
         'comments': log.comments,
+        'fahrzeug': fahrzeug,
+        'amount_fuel': amount_fuel,
         'rows': eintraege,
     })
 

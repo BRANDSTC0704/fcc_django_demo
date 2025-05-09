@@ -11,7 +11,7 @@ class KuebelSessionForm(forms.ModelForm):
     
     class Meta:
         model = KuebelSession
-        fields = ['user_name_manuell', 'comments']
+        fields = ['mitarbeiter', 'comments']
         # exclude = ['created_at']
         widgets = {
             'comments': forms.Textarea(attrs={
@@ -19,7 +19,7 @@ class KuebelSessionForm(forms.ModelForm):
                 'class': 'form-control small-textarea',  # For CSS control
                 'style': 'resize: vertical;'  # Optional: restrict resizing
             }),
-            'user_name_manuell': forms.TextInput(attrs={
+            'mitarbeiter': forms.TextInput(attrs={
                 'class': 'form-control'
             }),
         }

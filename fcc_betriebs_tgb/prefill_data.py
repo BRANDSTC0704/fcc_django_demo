@@ -1,8 +1,10 @@
-from him2_referenzdaten.models import KuebelArt, PresseBallenTyp, Schicht
+from him2_referenzdaten.models import KuebelArt, PresseBallenTyp, Schicht, Fahrzeug, Mitarbeiter
 from him2_pressenlinie.models import AbhProdTyp, ZeitAktivitaetTyp
 
 
 def prefill_ballen_art_pl():
+
+
     defaults = [('Karton', 0.7),
                 ('Papier', 0.8),
                 ('Folien', 0.4),
@@ -81,7 +83,7 @@ def prefill_ballenpresse_abh_prod():
 
 def prefill_ballenpresse_schicht():
     defaults = [
-        'Schicht 1', 'Schicht 2', 'Schicht 3'
+        'Schicht 1', 'Schicht 2', 
     ]
     for name in defaults:
         obj, created = Schicht.objects.get_or_create(schichten=name)
@@ -92,6 +94,8 @@ def prefill_ballenpresse_schicht():
 
 
 def prefill_ballenpresse_zeit_aktivitaeten():
+
+
     defaults = [
         'Arbeitsstunden', 'Ballenpresse Laufzeit', 'Störungszeiten',
         'Wartungszeit', 'Reinigungszeit', 
@@ -103,13 +107,68 @@ def prefill_ballenpresse_zeit_aktivitaeten():
         else:
             print(f"Exists: {name}")
 
+def prefill_mitarbeiter():
+    # first_name = models.CharField(max_length=40)
+    # last_name = models.CharField(max_length=40)
+    # funktion = models.CharField(max_length=40)
+    # intern_extern = models.CharField(max_length=20)
+
+    defaults = [
+        ("Erich", "Reitprecht", "Prozessverantwortlicher", "intern"), 
+        ("", "Bachmayer", "", "extern"), 
+        ("", "Schwingenschrot", "", "extern"), 
+        ("Leopold", "Baum", "", "intern"), 
+        ("", "Sailer", "", "extern"), 
+        ("", "Weiss", "", "extern"), 
+        ("", "Hasani", "", "extern"), 
+        ("", "Saric", "", "extern"), 
+        ("", "Block", "", "extern"), 
+        ("Wolfgang", "Hahn", "", "intern"), 
+    ]
+
+    for entry in defaults:
+        obj, created = Mitarbeiter.objects.get_or_create(first_name=entry[0], last_name=entry[1],
+                                                         funktion=entry[2], intern_extern=[3])
+        if created:
+            print(f"Created: {entry}")
+        else:
+            print(f"Exists: {entry}")
+
+
+def prefill_fahrzeug():
+    # fzg_name = models.CharField(max_length=30, unique=True)
+    # bereich = models.CharField(max_length=30, unique=True)
+    # kostenstelle = models.CharField(max_length=30, unique=True)
+
+    defaults = [
+        ("Linde 1 (Bj 2018)", "Sondermüll", "A0161976"), 
+        ("Linde 2 (Obi)", "Umladehalle/Freigelände", "A0161975"), 
+        ("Linde 3 (Bj 2019)", "Sondermüll", "A0161979"), 
+        ("Linde 4", "Umladehalle/Freigelände", "A0161612"), 
+        ("Linde 5", "Presse", "A0161970"), 
+        ("Radlader 924 G", "Umladehalle/Freigelände", "A0161969"), 
+        ("Radlader 908M", "Presse", "A0161610"), 
+        ("Bagger M322C", "Umladehalle/Freigelände", "A0161971"), 
+        ("Radlader 928M", "Umladehalle/Freigelände", "A0161946"), 
+    ]
+
+    for entry in defaults:
+        obj, created = Fahrzeug.objects.get_or_create(fzg_name=entry[0], bereich=entry[1], kostenstelle=entry[2])
+        if created:
+            print(f"Created: {entry}")
+        else:
+            print(f"Exists: {entry}")
+
 
 def run_all_prefills():
     print("Running data prefill scripts...")
     prefill_kuebel_art()
     prefill_ballen_art_pl()
     prefill_ballenpresse_abh_prod()
+    prefill_ballenpresse_schicht()
     prefill_ballenpresse_zeit_aktivitaeten()
+    prefill_mitarbeiter()
+    prefill_fahrzeug()
     print("Done.")
 
 

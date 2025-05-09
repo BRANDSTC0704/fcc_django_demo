@@ -5,13 +5,10 @@ from django.forms.widgets import SelectDateWidget
 from datetime import datetime
 
 # Register your models here.
-from .models import Schicht, ZeitAktivitaetTyp, PresseBallenTyp, AbhProdTyp, Stundeneingabe, Aktivitaet, Produktion
+from .models import ZeitAktivitaetTyp, AbhProdTyp, Stundeneingabe, Aktivitaet, Produktion
 
 
-
-admin.site.register(Schicht)
 admin.site.register(ZeitAktivitaetTyp)
-admin.site.register(PresseBallenTyp)
 admin.site.register(AbhProdTyp)
 admin.site.register(Stundeneingabe)
 admin.site.register(Aktivitaet)
@@ -35,7 +32,7 @@ admin.site.register(Produktion)
 
 #     class Meta:
 #         model = KuebelSession
-#         fields = ['created_at_date', 'created_at_time', 'user_name_manuell', 'user', 'comments']
+#         fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']
 
 #     def __init__(self, *args, **kwargs):
 #         super().__init__(*args, **kwargs)
@@ -93,8 +90,8 @@ admin.site.register(Produktion)
 #     site_title = 'Kübel-Metadaten'
 #     search_fields = ['created_at']
 #     list_filter = ['created_at']
-#     list_display = ['user_name_manuell', 'user', 'comments', 'entry_count'] 
-#     fields = ['created_at_date', 'created_at_time', 'user_name_manuell', 'user', 'comments']  
+#     list_display = ['mitarbeiter', 'user', 'comments', 'entry_count'] 
+#     fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']  
 #     readonly_fields = ['entry_count']
 #     inlines = [KuebelEintragInline]
 

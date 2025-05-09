@@ -1,12 +1,9 @@
 from django.contrib import admin
 from django import forms 
-from django.db import models
-from django.forms.widgets import SelectDateWidget
 from datetime import datetime
 
 # Register your models here.
 from .models import KuebelSession, KuebelEintrag
-from him2_referenzdaten.models import KuebelArt
 
 
 class KuebelSessionAdminForm(forms.ModelForm):
@@ -25,7 +22,7 @@ class KuebelSessionAdminForm(forms.ModelForm):
 
     class Meta:
         model = KuebelSession
-        fields = ['created_at_date', 'created_at_time', 'user_name_manuell', 'user', 'comments']
+        fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -83,8 +80,8 @@ class KuebelSessionAdmin(admin.ModelAdmin):
     site_title = 'Kübel-Metadaten'
     search_fields = ['created_at']
     list_filter = ['created_at']
-    list_display = ['created_at', 'user_name_manuell', 'user', 'comments', 'entry_count'] 
-    fields = ['created_at_date', 'created_at_time', 'user_name_manuell', 'user', 'comments']  
+    list_display = ['created_at', 'mitarbeiter', 'user', 'comments', 'entry_count'] 
+    fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']  
     readonly_fields = ['entry_count']
     inlines = [KuebelEintragInline]
 
@@ -93,4 +90,4 @@ class KuebelSessionAdmin(admin.ModelAdmin):
         return obj.kuebel.count()
 
 admin.site.register(KuebelSession, KuebelSessionAdmin)
-admin.site.register(KuebelArt)
+

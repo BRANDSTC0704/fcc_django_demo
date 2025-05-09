@@ -1,12 +1,12 @@
 TODO 
 Zeitschritt Zeiterfassung 0,25 - Done
 
-Farben Kübel - vermutlich weg (Innendienst) 
-Sonstiges h - weg 
+Farben Kübel - vermutlich weg (Innendienst) - Done 
+Sonstiges h - weg - Done 
 
-Verantwortlicher: Dropdown Mitarbeiter 
+Verantwortlicher: Dropdown Mitarbeiter - Done 
 
-Rechner sichern; Browser fixieren; - Michael sprechen 
+Rechner sichern; Browser fixieren; - Michael sprechen - angefragt 
 
 Presselinie 
 Datumauswahl erlauben 
@@ -22,3 +22,6 @@ Korrekturwert: Ende des Monats
 
 Balleninventur Monatsanfang wird die geändert; 
 Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] 
+
+Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) 
+Kübelwaschen - DONE 

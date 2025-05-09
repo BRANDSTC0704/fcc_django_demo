@@ -16,11 +16,11 @@
   <div class="form-wrapper">
     <div class="form-row d-flex justify-content-center gap-4">
   
-      <div class="form-group text-center" style="width: 200px;">
-        <label for="{{ log_form.name.id_for_label }}" class="form-label">
-          {{ log_form.fields.user_name_manuell.label }}
+      <div class="form-group text-center" style="width: 400px;">
+        <label for="{{ log_form.mitarbeiter.id_for_label }}" class="form-label">
+          {{ log_form.fields.mitarbeiter.label }}
         </label>
-        {{ log_form.user_name_manuell }}
+        {{ log_form.mitarbeiter }}
       </div>
   
       <div class="form-group text-center" style="width: 400px;">
@@ -29,7 +29,25 @@
         </label>
         {{ log_form.comments }}
       </div>
-  
+  <div class="alert alert-info position-relative text-center" role="alert">
+       <span class="position-absolute top-0 end-0 me-2 mt-1 small text-muted">
+      
+      </span>
+       <div class="d-flex flex-column align-items-center justify-content-center">
+      <div class="form-group text-center" style="width: 75px;">
+        <label for="{{ tank_form.fahrzeug.id_for_label }}" class="form-label">
+          Fahrzeug
+        </label>
+        {{ tank_form.fahrzeug }}
+      </div>
+    </div>
+      <div class="form-group text-center" style="width: 75px;">
+        <label for="{{ tank_form.amount_fuel.id_for_label }}" class="form-label">
+          Diesel [L]
+        </label>
+        {{ tank_form.amount_fuel }}
+      </div>
+</div>
     </div>
   </div>
   

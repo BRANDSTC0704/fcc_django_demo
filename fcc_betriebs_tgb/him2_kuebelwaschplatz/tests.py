@@ -29,17 +29,17 @@ class KuebelSessionModelTest(TestCase):
         self.user = User.objects.create(username="testuser")
         self.session = KuebelSession.objects.create(
             user=self.user,
-            user_name_manuell="Responsible User"
+            mitarbeiter="Responsible User"
         )
 
     def test_create_kuebel_session(self):
         session = KuebelSession.objects.create(
             user=self.user,
-            user_name_manuell="Max Mustermann",
+            mitarbeiter="Max Mustermann",
             comments="Initialer Testlauf"
         )
         self.assertEqual(session.user.username, "testuser")
-        self.assertEqual(session.user_name_manuell, "Max Mustermann")
+        self.assertEqual(session.mitarbeiter, "Max Mustermann")
         self.assertEqual(session.comments, "Initialer Testlauf")
         self.assertIsNotNone(session.created_at)
     
@@ -58,7 +58,7 @@ class KuebelEintragModelTest(TestCase):
         self.user = User.objects.create(username="eintraguser")
         self.session = KuebelSession.objects.create(
             user=self.user,
-            user_name_manuell="Maria Musterfrau"
+            mitarbeiter="Maria Musterfrau"
         )
         self.art = KuebelArt.objects.create(kuebel_name="Kleiner Kübel")
 
@@ -88,7 +88,7 @@ class KuebelEintragModelTransactionTest(TransactionTestCase):
         self.user = User.objects.create(username="testuser")
         self.session = KuebelSession.objects.create(
             user=self.user,
-            user_name_manuell="Responsible Person"
+            mitarbeiter="Responsible Person"
         )
 
     def test_foreign_key_constraint_invalid_kuebel_art(self):
@@ -107,7 +107,7 @@ class KuebelEintragFormTest(TestCase):
     
     def setUp(self):
         self.user = User.objects.create(username="formuser")
-        self.session = KuebelSession.objects.create(user=self.user, user_name_manuell="Form User")
+        self.session = KuebelSession.objects.create(user=self.user, mitarbeiter="Form User")
         self.art = KuebelArt.objects.create(kuebel_name="Großer Kübel")
 
     def test_form_valid_data(self):
@@ -128,17 +128,17 @@ class KuebelSessionFormTest(TestCase):
     
     def setUp(self):
         self.user = User.objects.create(username="formuser2")
-        self.user_name_manuell = "Form User2"
+        self.mitarbeiter = "Form User2"
         self.comments = "Kommentar"
         self.session = KuebelSession.objects.create(
             user=self.user,
-            user_name_manuell=self.user_name_manuell,
+            mitarbeiter=self.mitarbeiter,
             comments=self.comments
         )
 
     def test_form_valid_data(self):
         form = KuebelSessionForm(data={
-            'user_name_manuell': self.user_name_manuell,
+            'mitarbeiter': self.mitarbeiter,
             'comments': self.comments
         })
         self.assertTrue(form.is_valid())
@@ -164,7 +164,7 @@ class KuebelSessionViewTest(TestCase):
 
         # Submit the form with data, but do not include 'created_at'
         response = self.client.post(reverse('kuebel_aktivitaet'), data={
-            'user_name_manuell': 'Test User',
+            'mitarbeiter': 'Test User',
             'comments': 'Test Comment',
         })
 
@@ -174,7 +174,7 @@ class KuebelSessionViewTest(TestCase):
             print("Form Errors:", form.errors)  # Print out form errors
 
             # Check if the KuebelSession object was created
-            log = KuebelSession.objects.filter(user_name_manuell='Test User').first()
+            log = KuebelSession.objects.filter(mitarbeiter='Test User').first()
             self.assertIsNotNone(log, "KuebelSession object was not created.")
 
             # Ensure 'created_at' was set (it should be auto-generated)

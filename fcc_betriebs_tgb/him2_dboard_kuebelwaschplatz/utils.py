@@ -42,7 +42,7 @@ def get_kuebel_data():
             ['kuebel_eintrag_id', 'log_id', 'kuebel_art_id', 'sonstiges_h',
             'reinigung_h', 'waschen_h', 'waschen_count', 'instandh_h',
             'instandh_count', 'zerlegen_h', 'zerlegen_count', 'kuebel_name',
-            'user_name_manuell', 'user_id', 'comments', 'created_at'],
+            'mitarbeiter', 'user_id', 'comments', 'created_at'],
         dtypes:
             kuebel_eintrag_id - int64, log_id -int64, 
             kuebel_art_id - int64, sonstiges_h - float64,
@@ -50,7 +50,7 @@ def get_kuebel_data():
             waschen_count - int64, instandh_h - float64,
             instandh_count - int64, zerlegen_h - float64,
             zerlegen_count - int64, kuebel_name - object,
-            user_name_manuell - object, user_id - int64,
+            mitarbeiter - object, user_id - int64,
             comments - object, created_at - datetime64[ns, UTC]
     """
 
@@ -235,7 +235,7 @@ def generate_excel_table(df):
         # Create an in-memory bytes buffer
         output = io.BytesIO()
 
-        spalten = ['username', 'user_name_manuell', 'created_at', 
+        spalten = ['username', 'mitarbeiter', 'created_at', 
                 'comments', 'Anzahl_gesamt', 'Stunden_gesamt', 
                 'sonstiges_h', 'reinigung_h', 'waschen_h', 
                 'instandh_h', 'zerlegen_h', 'kuebel_name',

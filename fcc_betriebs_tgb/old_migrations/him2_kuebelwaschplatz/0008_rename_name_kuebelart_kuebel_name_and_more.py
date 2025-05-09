@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name="kuebelsession",
             old_name="name",
-            new_name="user_name_manuell",
+            new_name="mitarbeiter",
         ),
     ]

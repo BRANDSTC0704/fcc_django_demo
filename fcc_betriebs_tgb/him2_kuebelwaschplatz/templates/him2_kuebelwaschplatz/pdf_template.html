@@ -65,45 +65,49 @@
 </head>
 <body>
     <div class="header-container">
-    <img src="{% static 'logo.png' %}" class="logo" alt="Logo">
-    <h2>Kübelwaschplatz HIM2</h2> 
-    <h2>{% now "d.m.Y" %} </h2>
-    <p style="font-size: 10px; font-weight: bold;">pdf-Druck</p>
-    <p class="centered-paragraph">(falls gewünscht, bitte selbst herunterladen und abspeichern - sonst Tab schließen).</p>
-</div>
-
-  <p><strong>Verantwortlicher:</strong> {{ name }}</p>
-  <p><strong>Kommentar:</strong> {{ comments }}</p>
-
-  <div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Kübelbezeichnung</th>
-        <th>Reinigung [h]</th>
-        <th>Waschen [h]</th>
-        <th>Waschen [Stk]</th>
-        <th>Instandh. [h]</th>
-        <th>Instandh. [Stk]</th>
-        <th>Zerlegen [h]</th>
-        <th>Zerlegen [Stk]</th>
-      </tr>
-    </thead>
-<tbody>
-  {% for row in rows %}
-  <tr>
-    <td>{{ row.kuebel_art }}</td>
-    <td>{{ row.reinigung_h }}</td>
-    <td>{{ row.waschen_h }}</td>
-    <td>{{ row.waschen_count }}</td>
-    <td>{{ row.instandh_h }}</td>
-    <td>{{ row.instandh_count }}</td>
-    <td>{{ row.zerlegen_h }}</td>
-    <td>{{ row.zerlegen_count }}</td>
-  </tr>
-  {% endfor %}
-</tbody>
-  </table>
-</div>
-</body>
+      <img src="{% static 'logo.png' %}" class="logo" alt="Logo">
+      <h2>Kübelwaschplatz HIM2</h2> 
+      <h2>{% now "d.m.Y" %} </h2>
+      <p style="font-size: 10px; font-weight: bold;">pdf-Druck</p>
+      <p class="centered-paragraph">(falls gewünscht, bitte selbst herunterladen und abspeichern - sonst Tab schließen).</p>
+    </div>
+    <div class="text-center">
+      <p><strong>Mitarbeiter:</strong> {{ mitarbeiter }}</p>
+      <p><strong>Kommentar:</strong> {{ comments }}</p>
+      {% if fahrzeug or amount_fuel %}
+      <p><strong>Fahrzeug:</strong> {{ fahrzeug }} </p>
+      <p><strong>getankte Menge:</strong> {{ amount_fuel }}</p>
+      {% endif %}
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Kübelbezeichnung</th>
+            <th>Reinigung [h]</th>
+            <th>Waschen [h]</th>
+            <th>Waschen [Stk]</th>
+            <th>Instandh. [h]</th>
+            <th>Instandh. [Stk]</th>
+            <th>Zerlegen [h]</th>
+            <th>Zerlegen [Stk]</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+          <tr>
+            <td>{{ row.kuebel_art }}</td>
+            <td>{{ row.reinigung_h }}</td>
+            <td>{{ row.waschen_h }}</td>
+            <td>{{ row.waschen_count }}</td>
+            <td>{{ row.instandh_h }}</td>
+            <td>{{ row.instandh_count }}</td>
+            <td>{{ row.zerlegen_h }}</td>
+            <td>{{ row.zerlegen_count }}</td>
+          </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
 </html>
