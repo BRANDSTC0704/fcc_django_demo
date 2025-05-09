@@ -5,7 +5,8 @@ from django.forms.widgets import SelectDateWidget
 from datetime import datetime
 
 # Register your models here.
-from .models import KuebelSession, KuebelEintrag, KuebelArt
+from .models import KuebelSession, KuebelEintrag
+from him2_referenzdaten.models import KuebelArt
 
 
 class KuebelSessionAdminForm(forms.ModelForm):

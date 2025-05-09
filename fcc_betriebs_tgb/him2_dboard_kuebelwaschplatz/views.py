@@ -69,7 +69,7 @@ def grouped_dashboard(request):
         plot2_base64 = plot_tages_werte_nach_aktivitaet(filtered_df)
 
 
-    return render(request, 'dashboards/grouped_dashboard.html', {
+    return render(request, 'him2_dboard_kuebelwaschplatz/grouped_dashboard.html', {
         'form': form, # date widget 
         'plot1': plot1_base64, # totals time series 
         'plot2': plot2_base64, # time series per category 

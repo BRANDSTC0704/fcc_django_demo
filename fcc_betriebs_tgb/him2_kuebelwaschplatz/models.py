@@ -3,27 +3,9 @@ from django.db import models
 #import datetime
 #from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
+from him2_referenzdaten.models import KuebelArt
 
 # Kübelwaschen 
-class KuebelArt(models.Model):
-    """Model containting types of buckets, ordered by creation. 
-
-    Args:
-        models: Django models object. 
-
-    Returns:
-        none 
-    """
-    kuebel_name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        ordering = ['id']  # preserves insert order
-        verbose_name = 'Referenzdaten: Behältertyp'
-        verbose_name_plural = 'Referenzdaten: Behältertypen'
-    
-    def __str__(self):
-        return self.kuebel_name
-
 class KuebelSession(models.Model):
     """Session model for form filling. Includes a link to user-registration,
     time stamp a name to be typed in as well as a comment field. 

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("kuebelwaschen_him2", "0004_alter_kuebelsession_comments"),
+        ("him2_kuebelwaschplatz", "0004_alter_kuebelsession_comments"),
     ]
 
     operations = [

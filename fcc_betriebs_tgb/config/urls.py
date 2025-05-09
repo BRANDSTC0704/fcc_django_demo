@@ -29,10 +29,10 @@ urlpatterns = [
     path("admin/doc/", include('django.contrib.admindocs.urls')),
     path("admin/clearcache/", include("clearcache.urls")),
     path("admin/", admin.site.urls),
-    path("kuebelwaschen_him2/", include("kuebelwaschen_him2.urls")),
-    path("pressenlinie/", include("pressenlinie.urls")),
+    path("him2_kuebelwaschplatz/", include("him2_kuebelwaschplatz.urls")),
+    path("him2_pressenlinie/", include("him2_pressenlinie.urls")),
     path("", start_page, name="start_page"),
-    path("dashboards/", include("dashboards.urls")),
+    path("him2_dboard_kuebelwaschplatz/", include("him2_dboard_kuebelwaschplatz.urls")),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', logout_view, name='logout'),
 ]

@@ -1,0 +1,24 @@
+TODO 
+Zeitschritt Zeiterfassung 0,25 - Done
+
+Farben Kübel - vermutlich weg (Innendienst) 
+Sonstiges h - weg 
+
+Verantwortlicher: Dropdown Mitarbeiter 
+
+Rechner sichern; Browser fixieren; - Michael sprechen 
+
+Presselinie 
+Datumauswahl erlauben 
+(2 Schichten) - ein Tag: 2 Zeilen  
+Zählerstand Ballenpresse (Info: darf nicht kleiner sein als letzter Eintrag)
+Stromzähler: Zählerstand Ballenpresse (Info: Wert kleiner oder größer) 
+Felder: Mitarbeiter 1 und Mitarbeiter 2 
+
+Zeiten eine Seite 
+Produktion und Abholung auf einer Seite gemeinsam 
+Anfangslagerstand pro Monat (1 x monatlich: Startwert) 
+Korrekturwert: Ende des Monats 
+
+Balleninventur Monatsanfang wird die geändert; 
+Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] 

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("kuebelwaschen_him2", "0003_alter_kuebelart_options_alter_kuebelsession_user"),
+        ("him2_kuebelwaschplatz", "0003_alter_kuebelart_options_alter_kuebelsession_user"),
     ]
 
     operations = [

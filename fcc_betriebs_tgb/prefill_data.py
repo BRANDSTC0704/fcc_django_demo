@@ -1,5 +1,5 @@
-from kuebelwaschen_him2.models import KuebelArt
-from pressenlinie.models import PresseBallenTyp, AbhProdTyp, Schicht, ZeitAktivitaetTyp
+from him2_referenzdaten.models import KuebelArt, PresseBallenTyp, Schicht
+from him2_pressenlinie.models import AbhProdTyp, ZeitAktivitaetTyp
 
 
 def prefill_ballen_art_pl():

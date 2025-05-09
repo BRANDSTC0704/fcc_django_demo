@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import KuebelArt, KuebelSession, KuebelEintrag
+from .models import KuebelSession, KuebelEintrag
+from him2_referenzdaten.models import KuebelArt
 from django.test import TransactionTestCase
 from django.db.utils import IntegrityError
 from .forms import KuebelEintragForm, KuebelSessionForm

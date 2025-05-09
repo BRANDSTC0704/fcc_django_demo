@@ -9,9 +9,9 @@ import io
 import base64
 from django.db.models import F
 
+from him2_referenzdaten.models import KuebelArt
 
-from kuebelwaschen_him2.models import (
-    KuebelArt,
+from him2_kuebelwaschplatz.models import (
     KuebelSession,
     KuebelEintrag
 )
@@ -254,6 +254,7 @@ def generate_excel_table(df):
 
             worksheet.add_table(0, 0, max_row, max_col - 1, {'columns': column_settings})
             worksheet.set_column(0, max_col - 1, 12)
+            worksheet.set_column(2, 2, 19) # Date width
 
         # Rewind the buffer
         output.seek(0)

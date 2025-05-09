@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         (
-            "kuebelwaschen_him2",
+            "him2_kuebelwaschplatz",
             "0005_alter_kuebelart_options_alter_kuebeleintrag_options_and_more",
         ),
     ]

@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
 
-class DashboardsConfig(AppConfig):
+class Him2DboardKuebelwaschplatzConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "dashboards"
+    name = "him2_dboard_kuebelwaschplatz"
         
 

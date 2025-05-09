@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'clearcache',
     'corsheaders',
     'django.contrib.admindocs', 
-    "kuebelwaschen_him2",
-    "dashboards", 
-    "pressenlinie"
+    "him2_referenzdaten",
+    "him2_kuebelwaschplatz",
+    "him2_dboard_kuebelwaschplatz", 
+    "him2_pressenlinie"
 ]
 
 MIDDLEWARE = [
@@ -91,7 +92,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          'NAME': 'himberg',
+          'NAME': 'himberg2',
           'USER': 'postgres',
           'PASSWORD': 'postgres',
           'HOST': 'localhost',

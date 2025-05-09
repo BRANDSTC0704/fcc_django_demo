@@ -63,7 +63,7 @@ def kuebel_page(request):
                     KuebelEintrag.objects.create(
                         log=log,
                         kuebel_art=kuebel_art_instance,
-                        sonstiges_h=form.cleaned_data['sonstiges_h'],
+                        # sonstiges_h=form.cleaned_data['sonstiges_h'],
                         reinigung_h=form.cleaned_data['reinigung_h'],
                         waschen_h=form.cleaned_data['waschen_h'],
                         waschen_count=form.cleaned_data['waschen_count'],
@@ -89,7 +89,7 @@ def kuebel_page(request):
         initial_data = [{'kuebel_art': art} for art in KuebelArt.objects.all()]
         formset = KuebelEintragFormSet(initial=initial_data)
 
-    return render(request, 'kuebelwaschen_him2/kuebel_aktivitaet.html', {
+    return render(request, 'him2_kuebelwaschplatz/kuebel_aktivitaet.html', {
         'log_form': log_form,
         'formset': formset
     })
@@ -106,7 +106,7 @@ def open_pdf_redirect(request, log_id):
     """
     pdf_url = reverse('generate_pdf', args=[log_id])
     home_url = reverse('start_page')
-    return render(request, 'kuebelwaschen_him2/open_pdf_redirect.html', {
+    return render(request, 'him2_kuebelwaschplatz/open_pdf_redirect.html', {
         'pdf_url': pdf_url,
         'home_url': home_url,
     })
@@ -124,7 +124,7 @@ def generate_pdf(request, log_id):
     log = KuebelSession.objects.get(id=log_id)
     eintraege = KuebelEintrag.objects.filter(log=log)
 
-    html_string = render_to_string('kuebelwaschen_him2/pdf_template.html', {
+    html_string = render_to_string('him2_kuebelwaschplatz/pdf_template.html', {
         'user_name_manuell': log.user_name_manuell,
         'comments': log.comments,
         'rows': eintraege,

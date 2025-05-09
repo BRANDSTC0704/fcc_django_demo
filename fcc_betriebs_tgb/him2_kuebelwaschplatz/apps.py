@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class Kuebelwaschen_him2Config(AppConfig):
+class Him2KuebelwaschplatzConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "kuebelwaschen_him2"
+    name = "him2_kuebelwaschplatz"
