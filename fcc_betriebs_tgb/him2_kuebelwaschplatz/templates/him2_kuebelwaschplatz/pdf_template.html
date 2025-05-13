@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}" >
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -76,7 +75,12 @@
       <p><strong>Kommentar:</strong> {{ comments }}</p>
       {% if fahrzeug or amount_fuel %}
       <p><strong>Fahrzeug:</strong> {{ fahrzeug }} </p>
-      <p><strong>getankte Menge:</strong> {{ amount_fuel }}</p>
+      <p><strong>getankte Menge:</strong> {{ amount_fuel }} L </p> 
+      <strong>Startzeit:</strong> {{ start_time }}
+      <strong>Endzeit:</strong> {{ end_time }}
+        {% if end_time and start_time %}
+        <strong>gefahrene Zeit:</strong> {{ diff_time }} h
+        {% endif %}</p>
       {% endif %}
     </div>
     <div class="table-container">

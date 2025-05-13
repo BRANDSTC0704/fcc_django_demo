@@ -133,6 +133,9 @@ class Betankung(models.Model):
     daten_eingabe_von = models.CharField(max_length=40, verbose_name='von welcher App:') # die jeweilige App - muss beim Anlegen hard kodiert werden
     created_at = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
     amount_fuel = models.FloatField(default=0, validators=[MinValueValidator(0)], verbose_name='Diesel [l]')
+    start_time = models.TimeField(default='00:00')
+    end_time = models.TimeField(default='00:00')
+
 
     class Meta:
         ordering = ['id']  # preserves insert order

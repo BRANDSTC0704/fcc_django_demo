@@ -25,3 +25,4 @@ Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel]
 
 Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) 
 Kübelwaschen - DONE 
+Betriebsstunden (Start und Ende) 
