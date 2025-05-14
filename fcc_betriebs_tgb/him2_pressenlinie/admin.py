@@ -1,16 +1,16 @@
 from django.contrib import admin
-from django import forms 
-from django.db import models
-from django.forms.widgets import SelectDateWidget
-from datetime import datetime
+#from django import forms 
+#from django.db import models
+#from django.forms.widgets import SelectDateWidget
+#from datetime import datetime
 
 # Register your models here.
-from .models import ZeitAktivitaetTyp, AbhProdTyp, Stundeneingabe, Aktivitaet, Produktion
+from .models import ZeitAktivitaetTyp, AbhProdTyp, StundenEingabeSession, Aktivitaet, Produktion
 
 
 admin.site.register(ZeitAktivitaetTyp)
 admin.site.register(AbhProdTyp)
-admin.site.register(Stundeneingabe)
+admin.site.register(StundenEingabeSession)
 admin.site.register(Aktivitaet)
 admin.site.register(Produktion)
 

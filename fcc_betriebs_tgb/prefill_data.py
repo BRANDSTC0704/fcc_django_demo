@@ -1,6 +1,9 @@
 from him2_referenzdaten.models import KuebelArt, PresseBallenTyp, Schicht, Fahrzeug, Mitarbeiter
 from him2_pressenlinie.models import AbhProdTyp, ZeitAktivitaetTyp
 
+# Script to prepopulate reference data. 
+# updated 14.05 for new (unified) field names. 
+
 
 def prefill_ballen_art_pl():
 
@@ -32,7 +35,7 @@ def prefill_ballen_art_pl():
                 ('Nöm Kübel', 0.5)]
     
     for name in defaults:
-        obj, created = PresseBallenTyp.objects.get_or_create(ball_name=name[0], ball_gewicht=name[1])
+        obj, created = PresseBallenTyp.objects.get_or_create(name=name[0], gewicht=name[1])
         if created:
             print(f"Created: {name}")
         else:
@@ -62,7 +65,7 @@ def prefill_kuebel_art():
         'Altöltank', 'ASP', 'ASF'
     ]
     for name in defaults:
-        obj, created = KuebelArt.objects.get_or_create(kuebel_name=name)
+        obj, created = KuebelArt.objects.get_or_create(name=name)
         if created:
             print(f"Created: {name}")
         else:
@@ -74,7 +77,7 @@ def prefill_ballenpresse_abh_prod():
         'Abholung', 'Produktion'
     ]
     for name in defaults:
-        obj, created = AbhProdTyp.objects.get_or_create(bez_abh_prod=name)
+        obj, created = AbhProdTyp.objects.get_or_create(name=name)
         if created:
             print(f"Created: {name}")
         else:
@@ -86,7 +89,7 @@ def prefill_ballenpresse_schicht():
         'Schicht 1', 'Schicht 2', 
     ]
     for name in defaults:
-        obj, created = Schicht.objects.get_or_create(schichten=name)
+        obj, created = Schicht.objects.get_or_create(name=name)
         if created:
             print(f"Created: {name}")
         else:
@@ -101,7 +104,7 @@ def prefill_ballenpresse_zeit_aktivitaeten():
         'Wartungszeit', 'Reinigungszeit', 
     ]
     for name in defaults:
-        obj, created = ZeitAktivitaetTyp.objects.get_or_create(zeit_typ=name)
+        obj, created = ZeitAktivitaetTyp.objects.get_or_create(name=name)
         if created:
             print(f"Created: {name}")
         else:
@@ -136,7 +139,7 @@ def prefill_mitarbeiter():
 
 
 def prefill_fahrzeug():
-    # fzg_name = models.CharField(max_length=30, unique=True)
+    # name = models.CharField(max_length=30, unique=True)
     # bereich = models.CharField(max_length=30, unique=True)
     # kostenstelle = models.CharField(max_length=30, unique=True)
 
@@ -153,7 +156,7 @@ def prefill_fahrzeug():
     ]
 
     for entry in defaults:
-        obj, created = Fahrzeug.objects.get_or_create(fzg_name=entry[0], bereich=entry[1], kostenstelle=entry[2])
+        obj, created = Fahrzeug.objects.get_or_create(name=entry[0], bereich=entry[1], kostenstelle=entry[2])
         if created:
             print(f"Created: {entry}")
         else:

@@ -2,8 +2,9 @@ from django.db import models
 #from django.utils.timezone import now
 #import datetime
 from django.core.validators import MinValueValidator
-from django.contrib.auth.models import User
-from him2_referenzdaten.models import PresseBallenTyp, Schicht
+from django.contrib.auth.models import User ## Session User 
+from him2_referenzdaten.models import PresseBallenTyp, Schicht, Mitarbeiter
+from django.core.exceptions import ValidationError
 
 
 # Metadaten 
@@ -18,7 +19,7 @@ class ZeitAktivitaetTyp(models.Model):
     Returns:
         none 
     """
-    zeit_typ = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         ordering = ['id']  # preserves insert order
@@ -26,12 +27,13 @@ class ZeitAktivitaetTyp(models.Model):
         verbose_name_plural = 'Referenzdaten: Zeit_Typen'
     
     def __str__(self):
-        return self.zeit_typ
+        return self.name
     
 
 
 class AbhProdTyp(models.Model):
     """Model containting types of buckets, ordered by creation. 
+    # initially: Abholung und Produktion.
 
     Args:
         models: Django models object. 
@@ -39,7 +41,7 @@ class AbhProdTyp(models.Model):
     Returns:
         none 
     """
-    bez_abh_prod = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     
     class Meta:
         ordering = ['id']  # preserves insert order
@@ -47,10 +49,10 @@ class AbhProdTyp(models.Model):
         verbose_name_plural = 'Referenzdaten: Abholung_Produktion'
     
     def __str__(self):
-        return self.bez_abh_prod
+        return self.name
 
 # Aktivitäten 
-class Stundeneingabe(models.Model):
+class StundenEingabeSession(models.Model):
     """Model for time per shift. 
 
     Args:
@@ -63,13 +65,53 @@ class Stundeneingabe(models.Model):
         verbose_name = 'Erfassung Stunden'
         verbose_name_plural = 'Erfassung Stunden'
 
-    schicht = models.ForeignKey(Schicht, on_delete=models.PROTECT) # soll immer gespeichert bleiben
-    zeittyp = models.ForeignKey(ZeitAktivitaetTyp, on_delete=models.PROTECT) # soll immer gespeichert bleiben
+    user = models.ForeignKey(User, on_delete=models.PROTECT) # SystemUser 
     created_date = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
-    dauer = models.FloatField(default=0)
+    created_date_mitarbeiter = models.DateField(null=False, blank=False)
+    comments = models.TextField(blank=True, null=True, verbose_name='Kommentar')
 
     def __str__(self):
-        return f"{self.schicht} - {self.zeittyp} ({self.dauer} Std. am {self.created_date})"
+        return f"Session # {self.id} vom {self.created_date}, erstellt von {self.user}"
+    
+    
+class SchichtEingabeMitarbeiter(models.Model):
+    """Contains information on workers per Shift. 
+
+    Args:
+        models (models.Model): inherits from Django model. 
+    """
+
+    session = models.ForeignKey(StundenEingabeSession, on_delete=models.PROTECT)
+    schicht = models.ForeignKey(Schicht, on_delete=models.PROTECT)
+    mitarbeiter_1 = models.ForeignKey(Mitarbeiter, on_delete=models.PROTECT, related_name='+')
+    mitarbeiter_2 = models.ForeignKey(Mitarbeiter, on_delete=models.PROTECT, related_name='+')
+    
+    def __str__(self):
+        return f"Session # {self.session.id} vom {self.session.created_date}, Schicht {self.schicht} mit {self.mitarbeiter_1} und {self.mitarbeiter_2}" 
+
+class StundenEingabeDetails(models.Model): 
+    """Model for the time entry details including shift, activity type, and duration."""
+    
+    class Meta:
+        verbose_name = 'Erfassung Stunde Detail'
+        verbose_name_plural = 'Erfassung Stunden Details'
+ 
+    session = models.ForeignKey(StundenEingabeSession, on_delete=models.PROTECT)
+    schicht = models.ForeignKey(Schicht, on_delete=models.PROTECT)
+    zeittyp = models.ForeignKey(ZeitAktivitaetTyp, on_delete=models.PROTECT)
+    dauer = models.FloatField(default=0)  # Duration of activity
+
+    def __str__(self):
+        return f"{self.session} - {self.schicht} - {self.zeittyp} ({self.dauer} hours)"
+    
+    def clean(self):
+        if self.schicht_mitarbeiter_1 == self.schicht_mitarbeiter_2:
+            raise ValidationError("Die beiden Personen dürfen nicht gleich sein.")
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Enforce the validation
+        super().save(*args, **kwargs)
+
 
 class Aktivitaet(models.Model):
     """Model for time per shift. 
@@ -107,6 +149,8 @@ class Produktion(models.Model):
         verbose_name_plural = 'Erfassung Ballenproduktion u. -abholung'
 
     created_date = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
+    mitarbeiter = models.ForeignKey(Mitarbeiter, related_name='Produktionsmitarbeiter', on_delete=models.PROTECT) # soll immer gespeichert bleiben
     schicht = models.ForeignKey(Schicht, on_delete=models.PROTECT) # kann nicht gelöscht werden, wenn Daten da 
     abh_prod = models.ForeignKey(AbhProdTyp, on_delete=models.PROTECT) # kann nicht gelöscht werden, wenn Daten da 
     ballentyp = models.ForeignKey(PresseBallenTyp, on_delete=models.PROTECT) # kann nicht gelöscht werden, wenn Daten da 

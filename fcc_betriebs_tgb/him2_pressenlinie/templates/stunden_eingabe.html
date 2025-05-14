@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_filters %}
+{% load form_extras %}
+
+
+{% block content %}
+<div class="text-center">
+  <h1>
+      {% block header_title %} Zeiterfassung Presselinie HIM2 - {% now "d.m.Y" %}  {% endblock %}</h1>
+  </h1> 
+</div>    
+<form id="presse-aktivität-form" method="post" action="{% url 'stunden_eingabe' %}" class="container mt-4">
+  {% csrf_token %}
+  
+  <div class="row justify-content-center align-items-end g-3">
+    <!-- Datum -->
+    <div class="col-auto text-center">
+      <label for="{{ session_form.created_date_mitarbeiter.id_for_label }}" class="form-label">Datum</label>
+      <div class="d-flex gap-1">
+        {{ session_form.created_date_mitarbeiter }}
+      </div>
+    </div>
+
+    <!-- Mitarbeiter 2 -->
+    <div class="col-auto text-center">
+      <label for="{{ session_form.comments.id_for_label }}" class="form-label">Anmerkung</label>
+      {{ session_form.comments }}
+    </div>
+  </div>
+
+ 
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <table class="table table-striped text-center">
+        <thead>
+          <tr>
+            <th>Schicht</th>
+            <th>Mitarbeiter 1</th>
+            <th>Mitarbeiter 2</th>
+
+            {% for zeittyp in zeittypen %}
+              <th>{{ zeittyp }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+   
+   
+<tbody>
+  {% for schicht in schichten %}
+    <tr>
+      <td>{{ schicht }}</td>
+      
+      <!-- Dynamically generate the field name for schicht_mitarbeiter_1 -->
+      {% with field_name_1="schicht_mitarbeiter_1_1" %}
+        <td>{{ data_form|get_field:field_name_1 }}</td>
+      {% endwith %}
+      <!-- Dynamically generate the field name for schicht_mitarbeiter_2 -->
+      {% with field_name_2="schicht_mitarbeiter_2_"|add:schicht.id %}
+        <td>{{ data_form|get_field:field_name_2 }}</td>
+      {% endwith %}
+
+      {% for zeittyp in zeittypen %}
+        <td>
+          {% with field_name="entry_"|add:schicht.id|add:"_"|add:zeittyp.id %}
+            <td>{{ data_form|get_field:field_name }}</td>
+          {% endwith %}
+        </td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</tbody>
+      </table>
+
+      
+  <button type="submit" class="btn btn-primary">Speichern</button>
+</form>
+</div>
+</div>
+
+  {% endblock %}
+
+{% block footer %}{% endblock %}
+
+

@@ -3,7 +3,6 @@ Zeitschritt Zeiterfassung 0,25 - Done
 
 Farben Kübel - vermutlich weg (Innendienst) - Done 
 Sonstiges h - weg - Done 
-
 Verantwortlicher: Dropdown Mitarbeiter - Done 
 
 Rechner sichern; Browser fixieren; - Michael sprechen - angefragt 
@@ -25,4 +24,4 @@ Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel]
 
 Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) 
 Kübelwaschen - DONE 
-Betriebsstunden (Start und Ende) 
+Betriebsstunden (Start und Ende) - DONE

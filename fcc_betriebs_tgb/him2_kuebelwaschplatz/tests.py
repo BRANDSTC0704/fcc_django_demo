@@ -13,14 +13,14 @@ from datetime import timedelta
 class KuebelArtModelTest(TestCase):
 
     def test_create_kuebelart(self):
-        art = KuebelArt.objects.create(kuebel_name="Großer Behälter")
-        self.assertEqual(art.kuebel_name, "Großer Behälter")
+        art = KuebelArt.objects.create(name="Großer Behälter")
+        self.assertEqual(art.name, "Großer Behälter")
         self.assertEqual(str(art), "Großer Behälter")
 
     def test_unique_kuebel_name(self):
-        KuebelArt.objects.create(kuebel_name="Spezialbehälter")
+        KuebelArt.objects.create(name="Spezialbehälter")
         with self.assertRaises(Exception):
-            KuebelArt.objects.create(kuebel_name="Spezialbehälter")
+            KuebelArt.objects.create(name="Spezialbehälter")
 
 
 class KuebelSessionModelTest(TestCase):
@@ -60,7 +60,7 @@ class KuebelEintragModelTest(TestCase):
             user=self.user,
             mitarbeiter="Maria Musterfrau"
         )
-        self.art = KuebelArt.objects.create(kuebel_name="Kleiner Kübel")
+        self.art = KuebelArt.objects.create(name="Kleiner Kübel")
 
     def test_create_kuebel_eintrag(self):
         eintrag = KuebelEintrag.objects.create(
@@ -108,7 +108,7 @@ class KuebelEintragFormTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(username="formuser")
         self.session = KuebelSession.objects.create(user=self.user, mitarbeiter="Form User")
-        self.art = KuebelArt.objects.create(kuebel_name="Großer Kübel")
+        self.art = KuebelArt.objects.create(name="Großer Kübel")
 
     def test_form_valid_data(self):
         form = KuebelEintragForm(data={

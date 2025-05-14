@@ -50,6 +50,7 @@ def kuebel_page(request):
                     tank = Betankung.objects.create(
                         fahrzeug=fahrzeug,
                         amount_fuel=amount_fuel,
+                        user=request.user,
                         start_time=datetime.strptime(start_time, "%H:%M").time(),
                         end_time=datetime.strptime(end_time, "%H:%M").time(),
                         daten_eingabe_von='Kübelwaschplatz'
@@ -61,7 +62,7 @@ def kuebel_page(request):
                         kuebel_art_value = form.cleaned_data['kuebel_art']
                         
                         if isinstance(kuebel_art_value, str):
-                            kuebel_art_instance = KuebelArt.objects.get(kuebel_name=kuebel_art_value)
+                            kuebel_art_instance = KuebelArt.objects.get(name=kuebel_art_value)
                         else:
                             kuebel_art_instance = kuebel_art_value
 
@@ -102,6 +103,8 @@ def kuebel_page(request):
                     print('tank:', tank.id)
                     request.session.save()  # Ensure the session is explicitly saved
                     response_data['tank_id'] = tank.id  # Only include tank_id if it's saved
+                    log.tank_id = tank.id
+                    log.save()
                 
                 # Return the JSON response
                 return JsonResponse(response_data)

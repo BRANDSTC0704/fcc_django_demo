@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User ## Session User 
 
 # Create your models here.
 # an app containing reference data 
@@ -18,7 +19,7 @@ class KuebelArt(models.Model):
     Returns:
         none 
     """
-    kuebel_name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         ordering = ['id']  # preserves insert order
@@ -26,7 +27,7 @@ class KuebelArt(models.Model):
         verbose_name_plural = 'Referenzdaten: Behältertypen'
     
     def __str__(self):
-        return self.kuebel_name
+        return self.name
 
 
 class PresseBallenTyp(models.Model):
@@ -38,8 +39,8 @@ class PresseBallenTyp(models.Model):
     Returns:
         none 
     """
-    ball_name = models.CharField(max_length=100, unique=True)
-    ball_gewicht = models.FloatField(default=0.5, validators=[MinValueValidator(0)])
+    name = models.CharField(max_length=100, unique=True)
+    gewicht = models.FloatField(default=0.5, validators=[MinValueValidator(0)])
 
     class Meta:
         ordering = ['id']  # preserves insert order
@@ -47,7 +48,7 @@ class PresseBallenTyp(models.Model):
         verbose_name_plural = 'Referenzdaten: Ballentypen'
     
     def __str__(self):
-        return  f"{self.ball_name} ({self.ball_gewicht} t)" 
+        return  f"{self.name} ({self.gewicht} t)" 
 
 
 class Schicht(models.Model):
@@ -59,7 +60,7 @@ class Schicht(models.Model):
     Returns:
         none 
     """
-    schichten = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=20, unique=True)
 
     class Meta:
         ordering = ['id']  # preserves insert order
@@ -67,7 +68,7 @@ class Schicht(models.Model):
         verbose_name_plural = 'Referenzdaten: Schichten'
     
     def __str__(self):
-        return self.schichten
+        return self.name
 
 
 class Fahrzeug(models.Model):
@@ -79,7 +80,7 @@ class Fahrzeug(models.Model):
     Returns:
         none 
     """
-    fzg_name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     bereich = models.CharField(max_length=30)
     kostenstelle = models.CharField(max_length=30, unique=True)
 
@@ -89,7 +90,7 @@ class Fahrzeug(models.Model):
         verbose_name_plural = 'Referenzdaten: Fahrzeuge HIM2'
     
     def __str__(self):
-        return f"{self.fzg_name} - {self.bereich} (KS: {self.kostenstelle}))" 
+        return f"{self.name} - {self.bereich} (KS: {self.kostenstelle}))" 
     
 
 class Mitarbeiter(models.Model):
@@ -130,11 +131,12 @@ class Betankung(models.Model):
         none 
     """
     fahrzeug = models.ForeignKey(Fahrzeug, verbose_name='Fahrzeug', blank=True, null=True, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT) # soll immer gespeichert bleiben
     daten_eingabe_von = models.CharField(max_length=40, verbose_name='von welcher App:') # die jeweilige App - muss beim Anlegen hard kodiert werden
-    created_at = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
+    created_at_tank = models.DateField(auto_now_add=True, editable=False, null=False, blank=False) # hängt zwar meist bei session, ist aber gut, dass redundand
     amount_fuel = models.FloatField(default=0, validators=[MinValueValidator(0)], verbose_name='Diesel [l]')
-    start_time = models.TimeField(default='00:00')
-    end_time = models.TimeField(default='00:00')
+    start_time = models.TimeField(default='06:00')
+    end_time = models.TimeField(default='06:00')
 
 
     class Meta:

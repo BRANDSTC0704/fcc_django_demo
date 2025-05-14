@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 import sys 
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -165,3 +166,25 @@ TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]
 #]
 
 # CORS_ALLOW_ALL_ORIGINS = True
+
+LOG_LEVEL = os.environ.get("LOG_LEVEL", logging.INFO)
+
+LOGGING = {
+    "version": 1,
+    # This will leave the default Django logging behavior in place
+    "disable_existing_loggers": False,
+    # Custom handler config that gets log messages and outputs them to console
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": LOG_LEVEL,
+        },
+    },
+    "loggers": {
+        # Send everything to console
+        "": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+        },
+    },
+}

@@ -43,6 +43,7 @@ def grouped_dashboard(request):
     # Data filtering
     if start and end:
         df = get_kuebel_data()
+        print(df.columns)
         df['created_at'] = pd.to_datetime(df['created_at'])
         mask = (df['created_at'] >= start) & (df['created_at'] <= end)
         filtered_df = df.loc[mask]

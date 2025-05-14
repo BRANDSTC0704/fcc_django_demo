@@ -5,6 +5,7 @@ from him2_referenzdaten.models import Betankung, Mitarbeiter, Fahrzeug
 from .validators import validate_time
 from datetime import datetime, time, timedelta
 
+
 class KuebelSessionForm(forms.ModelForm):
     """Session Form including user name and comments; timestamp and user-name from login are saved in background. 
 
@@ -34,7 +35,7 @@ class KuebelSessionForm(forms.ModelForm):
 class BetankungForm(forms.ModelForm):
     """Form including Fahrzeug-Info und Betankung. 
     
-    fahrzeug = models.ForeignKey(Mitarbeiter, verbose_name='Fahrzeug', blank=False, null=False, on_delete=models.PROTECT)
+    fahrzeug = models.ForeignKey(Fahrzeug, verbose_name='Fahrzeug', blank=False, null=False, on_delete=models.PROTECT)
     daten_eingabe_von = models.CharField(max_length=40) # die jeweilige App - muss beim Anlegen hard kodiert werden
     created_at = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
     amount_fuel = models.FloatField(default=0, validators=[MinValueValidator(0)])
@@ -51,8 +52,7 @@ class BetankungForm(forms.ModelForm):
             'fahrzeug': forms.Select(attrs={'class': 'form-control'}) 
         }
     
-    from datetime import time, timedelta
-
+    
     def generate_time_choices(start="00:00", end="24:00", interval_minutes=15):
         start_h, start_m = map(int, start.split(":"))
         end_h, end_m = map(int, end.split(":"))
@@ -88,28 +88,44 @@ class BetankungForm(forms.ModelForm):
         
     def clean(self):
         cleaned_data = super().clean()
-        start = cleaned_data.get("start_time")
-        end = cleaned_data.get("end_time")
+        fahrzeug = cleaned_data.get("fahrzeug")
+        amount_fuel = cleaned_data.get('amount_fuel')
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
 
         # Debug: print the values of start and end to see what's being passed
         # print(f"start_time: {start}, end_time: {end}")
 
         # Only validate if both start_time and end_time are not empty
-        if start and end:  
+        if start_time and end_time:  
             # Convert string times to datetime objects
-            start_time_obj = datetime.strptime(start, "%H:%M").time()
-            end_time_obj = datetime.strptime(end, "%H:%M").time()
+            start_time_obj = datetime.strptime(start_time, "%H:%M").time()
+            end_time_obj = datetime.strptime(end_time, "%H:%M").time()
 
             if end_time_obj < start_time_obj:
                 self.add_error("end_time", "Endzeit muss nach oder bei der Startzeit liegen.")
 
-        elif start and not end:
+        elif start_time and not end_time:
             self.add_error("end_time", "Endzeit ist erforderlich, wenn Startzeit angegeben ist.")
-        elif not start and end:
+        elif not start_time and end_time:
             self.add_error("start_time", "Startzeit ist erforderlich, wenn Endzeit angegeben ist.")
 
-        print('CLEANED DATA: ', cleaned_data)
+        # print('CLEANED DATA:', cleaned_data)
+
+        # making sure, that car is selected 
+        any_filled = any([
+            fahrzeug,
+            amount_fuel,
+            not ( str(start_time) != '06:00' and str(end_time) != '06:00' ) 
+        ])
+
+        # If anything is filled, require fahrzeug
+        if any_filled and not fahrzeug:
+            self.add_error('fahrzeug', "Bitte wählen Sie ein Fahrzeug aus, wenn Sie eine Betankung eintragen.")
+
         return cleaned_data
+
 
 class KuebelEintragForm(forms.Form):
     """Detaillierte Aktivitätsaufzeichnung Kübelwaschplatz.  

@@ -9,11 +9,11 @@ import io
 import base64
 from django.db.models import F
 
-from him2_referenzdaten.models import KuebelArt
+from him2_referenzdaten.models import KuebelArt, Mitarbeiter, Betankung, Fahrzeug
 
 from him2_kuebelwaschplatz.models import (
     KuebelSession,
-    KuebelEintrag
+    KuebelEintrag, 
 )
 
 
@@ -41,7 +41,7 @@ def get_kuebel_data():
         columns: 
             ['kuebel_eintrag_id', 'log_id', 'kuebel_art_id', 'sonstiges_h',
             'reinigung_h', 'waschen_h', 'waschen_count', 'instandh_h',
-            'instandh_count', 'zerlegen_h', 'zerlegen_count', 'kuebel_name',
+            'instandh_count', 'zerlegen_h', 'zerlegen_count', 'name',
             'mitarbeiter', 'user_id', 'comments', 'created_at'],
         dtypes:
             kuebel_eintrag_id - int64, log_id -int64, 
@@ -49,7 +49,7 @@ def get_kuebel_data():
             reinigung_h - float64, waschen_h - float64,
             waschen_count - int64, instandh_h - float64,
             instandh_count - int64, zerlegen_h - float64,
-            zerlegen_count - int64, kuebel_name - object,
+            zerlegen_count - int64, name - object,
             mitarbeiter - object, user_id - int64,
             comments - object, created_at - datetime64[ns, UTC]
     """
@@ -57,25 +57,69 @@ def get_kuebel_data():
     kuebel_art_qs = KuebelArt.objects.all()
     kuebel_session_qs = KuebelSession.objects.all().select_related('user').annotate(username=F('user__username'))
     kuebel_eintrag_qs = KuebelEintrag.objects.all()
-    
-    kuebel_art_df = convert_qs_to_df(kuebel_art_qs)
-    kuebel_session_df = convert_qs_to_df(kuebel_session_qs)
-    kuebel_eintrag_df = convert_qs_to_df(kuebel_eintrag_qs)
+    # addendum: Mitarbeiter und Tankfahrzeug 
+    mitarbeiter_qs = Mitarbeiter.objects.all()
+    tank_qs = Betankung.objects.all()
+    fahrzeug_qs = Fahrzeug.objects.all()
 
+    def convert_ids_to_int(df, colname_list=['id']): 
+        """Convert columns with name id to int-datatype. 
+
+        Args:
+            df (pd.DataFrame): dataframe containing column with name id. 
+            colname_list (list): list of columns to convert 
+
+        Returns:
+            pd.DataFrame: Dataframe with converted id-column. 
+        """
+        
+        for i in colname_list: 
+            if i in df.columns: 
+                df[i] = df[i].fillna(0) # fix missing values
+                df[i] = df[i].astype(int)
+        return df 
+
+
+    kuebel_art_df = convert_ids_to_int(convert_qs_to_df(kuebel_art_qs))
+    kuebel_session_df = convert_ids_to_int(convert_qs_to_df(kuebel_session_qs), ['id', 'tank_id'])
+    kuebel_eintrag_df = convert_ids_to_int(convert_qs_to_df(kuebel_eintrag_qs))
+    mitarbeiter_df = convert_ids_to_int(convert_qs_to_df(mitarbeiter_qs))
+    tank_df = convert_ids_to_int(convert_qs_to_df(tank_qs))
+    fahrzeug_df = convert_ids_to_int(convert_qs_to_df(fahrzeug_qs))
+
+    # print('kuebel_art_df - ', kuebel_art_df.columns)
+    # print('kuebel_session_df - ', kuebel_session_df.columns)
+    # print('kuebel_eintrag_df - ', kuebel_eintrag_df.columns)
+    # print('mitarbeiter_df - ', mitarbeiter_df.columns)
+    # print('tank_df - ', tank_df.columns)
+    # print('fahrzeug_df - ', fahrzeug_df.columns)
+    
     kuebel_art_df.rename(columns={'id': 'kuebel_art_id'}, inplace=True)
     kuebel_session_df.rename(columns={'id': 'log_id'}, inplace=True)
     kuebel_eintrag_df.rename(columns={'id': 'kuebel_eintrag_id'}, inplace=True)
+    mitarbeiter_df.rename(columns={'id': 'mitarbeiter_id'}, inplace=True)
+    tank_df.rename(columns={'id': 'tank_id'}, inplace=True)
+    fahrzeug_df.rename(columns={'id': 'fahrzeug_id'}, inplace=True)
 
-    step1 = pd.merge(kuebel_eintrag_df, kuebel_art_df, on='kuebel_art_id', how='left')
-    step2 = pd.merge(step1, kuebel_session_df, on='log_id', how='left')
-    assert step2.shape[0] == kuebel_eintrag_df.shape[0], 'Beim Kuebel-Merging hat etwas nicht geklappt!'
+    # prep Mitarbeiter und Tank 
+    tank_fahrzeug_df = pd.merge(tank_df, fahrzeug_df, on='fahrzeug_id', how='left')
+    tank_fahrzeug_df.rename(columns={'name': 'fahrzeug_name', 'user_id': 'user_id_betankung'}, inplace=True)
+
+    mitarbeiter_df['mitarbeiter'] = mitarbeiter_df['first_name'] + ' ' + mitarbeiter_df['last_name'] 
+
+    step1 = pd.merge(kuebel_eintrag_df, kuebel_art_df, on='kuebel_art_id', how='left', suffixes=['_kuebel_eintrag', '_kuebel_art'])
+    step2 = pd.merge(step1, kuebel_session_df, on='log_id', how='left', suffixes=['_step1', '_kuebel_session'])
+    step3 = pd.merge(step2, tank_fahrzeug_df, on='tank_id', how='left', suffixes=['_step2', '_tank_fahrzeug'])
+    last_step = pd.merge(step3, mitarbeiter_df, on='mitarbeiter_id', how='left', suffixes=['_step3', '_mitarbeiter'])
+
+    assert last_step.shape[0] == kuebel_eintrag_df.shape[0], 'Beim Kuebel-Merging hat etwas nicht geklappt!'
     
     # Berechnung Gesamtzahl Behälter 
-    step2['Anzahl_gesamt'] = step2['waschen_count'] + step2['instandh_count'] + step2['zerlegen_count']
+    last_step['Anzahl_gesamt'] = last_step['waschen_count'] + last_step['instandh_count'] + last_step['zerlegen_count']
     # Berechnung Gesamtstunden
-    step2['Stunden_gesamt'] = step2['sonstiges_h'] + step2['reinigung_h'] + step2['waschen_h'] + step2['instandh_h'] + step2['zerlegen_h']
+    last_step['Stunden_gesamt'] = last_step['sonstiges_h'] + last_step['reinigung_h'] + last_step['waschen_h'] + last_step['instandh_h'] + last_step['zerlegen_h']
     
-    return(step2)
+    return(last_step)
 
 def plot_tages_werte_aktivitaet_anzahl(df):
     """Time Series Plot-Function for aggregated data view. 
@@ -235,13 +279,17 @@ def generate_excel_table(df):
         # Create an in-memory bytes buffer
         output = io.BytesIO()
 
-        spalten = ['username', 'mitarbeiter', 'created_at', 
+        print(df.columns)
+
+        spalten = ['username', 'mitarbeiter',
+                   'created_at', 'daten_eingabe_von', 
                 'comments', 'Anzahl_gesamt', 'Stunden_gesamt', 
                 'sonstiges_h', 'reinigung_h', 'waschen_h', 
-                'instandh_h', 'zerlegen_h', 'kuebel_name',
+                'instandh_h', 'zerlegen_h', 'name',
                 'waschen_count', 'instandh_count', 'zerlegen_count',
+                'fahrzeug_name',  'bereich', 'kostenstelle',                 
                 'user_id', 'log_id', 'kuebel_eintrag_id', 
-                'kuebel_art_id']
+                'kuebel_art_id',  'mitarbeiter_id', 'tank_id', 'user_id_betankung']
 
         # Use Excel writer with buffer
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
