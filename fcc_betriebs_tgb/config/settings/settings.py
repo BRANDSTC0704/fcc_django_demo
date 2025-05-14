@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
-import sys 
+import sys
 import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,20 +35,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin', 
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'clearcache',
-    'corsheaders',
-    'django.contrib.admindocs', 
+    "clearcache",
+    "corsheaders",
+    "django.contrib.admindocs",
     "him2_referenzdaten",
     "him2_kuebelwaschplatz",
-    "him2_dboard_kuebelwaschplatz", 
-    "him2_pressenlinie"
+    "him2_dboard_kuebelwaschplatz",
+    "him2_pressenlinie",
 ]
 
 MIDDLEWARE = [
@@ -59,8 +59,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.admindocs.middleware.XViewMiddleware", 
-    'corsheaders.middleware.CorsMiddleware',
+    "django.contrib.admindocs.middleware.XViewMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -68,8 +68,8 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # "DIRS": [os.path.join(BASE_DIR, "templates")],
-        # "DIRS": [], 
-        'DIRS': [
+        # "DIRS": [],
+        "DIRS": [
             os.path.join(BASE_DIR, "templates"),
         ],
         "APP_DIRS": True,
@@ -91,15 +91,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          'NAME': 'himberg2',
-          'USER': 'postgres',
-          'PASSWORD': 'postgres',
-          'HOST': 'localhost',
-          'PORT': '5432',
-      }
-  }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "himberg2",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
 
 
 # Password validation
@@ -137,8 +137,8 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 # LOGIN_REDIRECT_URL = '/your-target-url-after-login/'
 
@@ -161,9 +161,9 @@ STATICFILES_FINDERS = [
 
 TIME_INPUT_FORMATS = ["%H:%M:%S", "%H:%M"]
 
-#CORS_ALLOWED_ORIGINS = [
+# CORS_ALLOWED_ORIGINS = [
 #    "http://localhost:8000",  # example for frontend
-#]
+# ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
 

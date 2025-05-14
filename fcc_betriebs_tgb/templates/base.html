@@ -52,13 +52,13 @@
                 <a href="{% url 'admin' %}" class="btn btn-success">Admin-Seite</a>
             {% endif %}
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/him2_kuebelwaschplatz/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dateneingabe</a>
-            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/him2_dboard_kuebelwaschplatz/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/him2_kuebelwaschplatz/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Kübel-Waschplatz Dateneingabe</a>
+            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/him2_dboard_kuebelwaschplatz/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Kübel-Waschplatz Dashboard</a>
         
         </ul>
         
         <ul class="text-center mt-3">
-            <a href="{% url 'stunden_eingabe' %}" class="btn {% if request.path == '/him2_pressenlinie/stunden_eingabe' %}btn-primary{% else %}btn-secondary{% endif %}">Presselinie Zeiterfassung HIM2 Dashboard</a>
+            <a href="{% url 'stunden_eingabe' %}" class="btn {% if request.path == '/him2_pressenlinie/stunden_eingabe' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Presselinie Zeiterfassung</a>
         </ul>
 
     </header>
@@ -78,12 +78,12 @@
             {% endif %}
 
             <a href="{% url 'start_page' %}" class="btn {% if request.path == '/' %}btn-primary{% else %}btn-secondary{% endif %}">Startseite</a>
-            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/him2_kuebelwaschplatz/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2</a>
-            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/him2_dboard_kuebelwaschplatz/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">Kübel-Platz HIM2 Dashboard</a>
+            <a href="{% url 'kuebel_aktivitaet' %}" class="btn {% if request.path == '/him2_kuebelwaschplatz/kuebel_aktivitaet' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Kübel-Waschplatz</a>
+            <a href="{% url 'grouped_dashboard' %}" class="btn {% if request.path == '/him2_dboard_kuebelwaschplatz/grouped_dashboard' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Kübel-Waschplatz Dashboard</a>
         </ul>
 
         <ul class="text-center mt-3">
-            <a href="{% url 'stunden_eingabe' %}" class="btn {% if request.path == '/him2_pressenlinie/stunden_eingabe' %}btn-primary{% else %}btn-secondary{% endif %}">Presselinie Zeiterfassung HIM2 Dashboard</a>
+            <a href="{% url 'stunden_eingabe' %}" class="btn {% if request.path == '/him2_pressenlinie/stunden_eingabe' %}btn-primary{% else %}btn-secondary{% endif %}">HIM2 Presselinie Zeiterfassung</a>
         </ul>
 
     </footer>

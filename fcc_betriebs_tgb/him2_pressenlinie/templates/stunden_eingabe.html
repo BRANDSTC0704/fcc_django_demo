@@ -22,56 +22,64 @@
       </div>
     </div>
 
-    <!-- Mitarbeiter 2 -->
+    <!-- Anmerkung -->
     <div class="col-auto text-center">
       <label for="{{ session_form.comments.id_for_label }}" class="form-label">Anmerkung</label>
       {{ session_form.comments }}
     </div>
   </div>
-
  
+  {% if data_form.non_field_errors %}
+  <div class="alert alert-danger">
+    {% for error in data_form.non_field_errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  
   <div class="container mt-4">
-    <div class="row justify-content-center">
+    Mitarbeiter 1 darf nicht gleich Mitarbeiter 2 sein! 
+      <div class="row justify-content-center">
       <table class="table table-striped text-center">
         <thead>
           <tr>
-            <th>Schicht</th>
-            <th>Mitarbeiter 1</th>
-            <th>Mitarbeiter 2</th>
-
+            <th style="width: 100px;">Schicht</th>
+            <th style="width: 100px;">Mitarbeiter 1*</th>
+            <th style="width: 100px;">Mitarbeiter 2*</th>
             {% for zeittyp in zeittypen %}
               <th>{{ zeittyp }}</th>
             {% endfor %}
           </tr>
         </thead>
-   
-   
 <tbody>
   {% for schicht in schichten %}
     <tr>
       <td>{{ schicht }}</td>
-      
       <!-- Dynamically generate the field name for schicht_mitarbeiter_1 -->
-      {% with field_name_1="schicht_mitarbeiter_1_1" %}
+      {% with schicht.id|stringformat:"s" as schichtid %}
+        {% with "schicht_mitarbeiter_1_"|add:schichtid as field_name_1 %}
         <td>{{ data_form|get_field:field_name_1 }}</td>
-      {% endwith %}
+        {% endwith %}
       <!-- Dynamically generate the field name for schicht_mitarbeiter_2 -->
-      {% with field_name_2="schicht_mitarbeiter_2_"|add:schicht.id %}
+        {% with "schicht_mitarbeiter_2_"|add:schichtid as field_name_2 %}
         <td>{{ data_form|get_field:field_name_2 }}</td>
+        {% endwith %}
       {% endwith %}
 
       {% for zeittyp in zeittypen %}
-        <td>
-          {% with field_name="entry_"|add:schicht.id|add:"_"|add:zeittyp.id %}
+        {% with schicht.id|stringformat:"i" as schichtid %}
+          {% with zeittyp.id|stringformat:"i" as zeitid %}
+            {% with "entry_"|add:schichtid|add:'_'|add:zeitid as field_name %}
             <td>{{ data_form|get_field:field_name }}</td>
+            {% endwith %} 
           {% endwith %}
-        </td>
+        {% endwith %}
       {% endfor %}
     </tr>
   {% endfor %}
 </tbody>
       </table>
-
       
   <button type="submit" class="btn btn-primary">Speichern</button>
 </form>

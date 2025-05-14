@@ -1,27 +1,28 @@
 TODO 
-Zeitschritt Zeiterfassung 0,25 - Done
+Zeitschritt Zeiterfassung 0,25 - DONE
 
-Farben Kübel - vermutlich weg (Innendienst) - Done 
-Sonstiges h - weg - Done 
-Verantwortlicher: Dropdown Mitarbeiter - Done 
+Farben Kübel - vermutlich weg (Innendienst) - DONE 
+Sonstiges h - weg - DONE 
+Verantwortlicher: Dropdown Mitarbeiter - DONE 
 
-Rechner sichern; Browser fixieren; - Michael sprechen - angefragt 
+Rechner sichern; Browser fixieren; - Michael sprechen - - IN PROGRESS 
 
 Presselinie 
-Datumauswahl erlauben 
-(2 Schichten) - ein Tag: 2 Zeilen  
-Zählerstand Ballenpresse (Info: darf nicht kleiner sein als letzter Eintrag)
-Stromzähler: Zählerstand Ballenpresse (Info: Wert kleiner oder größer) 
-Felder: Mitarbeiter 1 und Mitarbeiter 2 
+Datumauswahl erlauben - DONE 
+(2 Schichten) - ein Tag: 2 Zeilen  - DONE 
+Felder: Mitarbeiter 1 und Mitarbeiter 2 - DONE  
+
+Zählerstand Ballenpresse (Info: darf nicht kleiner sein als letzter Eintrag) - OFFEN 
+Stromzähler: Zählerstand Ballenpresse (Info: Wert kleiner oder größer) - OFFEN
 
 Zeiten eine Seite 
-Produktion und Abholung auf einer Seite gemeinsam 
-Anfangslagerstand pro Monat (1 x monatlich: Startwert) 
-Korrekturwert: Ende des Monats 
+Produktion und Abholung auf einer Seite gemeinsam - OFFEN 
+Anfangslagerstand pro Monat (1 x monatlich: Startwert) - OFFEN 
+Korrekturwert: Ende des Monats - OFFEN 
+Balleninventur Monatsanfang wird die geändert; - OFFEN 
 
-Balleninventur Monatsanfang wird die geändert; 
-Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] 
+Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] - DONE 
 
-Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) 
+Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) - IN PROGRESS 
 Kübelwaschen - DONE 
 Betriebsstunden (Start und Ende) - DONE

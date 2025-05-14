@@ -1,19 +1,29 @@
 from django.contrib import admin
-#from django import forms 
-#from django.db import models
-#from django.forms.widgets import SelectDateWidget
-#from datetime import datetime
+
+# from django import forms
+# from django.db import models
+# from django.forms.widgets import SelectDateWidget
+# from datetime import datetime
 
 # Register your models here.
-from .models import ZeitAktivitaetTyp, AbhProdTyp, StundenEingabeSession, Aktivitaet, Produktion
+from .models import (
+    ZeitAktivitaetTyp,
+    AbhProdTyp,
+    StundenEingabeSession,
+    SchichtEingabeMitarbeiter,
+    StundenEingabeDetails,
+    Aktivitaet,
+    Produktion,
+)
 
 
 admin.site.register(ZeitAktivitaetTyp)
 admin.site.register(AbhProdTyp)
 admin.site.register(StundenEingabeSession)
+admin.site.register(SchichtEingabeMitarbeiter)
+admin.site.register(StundenEingabeDetails)
 admin.site.register(Aktivitaet)
 admin.site.register(Produktion)
-
 
 
 # class KuebelSessionAdminForm(forms.ModelForm):
@@ -36,16 +46,16 @@ admin.site.register(Produktion)
 
 #     def __init__(self, *args, **kwargs):
 #         super().__init__(*args, **kwargs)
-       
+
 #         created_at = self.instance.created_at if self.instance and self.instance.pk else datetime.now()
-        
+
 #         self.fields['created_at_date'].initial = created_at.strftime('%Y-%m-%d') # created_at.date()
-#         self.fields['created_at_time'].initial = created_at.time().replace(second=0, microsecond=0)            
-        
+#         self.fields['created_at_time'].initial = created_at.time().replace(second=0, microsecond=0)
+
 #         # self.fields['created_at_override'].initial = self.instance.created_at
 #         # self.fields['created_at_date'] = forms.DateField(widget=SelectDateWidget(), label="Datum")
 #         # self.fields['created_at_time'] = forms.TimeField(widget=forms.TimeInput(format='%H:%M'), label="Zeit [HH:MM]")
-        
+
 #         self.fields['user'].label = "User (angelegt im System)"
 
 #     def save(self, commit=True):
@@ -70,7 +80,7 @@ admin.site.register(Produktion)
 #         self.fields['kuebel_art'].widget.can_add_related = False
 #         self.fields['kuebel_art'].widget.can_change_related = False
 #         self.fields['kuebel_art'].widget.can_delete_related = False
-    
+
 
 # class KuebelEintragInline(admin.TabularInline):
 #     model = KuebelEintrag
@@ -84,14 +94,14 @@ admin.site.register(Produktion)
 #     ]
 
 # class KuebelSessionAdmin(admin.ModelAdmin):
-    
+
 #     form = KuebelSessionAdminForm
-    
+
 #     site_title = 'Kübel-Metadaten'
 #     search_fields = ['created_at']
 #     list_filter = ['created_at']
-#     list_display = ['mitarbeiter', 'user', 'comments', 'entry_count'] 
-#     fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']  
+#     list_display = ['mitarbeiter', 'user', 'comments', 'entry_count']
+#     fields = ['created_at_date', 'created_at_time', 'mitarbeiter', 'user', 'comments']
 #     readonly_fields = ['entry_count']
 #     inlines = [KuebelEintragInline]
 

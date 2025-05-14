@@ -6,7 +6,7 @@ def validate_time(value):
         return
 
     try:
-        stunden, minuten = map(int, str(value).split(':'))
+        stunden, minuten = map(int, str(value).split(":"))
     except (ValueError, AttributeError):
         raise ValidationError("Ungültiges Zeitformat! (Erwartet: HH:MM)")
 

@@ -30,10 +30,9 @@ urlpatterns = [
     path("him2_kuebelwaschplatz/", include("him2_kuebelwaschplatz.urls")),
     path("", views.start_page, name="start_page"),
     path("him2_dboard_kuebelwaschplatz/", include("him2_dboard_kuebelwaschplatz.urls")),
-    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', logout_view, name='logout'),
+    path("login/", LoginView.as_view(template_name="login.html"), name="login"),
+    path("logout/", logout_view, name="logout"),
     path("him2_pressenlinie/", include("him2_pressenlinie.urls")),
-
 ]
 
 # Serve static files (for Plotly)

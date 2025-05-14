@@ -4,9 +4,14 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from django_plotly_dash import DjangoDash
-from .preprocessing import (get_cleaned_work_hours, get_cleaned_employee, 
-                            date_allowed, get_cleaned_wcat, get_cleaned_cont, 
-                            get_cleaned_prot)
+from .preprocessing import (
+    get_cleaned_work_hours,
+    get_cleaned_employee,
+    date_allowed,
+    get_cleaned_wcat,
+    get_cleaned_cont,
+    get_cleaned_prot,
+)
 import io
 import datetime
 
@@ -30,19 +35,23 @@ weekly_app.layout = html.Div(
         # Date Picker
         html.Div(
             [
-                dcc.DatePickerSingle(id="week-picker",  
-                                    display_format='YYYY-W',  # Display year and week number
-                                    placeholder='Wochenwahl', 
-                                    min_date_allowed=min_date,
-                                    max_date_allowed=max_date, 
-                                    first_day_of_week=1, 
-                                    initial_visible_month=max_date,
-                                    date=max_date)
+                dcc.DatePickerSingle(
+                    id="week-picker",
+                    display_format="YYYY-W",  # Display year and week number
+                    placeholder="Wochenwahl",
+                    min_date_allowed=min_date,
+                    max_date_allowed=max_date,
+                    first_day_of_week=1,
+                    initial_visible_month=max_date,
+                    date=max_date,
+                )
             ],
             className="text-center mt-3",
         ),
-        html.H2(id='date-range-output',  className="text-center mt-3",),
-        
+        html.H2(
+            id="date-range-output",
+            className="text-center mt-3",
+        ),
         dcc.Graph(id="employee_plot"),
         dcc.Graph(id="workhours_plot"),
         dcc.Store(id="json_data_workhours"),  # Store filtered data
@@ -71,13 +80,13 @@ weekly_app.layout = html.Div(
 # Datefilter Week
 @weekly_app.callback(
     # Output('output-container', 'children'),
-    Output('date-range-output', 'children'),
+    Output("date-range-output", "children"),
     # Output('selected-range-display', 'children'), #Added output to display the range
-    Input('week-picker', 'date')
+    Input("week-picker", "date"),
 )
 def update_output(selected_date):
     if selected_date:
-        selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+        selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
         year, week_num, day_of_week = selected_date.isocalendar()
 
         # Get the first day of the selected week (Monday)
@@ -89,26 +98,35 @@ def update_output(selected_date):
         # date_strings = [date.strftime('%Y-%m-%d') for date in week_dates]
 
         return (
-            # html.Div(f"Dates in Week {week_num}: {', '.join(date_strings)}"), 
-            # html.Div(f"Start Date: {first_day_of_week.strftime('%Y-%m-%d')}, End Date: {last_day_of_week.strftime('%Y-%m-%d')}"), 
-            html.Div(f"Datumsauswahl: {first_day_of_week.strftime('%d.%m.%Y')} - {last_day_of_week.strftime('%d.%m.%Y')}") #Return the display
-           )
+            # html.Div(f"Dates in Week {week_num}: {', '.join(date_strings)}"),
+            # html.Div(f"Start Date: {first_day_of_week.strftime('%Y-%m-%d')}, End Date: {last_day_of_week.strftime('%Y-%m-%d')}"),
+            html.Div(
+                f"Datumsauswahl: {first_day_of_week.strftime('%d.%m.%Y')} - {last_day_of_week.strftime('%d.%m.%Y')}"
+            )  # Return the display
+        )
     else:
         return "Select a week to see dates."
+
 
 # Excel-Download
 @weekly_app.callback(
     Output("download", "data"),
     Input("download-btn", "n_clicks"),
-    State("json_data_workhours", "data"), 
-    State("json_data_employee", "data"), 
-    State("json_data_wcat", "data"), 
-    State("json_data_cont", "data"), 
-    State("json_data_prot", "data"), 
+    State("json_data_workhours", "data"),
+    State("json_data_employee", "data"),
+    State("json_data_wcat", "data"),
+    State("json_data_cont", "data"),
+    State("json_data_prot", "data"),
     prevent_initial_call=True,
 )
-def download_excel(n_clicks, json_data_workhours, json_data_employee, 
-                   json_data_wcat, json_data_cont, json_data_prot):
+def download_excel(
+    n_clicks,
+    json_data_workhours,
+    json_data_employee,
+    json_data_wcat,
+    json_data_cont,
+    json_data_prot,
+):
     if not n_clicks:
         return dash.no_update
 
@@ -121,22 +139,34 @@ def download_excel(n_clicks, json_data_workhours, json_data_employee,
     filtered_df_wcat = pd.read_json(io.StringIO(json_data_wcat))
     filtered_df_cont = pd.read_json(io.StringIO(json_data_cont))
     filtered_df_prot = pd.read_json(io.StringIO(json_data_prot))
-    
-    filtered_df_wh["start_time"] = filtered_df_wh["start_time"].dt.strftime("%H:%M:%S") 
-    filtered_df_wh["end_time"] = filtered_df_wh["end_time"].dt.strftime("%H:%M:%S") 
-    
+
+    filtered_df_wh["start_time"] = filtered_df_wh["start_time"].dt.strftime("%H:%M:%S")
+    filtered_df_wh["end_time"] = filtered_df_wh["end_time"].dt.strftime("%H:%M:%S")
+
     # Generate Excel file
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine="xlsxwriter", datetime_format="yyyy-mm-dd hh:mm:ss") as writer:
-        filtered_df_wh.to_excel(writer, sheet_name="Betriebsstunden", index=False, header=True)
-        filtered_df_emp.to_excel(writer, sheet_name="Arbeiterstunden", index=False, header=True)
-        filtered_df_wcat.to_excel(writer, sheet_name="Betriebskategorie_Detail", index=False, header=True)
-        filtered_df_cont.to_excel(writer, sheet_name="Anzahl_Container", index=False, header=True)
-        filtered_df_prot.to_excel(writer, sheet_name="Protokollist", index=False, header=True)
+    with pd.ExcelWriter(
+        output, engine="xlsxwriter", datetime_format="yyyy-mm-dd hh:mm:ss"
+    ) as writer:
+        filtered_df_wh.to_excel(
+            writer, sheet_name="Betriebsstunden", index=False, header=True
+        )
+        filtered_df_emp.to_excel(
+            writer, sheet_name="Arbeiterstunden", index=False, header=True
+        )
+        filtered_df_wcat.to_excel(
+            writer, sheet_name="Betriebskategorie_Detail", index=False, header=True
+        )
+        filtered_df_cont.to_excel(
+            writer, sheet_name="Anzahl_Container", index=False, header=True
+        )
+        filtered_df_prot.to_excel(
+            writer, sheet_name="Protokollist", index=False, header=True
+        )
 
         workbook = writer.book
-        date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        datetime_format = workbook.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'})
+        date_format = workbook.add_format({"num_format": "yyyy-mm-dd"})
+        datetime_format = workbook.add_format({"num_format": "yyyy-mm-dd hh:mm:ss"})
 
         # Adjust column widths and format datetime correctly
         def adjust_columns(df, sheet):
@@ -149,9 +179,13 @@ def download_excel(n_clicks, json_data_workhours, json_data_employee,
                     for row_num, value in enumerate(df[col]):
                         if pd.notna(value):  # Avoid NaN issues
                             if value.time() == pd.Timestamp("00:00:00").time():
-                                worksheet.write_datetime(row_num + 1, i, value, date_format)  # Date only
+                                worksheet.write_datetime(
+                                    row_num + 1, i, value, date_format
+                                )  # Date only
                             else:
-                                worksheet.write_datetime(row_num + 1, i, value, datetime_format)  # Full datetime
+                                worksheet.write_datetime(
+                                    row_num + 1, i, value, datetime_format
+                                )  # Full datetime
 
         adjust_columns(filtered_df_wh, "Betriebsstunden")
         adjust_columns(filtered_df_emp, "Arbeiterstunden")
@@ -173,7 +207,7 @@ def download_excel(n_clicks, json_data_workhours, json_data_employee,
 )
 def update_graphs_wh(selected_date):
 
-    selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     year, week_num, day_of_week = selected_date.isocalendar()
 
     start_date = datetime.date.fromisocalendar(year, week_num, 1)
@@ -217,7 +251,7 @@ def update_graphs_wh(selected_date):
         hovertemplate="Woche: %{x} <br>Gesamtstunden: %{y:.0f} Stunden",
     )
     weekly_fig.update_yaxes(range=[0, weekly_data["Gesamtstunden"].max() + 5])
-    
+
     # filtered_df["start_time"] = pd.to_datetime(start_date, utc=True)filtered_df["start_time"].dt.time
     # filtered_df["end_time"] = filtered_df["end_time"].dt.time
     filtered_df["date"] = filtered_df["date"].dt.date
@@ -234,8 +268,8 @@ def update_graphs_wh(selected_date):
     [Input("week-picker", "date")],
 )
 def update_graphs_emp(selected_date):
-    
-    selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     year, week_num, day_of_week = selected_date.isocalendar()
 
     start_date = datetime.date.fromisocalendar(year, week_num, 1)
@@ -258,17 +292,18 @@ def update_graphs_emp(selected_date):
         else:
             # Convert numerical timestamp to datetime object
             seconds = timestamp / 1000.0  # Convert milliseconds to seconds
-            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(tzinfo=None) #remove timezone.
-            return datetime_object #return the datetime object directly, not a string
-    
+            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(
+                tzinfo=None
+            )  # remove timezone.
+            return datetime_object  # return the datetime object directly, not a string
+
     df["work_start"] = df["work_start"].apply(convert_timestamp)
     df["work_end"] = df["work_end"].apply(convert_timestamp)
-    
 
     # Explicitly convert to datetime64[ns]
     df["work_start"] = pd.to_datetime(df["work_start"], format="%H:%M:%S")
     df["work_end"] = pd.to_datetime(df["work_end"], format="%H:%M:%S")
-    
+
     end_date = pd.to_datetime(end_date) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
     # Filter Data
     filtered_df = df[(df["date"] >= start_date) & (df["date"] <= end_date)].copy()
@@ -314,6 +349,7 @@ def update_graphs_emp(selected_date):
 
     return weekly_fig, filtered_df.to_json()
 
+
 # work category
 @weekly_app.callback(
     [
@@ -323,8 +359,8 @@ def update_graphs_emp(selected_date):
     [Input("week-picker", "date")],
 )
 def update_graphs_wcat(selected_date):
-    
-    selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     year, week_num, day_of_week = selected_date.isocalendar()
 
     start_date = datetime.date.fromisocalendar(year, week_num, 1)
@@ -347,28 +383,40 @@ def update_graphs_wcat(selected_date):
         else:
             # Convert numerical timestamp to datetime object
             seconds = timestamp / 1000.0  # Convert milliseconds to seconds
-            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(tzinfo=None) #remove timezone.
-            return datetime_object #return the datetime object directly, not a string
+            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(
+                tzinfo=None
+            )  # remove timezone.
+            return datetime_object  # return the datetime object directly, not a string
 
-     
     end_date = pd.to_datetime(end_date) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
     # Filter Data
-    filtered_df = df[(df["date"] >= start_date.date()) & (df["date"] <= end_date.date())].copy()
+    filtered_df = df[
+        (df["date"] >= start_date.date()) & (df["date"] <= end_date.date())
+    ].copy()
     # print(filtered_df)
 
     # Ensure filtering worked
     if filtered_df.empty:
         return px.line(title="No data"), px.line(title="No data"), "{}"
-    
-    plot_dat = pd.melt(filtered_df, id_vars='date', value_vars=["cleaning", "maintenance", "interruption"], 
-                       var_name="Kategorie", value_name='Dauer')
-    plot_dat['Kategorie'] = plot_dat['Kategorie'].map({'cleaning': "Reinigung",
-                                    "maintenance": "Wartung/Reparatur", 
-                                    'interruption': "Störung"})
-    
+
+    plot_dat = pd.melt(
+        filtered_df,
+        id_vars="date",
+        value_vars=["cleaning", "maintenance", "interruption"],
+        var_name="Kategorie",
+        value_name="Dauer",
+    )
+    plot_dat["Kategorie"] = plot_dat["Kategorie"].map(
+        {
+            "cleaning": "Reinigung",
+            "maintenance": "Wartung/Reparatur",
+            "interruption": "Störung",
+        }
+    )
+
     # print(plot_dat['date'].dtype)
-    plot_dat['date'] = pd.to_datetime(plot_dat['date'], utc=True)
-    plot_dat['date'] = plot_dat['date'].dt.strftime("%d.%m.%Y")
+    plot_dat["date"] = pd.to_datetime(plot_dat["date"], utc=True)
+    plot_dat["date"] = plot_dat["date"].dt.strftime("%d.%m.%Y")
 
     # Weekly Figure
     weekly_fig = go.Figure(layout=dict(template="plotly"))
@@ -378,15 +426,15 @@ def update_graphs_wcat(selected_date):
         x="date",
         color="Kategorie",
         title="tägliche Aktivitäten",
-        symbol="Kategorie"
+        symbol="Kategorie",
     )
     # weekly_fig.update_xaxes(tickformat="%d/%m/%Y")
-    #weekly_fig.update_yaxes(type="category")
-    #weekly_fig.update_traces(
+    # weekly_fig.update_yaxes(type="category")
+    # weekly_fig.update_traces(
     #    texttemplate="%{text} Stunden",
     #    hovertemplate="Woche: %{x} <br>Gesamtstunden: %{x:.0f} Stunden",
-    #)
-    #weekly_fig.update_xaxes(range=[0, weekly_data["Gesamtstunden"].max() + 5])
+    # )
+    # weekly_fig.update_xaxes(range=[0, weekly_data["Gesamtstunden"].max() + 5])
 
     return weekly_fig, filtered_df.to_json()
 
@@ -400,8 +448,8 @@ def update_graphs_wcat(selected_date):
     [Input("week-picker", "date")],
 )
 def update_graphs_container(selected_date):
-    
-    selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     year, week_num, day_of_week = selected_date.isocalendar()
 
     start_date = datetime.date.fromisocalendar(year, week_num, 1)
@@ -424,32 +472,43 @@ def update_graphs_container(selected_date):
         else:
             # Convert numerical timestamp to datetime object
             seconds = timestamp / 1000.0  # Convert milliseconds to seconds
-            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(tzinfo=None) #remove timezone.
-            return datetime_object #return the datetime object directly, not a string
+            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(
+                tzinfo=None
+            )  # remove timezone.
+            return datetime_object  # return the datetime object directly, not a string
 
-     
     end_date = pd.to_datetime(end_date) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
     # Filter Data
-    filtered_df = df[(df["date"] >= start_date.date()) & (df["date"] <= end_date.date())].copy()
+    filtered_df = df[
+        (df["date"] >= start_date.date()) & (df["date"] <= end_date.date())
+    ].copy()
     # print(filtered_df)
 
     # Ensure filtering worked
     if filtered_df.empty:
         return px.line(title="No data"), px.line(title="No data"), "{}"
-    
-    plot_dat = pd.melt(filtered_df, id_vars='date', value_vars=["alu", "holz", "karton", "magnetschrott", "kanister"], 
-                       var_name="Kategorie", value_name='Anzahl')
-    plot_dat['Kategorie'] = plot_dat['Kategorie'].map({'alu': 'Alu Dosen (Kübel - 8,5 kg)',
-                                    'holz': 'Holz (Container - 6 t)', 
-                                    'karton': 'Karton (Container - 6 t)', 
-                                    'magnetschrott': 'Magnetschrott (Container - 6 t)', 
-                                    'kanister': 'Kanister (1 Container = 5 Ballen)'
-                                    })
-    
+
+    plot_dat = pd.melt(
+        filtered_df,
+        id_vars="date",
+        value_vars=["alu", "holz", "karton", "magnetschrott", "kanister"],
+        var_name="Kategorie",
+        value_name="Anzahl",
+    )
+    plot_dat["Kategorie"] = plot_dat["Kategorie"].map(
+        {
+            "alu": "Alu Dosen (Kübel - 8,5 kg)",
+            "holz": "Holz (Container - 6 t)",
+            "karton": "Karton (Container - 6 t)",
+            "magnetschrott": "Magnetschrott (Container - 6 t)",
+            "kanister": "Kanister (1 Container = 5 Ballen)",
+        }
+    )
+
     # print(plot_dat['date'].dtype)
-    plot_dat['date'] = pd.to_datetime(plot_dat['date'], utc=True)
-    plot_dat['date'] = plot_dat['date'].dt.strftime("%d.%m.%Y")
-    
+    plot_dat["date"] = pd.to_datetime(plot_dat["date"], utc=True)
+    plot_dat["date"] = plot_dat["date"].dt.strftime("%d.%m.%Y")
+
     # Weekly Figure
     weekly_fig = go.Figure(layout=dict(template="plotly"))
     weekly_fig = px.line(
@@ -458,28 +517,27 @@ def update_graphs_container(selected_date):
         x="date",
         color="Kategorie",
         title="Container-Anzahl",
-        symbol="Kategorie"
+        symbol="Kategorie",
     )
     # weekly_fig.update_xaxes(tickformat="%d.%m.%Y")
-    #weekly_fig.update_yaxes(type="category")
-    #weekly_fig.update_traces(
+    # weekly_fig.update_yaxes(type="category")
+    # weekly_fig.update_traces(
     #    texttemplate="%{text} Stunden",
     #    hovertemplate="Woche: %{x} <br>Gesamtstunden: %{x:.0f} Stunden",
-    #)
-    #weekly_fig.update_xaxes(range=[0, weekly_data["Gesamtstunden"].max() + 5])
+    # )
+    # weekly_fig.update_xaxes(range=[0, weekly_data["Gesamtstunden"].max() + 5])
 
     return weekly_fig, filtered_df.to_json()
 
 
-# protocollist 
+# protocollist
 @weekly_app.callback(
-    
     Output("json_data_prot", "data"),
     Input("week-picker", "date"),
 )
 def update_protocollist(selected_date):
-    
-    selected_date = datetime.datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
     year, week_num, day_of_week = selected_date.isocalendar()
 
     start_date = datetime.date.fromisocalendar(year, week_num, 1)
@@ -503,12 +561,16 @@ def update_protocollist(selected_date):
         else:
             # Convert numerical timestamp to datetime object
             seconds = timestamp / 1000.0  # Convert milliseconds to seconds
-            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(tzinfo=None) #remove timezone.
-            return datetime_object #return the datetime object directly, not a string
-     
+            datetime_object = datetime.datetime.utcfromtimestamp(seconds).replace(
+                tzinfo=None
+            )  # remove timezone.
+            return datetime_object  # return the datetime object directly, not a string
+
     end_date = pd.to_datetime(end_date) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
     # Filter Data
-    filtered_df = df[(df["date"] >= start_date.date()) & (df["date"] <= end_date.date())].copy()
+    filtered_df = df[
+        (df["date"] >= start_date.date()) & (df["date"] <= end_date.date())
+    ].copy()
     # print(filtered_df)
- 
+
     return filtered_df.to_json(orient="records")
