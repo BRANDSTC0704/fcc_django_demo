@@ -71,18 +71,31 @@
       <p class="centered-paragraph">(falls gewünscht, bitte selbst herunterladen und abspeichern - sonst Tab schließen).</p>
     </div>
     <div class="text-center">
-      <p><strong>Mitarbeiter:</strong> {{ mitarbeiter }}</p>
-      <p><strong>Kommentar:</strong> {{ comments }}</p>
-      {% if fahrzeug or amount_fuel %}
-      <p><strong>Fahrzeug:</strong> {{ fahrzeug }} </p>
-      <p><strong>getankte Menge:</strong> {{ amount_fuel }} L </p> 
-      <strong>Startzeit:</strong> {{ start_time }}
-      <strong>Endzeit:</strong> {{ end_time }}
-        {% if end_time and start_time %}
-        <strong>gefahrene Zeit:</strong> {{ diff_time }} h
-        {% endif %}</p>
-      {% endif %}
-    </div>
+  <p><strong>Mitarbeiter:</strong> {{ mitarbeiter }}</p>
+  <p><strong>Kommentar:</strong> {{ comments }}</p>
+
+  {% if tank_data %}
+  <h4>Tankdaten</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Fahrzeug</th>
+        <th>Menge (L)</th>
+        <th>Laufzeit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tank in tank_data %}
+        <tr>
+          <td>{{ tank.fahrzeug }}</td>
+          <td>{{ tank.amount_fuel }}</td>
+          <td>{{ tank.laufzeit }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+</div>
     <div class="table-container">
       <table>
         <thead>

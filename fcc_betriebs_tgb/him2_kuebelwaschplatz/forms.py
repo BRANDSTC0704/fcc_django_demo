@@ -35,124 +35,127 @@ class KuebelSessionForm(forms.ModelForm):
         self.fields["mitarbeiter"].empty_label = "Mitarbeiter auswählen"
 
 
-class BetankungForm(forms.ModelForm):
-    """Form including Fahrzeug-Info und Betankung.
+# class BetankungForm(forms.ModelForm):
+#     """Form including Fahrzeug-Info und Betankung.
 
-    fahrzeug = models.ForeignKey(Fahrzeug, verbose_name='Fahrzeug', blank=False, null=False, on_delete=models.PROTECT)
-    daten_eingabe_von = models.CharField(max_length=40) # die jeweilige App - muss beim Anlegen hard kodiert werden
-    created_at = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
-    amount_fuel = models.FloatField(default=0, validators=[MinValueValidator(0)])
+#     fahrzeug = models.ForeignKey(Fahrzeug, verbose_name='Fahrzeug', blank=False, null=False, on_delete=models.PROTECT)
+#     daten_eingabe_von = models.CharField(max_length=40) # die jeweilige App - muss beim Anlegen hard kodiert werden
+#     created_at = models.DateField(auto_now_add=True, editable=False, null=False, blank=False)
+#     amount_fuel = models.FloatField(default=0, validators=[MinValueValidator(0)])
 
-    Args:
-        forms (django.forms.ModelForm): a modelform object.
-    """
+#     Args:
+#         forms (django.forms.ModelForm): a modelform object.
+#     """
 
-    class Meta:
-        model = Betankung
-        fields = ["fahrzeug", "amount_fuel"]
-        # exclude = ['created_at']
-        widgets = {"fahrzeug": forms.Select(attrs={"class": "form-control"})}
+#     class Meta:
+#         model = Betankung
+#         fields = ["fahrzeug", "amount_fuel"]
+#         # exclude = ['created_at']
+#         widgets = {"fahrzeug": forms.Select(attrs={"class": "form-control"})}
 
-    def generate_time_choices(start="00:00", end="24:00", interval_minutes=15):
-        start_h, start_m = map(int, start.split(":"))
-        end_h, end_m = map(int, end.split(":"))
-        current = time(start_h, start_m)
-        end_time = time(end_h - 1, end_m)
+#     def generate_time_choices(start="00:00", end="24:00", interval_minutes=15):
+#         start_h, start_m = map(int, start.split(":"))
+#         end_h, end_m = map(int, end.split(":"))
+#         current = time(start_h, start_m)
+#         end_time = time(end_h - 1, end_m)
 
-        choices = []
-        while current <= end_time:
-            label = current.strftime("%H:%M")
-            choices.append((label, label))
-            # advance time
-            dt = timedelta(hours=current.hour, minutes=current.minute) + timedelta(
-                minutes=interval_minutes
-            )
-            current = (dt.seconds // 3600, (dt.seconds % 3600) // 60)
-            current = time(*current)
+#         choices = []
+#         while current <= end_time:
+#             label = current.strftime("%H:%M")
+#             choices.append((label, label))
+#             # advance time
+#             dt = timedelta(hours=current.hour, minutes=current.minute) + timedelta(
+#                 minutes=interval_minutes
+#             )
+#             current = (dt.seconds // 3600, (dt.seconds % 3600) // 60)
+#             current = time(*current)
 
-        return choices
+#         return choices
 
-    amount_fuel = forms.FloatField(
+#     amount_fuel = forms.FloatField(
+#         required=False,
+#         initial=0,
+#         min_value=0,
+#         widget=forms.NumberInput(attrs={"step": "0.1"}),
+#     )
+#     fahrzeug = forms.ModelChoiceField(queryset=Fahrzeug.objects.all(), required=False)
+
+#     TIME_CHOICES = generate_time_choices()
+
+#     laufzeit = forms.ChoiceField(
+#         choices=TIME_CHOICES,
+#         label="Startzeit",
+#         initial="00:00",
+#         localize=True,
+#         validators=[validate_time],
+#         required=False,
+#     )
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields["fahrzeug"].queryset = Fahrzeug.objects.all()
+#         self.fields["amount_fuel"].empty_label = "getankte Menge"
+
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         fahrzeug = cleaned_data.get("fahrzeug")
+#         amount_fuel = cleaned_data.get("amount_fuel")
+#         laufzeit = cleaned_data.get("laufzeit")
+
+#         if laufzeit:
+#             # Convert string times to datetime objects
+#             laufzeit_obj = datetime.strptime(laufzeit, "%H:%M").time()
+
+#         # print('CLEANED DATA:', cleaned_data)
+
+#         # making sure, that car is selected
+#         any_filled = any(
+#             [
+#                 fahrzeug,
+#                 amount_fuel,
+#                 str(laufzeit) != "00:00",
+#             ]
+#         )
+
+#         # If anything is filled, require fahrzeug
+#         if any_filled and not fahrzeug:
+#             self.add_error(
+#                 "fahrzeug",
+#                 "Bitte wählen Sie ein Fahrzeug aus, wenn Sie eine Betankung eintragen.",
+#             )
+
+#         return cleaned_data
+
+
+# forms.py
+class BetankungRowForm(forms.Form):
+    fahrzeug_id = forms.IntegerField(widget=forms.HiddenInput)
+    fahrzeug_name = forms.CharField(
+        disabled=True,
         required=False,
-        initial=0,
-        min_value=0,
-        widget=forms.NumberInput(attrs={"step": "0.1"}),
+        widget=forms.TextInput(
+            attrs={
+                "class": "wide-field",  # define in your CSS
+                "style": "width: 200px;",  # or directly use inline style
+            }
+        ),
     )
-    fahrzeug = forms.ModelChoiceField(queryset=Fahrzeug.objects.all(), required=False)
 
-    TIME_CHOICES = generate_time_choices()
+    amount_fuel = forms.FloatField(min_value=0, required=False)
 
-    start_time = forms.ChoiceField(
-        choices=TIME_CHOICES,
-        label="Startzeit",
-        initial="06:00",
-        localize=True,
-        validators=[validate_time],
+    laufzeit_hour = forms.ChoiceField(
+        choices=[(f"{i:02d}", f"{i:02d}") for i in range(24)],
+        label="Stunde",
         required=False,
     )
-    end_time = forms.ChoiceField(
-        choices=TIME_CHOICES,
-        label="Endzeit",
-        initial="06:00",
-        localize=True,
-        validators=[validate_time],
+    laufzeit_minute = forms.ChoiceField(
+        choices=[(f"{i:02d}", f"{i:02d}") for i in range(0, 60, 15)],
+        label="Minute",
         required=False,
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["fahrzeug"].queryset = Fahrzeug.objects.all()
-        self.fields["amount_fuel"].empty_label = "getankte Menge"
 
-    def clean(self):
-        cleaned_data = super().clean()
-        fahrzeug = cleaned_data.get("fahrzeug")
-        amount_fuel = cleaned_data.get("amount_fuel")
-        start_time = cleaned_data.get("start_time")
-        end_time = cleaned_data.get("end_time")
-
-        # Debug: print the values of start and end to see what's being passed
-        # print(f"start_time: {start}, end_time: {end}")
-
-        # Only validate if both start_time and end_time are not empty
-        if start_time and end_time:
-            # Convert string times to datetime objects
-            start_time_obj = datetime.strptime(start_time, "%H:%M").time()
-            end_time_obj = datetime.strptime(end_time, "%H:%M").time()
-
-            if end_time_obj < start_time_obj:
-                self.add_error(
-                    "end_time", "Endzeit muss nach oder bei der Startzeit liegen."
-                )
-
-        elif start_time and not end_time:
-            self.add_error(
-                "end_time", "Endzeit ist erforderlich, wenn Startzeit angegeben ist."
-            )
-        elif not start_time and end_time:
-            self.add_error(
-                "start_time", "Startzeit ist erforderlich, wenn Endzeit angegeben ist."
-            )
-
-        # print('CLEANED DATA:', cleaned_data)
-
-        # making sure, that car is selected
-        any_filled = any(
-            [
-                fahrzeug,
-                amount_fuel,
-                not (str(start_time) != "06:00" and str(end_time) != "06:00"),
-            ]
-        )
-
-        # If anything is filled, require fahrzeug
-        if any_filled and not fahrzeug:
-            self.add_error(
-                "fahrzeug",
-                "Bitte wählen Sie ein Fahrzeug aus, wenn Sie eine Betankung eintragen.",
-            )
-
-        return cleaned_data
+BetankungFormSet = formset_factory(BetankungRowForm, extra=0)
 
 
 class KuebelEintragForm(forms.Form):

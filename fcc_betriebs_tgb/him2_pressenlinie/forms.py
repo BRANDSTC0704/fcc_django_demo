@@ -1,20 +1,13 @@
 from django import forms
 from django.forms import formset_factory
 from .models import (
-    ZeitAktivitaetTyp,
     StundenEingabeSession,
     StundenEingabeDetails,
     Aktivitaet,
-    AbhProdTyp,
-    Produktion,
     SchichtEingabeMitarbeiter,
 )
 from him2_referenzdaten.models import (
-    PresseBallenTyp,
-    Schicht,
-    Fahrzeug,
     Mitarbeiter,
-    Betankung,
 )
 import datetime
 from django.forms import Select
@@ -96,8 +89,10 @@ class PresseStundenEingabeForm(forms.Form):
                 m1 = cleaned_data.get(f"schicht_mitarbeiter_1_{schicht_id}")
                 m2 = cleaned_data.get(f"schicht_mitarbeiter_2_{schicht_id}")
                 if m1 and m2 and m1 == m2:
-                    self.add_error(f"schicht_mitarbeiter_2_{schicht_id}", "Die beiden Personen dürfen nicht gleich sein.")
-
+                    self.add_error(
+                        f"schicht_mitarbeiter_2_{schicht_id}",
+                        "Die beiden Personen dürfen nicht gleich sein.",
+                    )
 
     def save(self, session):
         """Save the form data to the StundeneingabeDetails model."""
@@ -116,8 +111,11 @@ class PresseStundenEingabeForm(forms.Form):
             if schicht_mitarbeiter_1 and schicht_mitarbeiter_2:
 
                 if schicht_mitarbeiter_1 == schicht_mitarbeiter_2:
-                    self.add_error(f"schicht_mitarbeiter_2_{schicht.id}", "Mitarbeiter dürfen nicht gleich sein.")
-                
+                    self.add_error(
+                        f"schicht_mitarbeiter_2_{schicht.id}",
+                        "Mitarbeiter dürfen nicht gleich sein.",
+                    )
+
                 for zeittyp in zeittypen:
                     field_name = f"entry_{schicht.id}_{zeittyp.id}"
                     dauer = self.cleaned_data.get(field_name)
@@ -138,4 +136,63 @@ class PresseStundenEingabeForm(forms.Form):
                     schicht=schicht,
                     mitarbeiter_1=schicht_mitarbeiter_1,
                     mitarbeiter_2=schicht_mitarbeiter_2,
+                )
+
+
+class PresseAktivitaetForm(forms.Form):
+    """Dynamically generated form for time entries based on available shifts and activity types."""
+
+    def __init__(self, *args, **kwargs):
+
+        schichten = kwargs.pop("schichten")
+        super(PresseAktivitaetForm, self).__init__(*args, **kwargs)
+
+        # Dynamically add fields for each shift and activity type combination
+        # mitarbeiter_widget_style = {"style": "max-width:150px; margin: 2px 6px;"}
+
+        for schicht in schichten:
+
+            self.fields[f"stromzaehler_{schicht.id}"] = forms.IntegerField(
+                label=f"Stromzähler ({schicht.name})",
+                initial=0,
+                widget=forms.NumberInput(attrs={"class": "form-control"}),
+                # required=True,
+                min_value=0,
+            )
+
+            self.fields[f"pressezaehler_{schicht.id}"] = forms.IntegerField(
+                label=f"Pressezähler ({schicht.name})",
+                initial=0,
+                widget=forms.NumberInput(attrs={"class": "form-control"}),
+                # required=True,
+                min_value=0,
+            )
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     for field in self.fields:
+    #         if field.startswith("schicht_mitarbeiter_1_"):
+    #             schicht_id = field.split("_")[-1]
+    #             m1 = cleaned_data.get(f"schicht_mitarbeiter_1_{schicht_id}")
+    #             m2 = cleaned_data.get(f"schicht_mitarbeiter_2_{schicht_id}")
+    #             if m1 and m2 and m1 == m2:
+    #                 self.add_error(f"schicht_mitarbeiter_2_{schicht_id}", "Die beiden Personen dürfen nicht gleich sein.")
+
+    def save(self, session):
+        """Save the form data to the StundeneingabeDetails model."""
+        schichten = session.schichten.all()
+
+        for schicht in schichten:
+            stromzaehler = self.cleaned_data.get(f"stromzaehler_{schicht.id}")
+            pressezaehler = self.cleaned_data.get(f"pressezaehler_{schicht.id}")
+
+            # Check if both Mitarbeiter (workers) are selected
+            if stromzaehler and pressezaehler:
+
+                # Create the worker entry record if both Mitarbeiter are valid
+                Aktivitaet.objects.create(
+                    session=session,
+                    schicht=schicht,
+                    stromzaehler=stromzaehler,
+                    ballenpresse_zaehler=pressezaehler,
                 )

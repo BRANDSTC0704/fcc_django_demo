@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import (
     ZeitAktivitaetTyp,
     StundenEingabeDetails,
     SchichtEingabeMitarbeiter,
-    StundenEingabeSession,
+    Aktivitaet,
 )
 from him2_referenzdaten.models import Schicht
-from .forms import PresseStundenEingabeForm, PresseZeitSessionForm
-from datetime import date
+from .forms import PresseStundenEingabeForm, PresseZeitSessionForm, PresseAktivitaetForm
+
+# from datetime import date
 
 
+@login_required
 def eingabe_view(request):
     schichten = Schicht.objects.all()
     zeittypen = ZeitAktivitaetTyp.objects.all()
@@ -19,13 +22,20 @@ def eingabe_view(request):
         data_form = PresseStundenEingabeForm(
             request.POST, schichten=schichten, zeittypen=zeittypen
         )
+        aktivitaet_form = PresseAktivitaetForm(request.POST, schichten=schichten)
 
-        if session_form.is_valid() and data_form.is_valid():
-            # Save the session first
+        if (
+            session_form.is_valid()
+            and data_form.is_valid()
+            and aktivitaet_form.is_valid()
+        ):
+
+            # Save the session first - Session form
             session_instance = session_form.save(commit=False)
             session_instance.user = request.user
             session_instance.save()
 
+            # Duration Form
             # Loop through schichten and zeittypen to save data
             for schicht in schichten:
                 mitarbeiter_1 = data_form.cleaned_data.get(
@@ -41,8 +51,8 @@ def eingabe_view(request):
                     mitarbeiter_1=mitarbeiter_1,
                     mitarbeiter_2=mitarbeiter_2,
                 )
-                
-                schicht_entry.full_clean() # for data validation 
+
+                schicht_entry.full_clean()  # for data validation
                 schicht_entry.save()
 
                 for zeittyp in zeittypen:
@@ -55,10 +65,30 @@ def eingabe_view(request):
                             zeittyp=zeittyp,
                             session=session_instance,
                         )
+
+                # AktivitätsForm
+                strom_zaehler = aktivitaet_form.cleaned_data.get(
+                    f"stromzaehler_{schicht.id}"
+                )
+                presse_zaehler = aktivitaet_form.cleaned_data.get(
+                    f"pressezaehler_{schicht.id}"
+                )
+
+                aktivitaet_entry = Aktivitaet.objects.create(
+                    session=session_instance,
+                    schicht=schicht,
+                    stromzaehler=strom_zaehler,
+                    ballenpresse_zaehler=presse_zaehler,
+                )
+
+                aktivitaet_entry.full_clean()  # for data validation
+                aktivitaet_entry.save()
+
             return render(request, "start_page.html")
     else:
         session_form = PresseZeitSessionForm()
         data_form = PresseStundenEingabeForm(schichten=schichten, zeittypen=zeittypen)
+        aktivitaet_form = PresseAktivitaetForm(schichten=schichten)
 
     return render(
         request,
@@ -66,6 +96,7 @@ def eingabe_view(request):
         {
             "session_form": session_form,
             "data_form": data_form,
+            "aktivitaet_form": aktivitaet_form,
             "schichten": schichten,
             "zeittypen": zeittypen,
         },

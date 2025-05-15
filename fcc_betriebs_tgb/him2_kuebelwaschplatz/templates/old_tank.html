@@ -1,0 +1,36 @@
+
+    <div class="alert alert-info position-relative text-center" role="alert">
+      <span class="position-absolute top-0 translate-middle me-2 mt-1 badge text-muted fst-italic">
+        Betankung: optional
+      </span>
+      
+       <div class="d-flex justify-content-center gap-4">
+    
+    <!-- Left: Fuel Info -->
+    <div class="d-flex flex-column align-items-center">
+      <div class="form-group text-center" style="width: 100px;">
+        <label for="{{ tank_form.fahrzeug.id_for_label }}" class="form-label">Fahrzeug*</label>
+        {{ tank_form.fahrzeug }}
+      </div>
+      <div class="form-group text-center mt-2" style="width: 100px;">
+        <label for="{{ tank_form.amount_fuel.id_for_label }}" class="form-label">Diesel getankt [L]</label>
+        {{ tank_form.amount_fuel }}
+      </div>
+    </div>
+   
+
+    <!-- Right: Time Info -->
+    <div class="d-flex flex-column align-items-center">
+      <div class="form-group text-center" style="width: 100px;">
+        <label for="{{ tank_form.start_time.id_for_label }}" class="form-label">Startzeit</label>
+        {{ tank_form.start_time }}
+      </div>
+      <div class="form-group text-center mt-2" style="width: 100px;">
+        <label for="{{ tank_form.end_time.id_for_label }}" class="form-label">Endzeit</label>
+        {{ tank_form.end_time }}  
+      </div>
+      Startzeit <= Endzeit !!
+    </div>
+    </div>
+  </div>
+  </div>

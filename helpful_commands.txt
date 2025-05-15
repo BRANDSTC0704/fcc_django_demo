@@ -6,8 +6,11 @@ python manage.py runserver
 python manage.py makemigrations
 python manage.py migrate
 python manage.py clearcache
-python manage.py shell                                                                                                                                            
+python manage.py shell
 python manage.py createsuperuser
+python manage.py help
+python manage.py test
+coverage run ./manage.py test
 
 py manage.py sqlmigrate members 0001
 # durch Änderung der Projektstruktur musste manage.py die settings-datei angepasst werden!
@@ -17,4 +20,14 @@ py manage.py sqlmigrate members 0001
 $env:DJANGO_SETTINGS_MODULE = "config.settings.settings"
 $env:PYTHONPATH = "C:\Users\BRANDSTC0704\OneDrive - FCC\wd\djangodemo\fcc_betriebs_tgb"
 django-admin migrate
-# django-admin startapp dateneingaben
+# django-admin startapp him2_xyz
+
+
+Shortcuts Visual Studio code 
+STRG+1: coding window 
+STRG+ö
+STRG-K + STRK 
+
+
+
+

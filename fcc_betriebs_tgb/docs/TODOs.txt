@@ -21,8 +21,7 @@ Anfangslagerstand pro Monat (1 x monatlich: Startwert) - OFFEN
 Korrekturwert: Ende des Monats - OFFEN 
 Balleninventur Monatsanfang wird die geändert; - OFFEN 
 
-Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] - DONE 
-
+Kübelwaschplatz: Session: Betriebsstunden; Tankmenge [L Diesel] - IN PROGRESS 
 Fahrzeug + Betankung hinzufügen (zuerst Kübelwaschen) - IN PROGRESS 
-Kübelwaschen - DONE 
-Betriebsstunden (Start und Ende) - DONE
+Kübelwaschen - MUSS NOCH GEÄNDERT WERDEN; 
+Betriebsstunden - UPDATE: NUR GESAMTZEIZT 

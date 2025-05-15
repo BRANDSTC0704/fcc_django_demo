@@ -1,13 +1,14 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import KuebelSession, KuebelEintrag
-from him2_referenzdaten.models import KuebelArt
 from django.test import TransactionTestCase
 from django.db.utils import IntegrityError
-from .forms import KuebelEintragForm, KuebelSessionForm
 from django.utils import timezone
 from django.urls import reverse
 from datetime import timedelta
+
+from .forms import KuebelEintragForm, KuebelSessionForm
+from .models import KuebelSession, KuebelEintrag
+from him2_referenzdaten.models import KuebelArt, Mitarbeiter, Betankung
 
 
 # Models
@@ -100,6 +101,16 @@ class KuebelEintragFormTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username="formuser")
+        self.mitarbeiter = Mitarbeiter.objects.create(
+            first_name="formuser",
+            last_name="formuser",
+            funktion="keine",
+            intern_extern="extern",
+        )
+
+        self.tank = Betankung.objects.create(username="formuser")
+        # fahrzeug, user,
+
         self.session = KuebelSession.objects.create(
             user=self.user, mitarbeiter="Form User"
         )

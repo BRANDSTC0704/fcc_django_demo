@@ -2,7 +2,7 @@ from django.db import models
 
 # from django.utils.timezone import now
 # import datetime
-from django.core.validators import MinValueValidator
+# from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User  ## Session User
 from him2_referenzdaten.models import PresseBallenTyp, Schicht, Mitarbeiter
 from django.core.exceptions import ValidationError
@@ -33,8 +33,8 @@ class ZeitAktivitaetTyp(models.Model):
 
 
 class AbhProdTyp(models.Model):
-    """Model containting types of buckets, ordered by creation.
-    # initially: Abholung und Produktion.
+    """Model containting types of stations, ordered by creation.
+    Initially: Abholung und Produktion.
 
     Args:
         models: Django models object.
@@ -82,6 +82,7 @@ class StundenEingabeSession(models.Model):
 
 class SchichtEingabeMitarbeiter(models.Model):
     """Contains information on workers per Shift.
+    This was necessary, as one shift has 2 workers.
 
     Args:
         models (models.Model): inherits from Django model.
@@ -105,7 +106,9 @@ class SchichtEingabeMitarbeiter(models.Model):
 
 
 class StundenEingabeDetails(models.Model):
-    """Model for the time entry details including shift, activity type, and duration."""
+    """Model for the time entry details including shift, activity type, and duration.
+    This will save the durations of different activities in long-format.
+    """
 
     class Meta:
         verbose_name = "Erfassung Stunde Detail"
@@ -126,6 +129,9 @@ class StundenEingabeDetails(models.Model):
 
 class Aktivitaet(models.Model):
     """Model for time per shift.
+    These are additional activities that must be accounted for at Presse.
+    Currently it is the amount of pressed Ballen and the amount of used electricity.
+    But this can be extended.
 
     Args:
         models: Django models object.
@@ -138,9 +144,13 @@ class Aktivitaet(models.Model):
         verbose_name = "Erfassung Aktivitäten"
         verbose_name_plural = "Erfassung Aktivitäten"
 
+    # Schicht ist nicht mit Session verknüpft...
+    session = models.ForeignKey(StundenEingabeSession, on_delete=models.PROTECT)
+
     schicht = models.ForeignKey(
         Schicht, on_delete=models.PROTECT
     )  # soll immer gespeichert bleiben
+
     created_date = models.DateField(
         auto_now_add=True, editable=False, null=False, blank=False
     )
