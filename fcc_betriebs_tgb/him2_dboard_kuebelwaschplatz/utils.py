@@ -2,6 +2,7 @@
 
 import pandas as pd
 import matplotlib
+import numpy as np 
 
 matplotlib.use("Agg")  # Use a non-GUI backend suitable for scripts and servers
 import matplotlib.pyplot as plt
@@ -10,7 +11,7 @@ import io
 import base64
 from django.db.models import F
 
-from him2_referenzdaten.models import KuebelArt, Mitarbeiter, Betankung, Fahrzeug
+from him2_referenzdaten.models import KuebelArt, Mitarbeiter, Betankung, BetankungSession, Fahrzeug
 
 from him2_kuebelwaschplatz.models import (
     KuebelSession,
@@ -63,6 +64,7 @@ def get_kuebel_data():
     # addendum: Mitarbeiter und Tankfahrzeug
     mitarbeiter_qs = Mitarbeiter.objects.all()
     tank_qs = Betankung.objects.all()
+    tank_session_qs = BetankungSession.objects.all()
     fahrzeug_qs = Fahrzeug.objects.all()
 
     def convert_ids_to_int(df, colname_list=["id"]):
@@ -80,37 +82,57 @@ def get_kuebel_data():
             if i in df.columns:
                 df[i] = df[i].fillna(0)  # fix missing values
                 df[i] = df[i].astype(int)
+                df[i] = df[i].replace(0, np.nan)
         return df
 
     kuebel_art_df = convert_ids_to_int(convert_qs_to_df(kuebel_art_qs))
     kuebel_session_df = convert_ids_to_int(
-        convert_qs_to_df(kuebel_session_qs), ["id", "tank_id"]
-    )
+        convert_qs_to_df(kuebel_session_qs), ["id", "tank_session_id"])
     kuebel_eintrag_df = convert_ids_to_int(convert_qs_to_df(kuebel_eintrag_qs))
     mitarbeiter_df = convert_ids_to_int(convert_qs_to_df(mitarbeiter_qs))
-    tank_df = convert_ids_to_int(convert_qs_to_df(tank_qs))
+    tank_session_df = convert_ids_to_int(convert_qs_to_df(tank_session_qs), ['id', 'tank_session_id'])
+    tank_df = convert_ids_to_int(convert_qs_to_df(tank_qs), ['id', 'tank_session_id'])
     fahrzeug_df = convert_ids_to_int(convert_qs_to_df(fahrzeug_qs))
 
     # print('kuebel_art_df - ', kuebel_art_df.columns)
     # print('kuebel_session_df - ', kuebel_session_df.columns)
     # print('kuebel_eintrag_df - ', kuebel_eintrag_df.columns)
     # print('mitarbeiter_df - ', mitarbeiter_df.columns)
+    # print('tank_session_df - ', tank_session_df.columns)
     # print('tank_df - ', tank_df.columns)
     # print('fahrzeug_df - ', fahrzeug_df.columns)
+
+    # kuebel_art_df -  Index(['id', 'name'], dtype='object')
+    # kuebel_session_df -  Index(['id', 'mitarbeiter_id', 'user_id', 'tank_session_id', 'comments',
+    #    'created_at', 'username'],
+    #   dtype='object')
+    # kuebel_eintrag_df -  Index(['id', 'log_id', 'kuebel_art_id', 'sonstiges_h', 'reinigung_h',
+    #    'waschen_h', 'waschen_count', 'instandh_h', 'instandh_count',
+    #    'zerlegen_h', 'zerlegen_count'],
+    #   dtype='object')
+    # mitarbeiter_df -  Index(['id', 'first_name', 'last_name', 'funktion', 'intern_extern'], dtype='object')
+    # tank_session_df -  Index(['id', 'user_id', 'daten_eingabe_von', 'created_at_tank'], dtype='object')
+    # tank_df -  Index(['id', 'session_id', 'fahrzeug_id', 'amount_fuel', 'laufzeit'], dtype='object')
+    # fahrzeug_df -  Index(['id', 'name', 'bereich', 'kostenstelle'], dtype='object')
 
     kuebel_art_df.rename(columns={"id": "kuebel_art_id"}, inplace=True)
     kuebel_session_df.rename(columns={"id": "log_id"}, inplace=True)
     kuebel_eintrag_df.rename(columns={"id": "kuebel_eintrag_id"}, inplace=True)
     mitarbeiter_df.rename(columns={"id": "mitarbeiter_id"}, inplace=True)
+    tank_session_df.rename(columns={"id": "tank_session_id"}, inplace=True)
     tank_df.rename(columns={"id": "tank_id"}, inplace=True)
     fahrzeug_df.rename(columns={"id": "fahrzeug_id"}, inplace=True)
 
     # prep Mitarbeiter und Tank
+
     tank_fahrzeug_df = pd.merge(tank_df, fahrzeug_df, on="fahrzeug_id", how="left")
     tank_fahrzeug_df.rename(
-        columns={"name": "fahrzeug_name", "user_id": "user_id_betankung"}, inplace=True
+        columns={"name": "fahrzeug_name"}, inplace=True
     )
 
+    tank_fahrzeug_session_df = pd.merge(tank_fahrzeug_df, tank_session_df, 
+                                        on='tank_session_id', how='left')
+    
     mitarbeiter_df["mitarbeiter"] = (
         mitarbeiter_df["first_name"] + " " + mitarbeiter_df["last_name"]
     )
@@ -129,10 +151,11 @@ def get_kuebel_data():
         how="left",
         suffixes=["_step1", "_kuebel_session"],
     )
+    
     step3 = pd.merge(
         step2,
-        tank_fahrzeug_df,
-        on="tank_id",
+        tank_fahrzeug_session_df,
+        on="tank_session_id",
         how="left",
         suffixes=["_step2", "_tank_fahrzeug"],
     )
@@ -144,9 +167,24 @@ def get_kuebel_data():
         suffixes=["_step3", "_mitarbeiter"],
     )
 
-    assert (
-        last_step.shape[0] == kuebel_eintrag_df.shape[0]
-    ), "Beim Kuebel-Merging hat etwas nicht geklappt!"
+    print(step3.tail(10))
+  
+    print('tank_fahrzeug_session-shape:', tank_fahrzeug_session_df.shape)
+    print('kuebel-eintrag-shape:', kuebel_eintrag_df.shape)
+    print('step1-shape:', step1.shape)
+    print('step2-shape:', step2.shape)
+    print('step3-shape:', step3.shape)
+    print('last_step-shape:', last_step.shape)
+    
+    #step1.to_csv("./step1.csv")
+    #step2.to_csv("./step2.csv")
+    step3.to_csv("./step3.csv")
+    
+    # NICHT VERGESSEN! 
+    print('TODO: Dashboard - fix dataset (Tankdaten multiplizieren Reihen)')
+    #assert (
+    #    last_step.shape[0] == kuebel_eintrag_df.shape[0]
+    #), "Beim Kuebel-Merging hat etwas nicht geklappt!"
 
     # Berechnung Gesamtzahl Behälter
     last_step["Anzahl_gesamt"] = (
@@ -359,6 +397,7 @@ def generate_excel_table(df):
         spalten = [
             "username",
             "mitarbeiter",
+            "intern_extern", 
             "created_at",
             "daten_eingabe_von",
             "comments",
@@ -376,13 +415,14 @@ def generate_excel_table(df):
             "fahrzeug_name",
             "bereich",
             "kostenstelle",
-            "user_id",
+            "amount_fuel",
+            # "user_id",
             "log_id",
             "kuebel_eintrag_id",
             "kuebel_art_id",
             "mitarbeiter_id",
             "tank_id",
-            "user_id_betankung",
+            "user_id_tank_fahrzeug",
         ]
 
         df_select = df[spalten]

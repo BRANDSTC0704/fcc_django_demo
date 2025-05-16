@@ -1,16 +1,16 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from .forms import KuebelSessionForm, KuebelEintragFormSet, BetankungFormSet
+from .forms import KuebelSessionForm, KuebelEintragFormSet
+from him2_referenzdaten.forms import BetankungFormSet
 from .models import KuebelSession, KuebelEintrag, KuebelArt
-from him2_referenzdaten.models import Betankung, Fahrzeug
+from him2_referenzdaten.models import Betankung, Fahrzeug, BetankungSession
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.http import HttpResponseRedirect
-from datetime import datetime, timedelta, time
-from django.templatetags.static import static
+from datetime import timedelta 
+# from django.templatetags.static import static
 
 
 @login_required
@@ -24,7 +24,8 @@ def kuebel_page(request):
     Returns:
         view: A rendered view object, including both a log-form (session) as a detailed entry formset.
     """
-
+    
+    # this is a pre-filter depending on the station 
     fahrzeug_filter = Fahrzeug.objects.filter(bereich__icontains="Freigelände")
     initial_data = [
         {
@@ -39,52 +40,64 @@ def kuebel_page(request):
         log_form = KuebelSessionForm(request.POST)
         formset = KuebelEintragFormSet(request.POST)
         tank_form = BetankungFormSet(request.POST)
-        print("POST DATA:", request.POST)
 
-        if log_form.is_valid() and formset.is_valid() and tank_form.is_valid():
+        # print("POST DATA:", request.POST)
+
+        if log_form.is_valid() and formset.is_valid()\
+            and tank_form.is_valid():
             # Save the session log
+          
+            if tank_form.is_valid():
+                # for form in tank_form:
+                    # print("Form cleaned_data:", form.cleaned_data)
+                tank_session = None  # Prepare outside the loop
+
+                for form in tank_form:
+                    if not form.cleaned_data:
+                        continue
+
+                    fahrzeug_id = form.cleaned_data.get("fahrzeug_id")
+                    amount_fuel = form.cleaned_data.get("amount_fuel")
+                    hour = form.cleaned_data.get("laufzeit_hour")
+                    minute = form.cleaned_data.get("laufzeit_minute")
+
+                    if not (amount_fuel or hour or minute):
+                        continue  # skip entirely empty rows
+
+                    # Only proceed if there is relevant input
+                    laufzeit = timedelta(
+                        hours=int(hour) if hour is not None else 0,
+                        minutes=int(minute) if minute is not None else 0,
+                    )
+
+                    if (amount_fuel and amount_fuel > 0) or laufzeit.total_seconds() > 0:
+                        # Create tank_session only once
+                        if not tank_session:
+                            tank_session = BetankungSession.objects.create(
+                                user=request.user,
+                                daten_eingabe_von="Kübelwaschplatz"
+                            )
+
+                        Betankung.objects.create(
+                            tank_session=tank_session,
+                            fahrzeug_id=fahrzeug_id,
+                            amount_fuel=amount_fuel or 0,
+                            laufzeit=laufzeit
+                        ) 
+
+            else:
+                tank_form = BetankungFormSet(initial=initial_data)
+            
+            
             log = KuebelSession.objects.create(
                 mitarbeiter=log_form.cleaned_data["mitarbeiter"],
                 user=request.user,
                 comments=log_form.cleaned_data["comments"],
             )
+            if tank_session:
+                log.tank_session = tank_session
+                log.save()
 
-            if tank_form.is_valid():
-                for form in tank_form:
-                    print("Form cleaned_data:", form.cleaned_data)
-                for form in tank_form:
-                    if not form.cleaned_data:
-                        continue
-
-                    fahrzeug_id = form.cleaned_data["fahrzeug_id"]
-                    user = request.user
-                    amount_fuel = form.cleaned_data["amount_fuel"]
-                    hour = form.cleaned_data.get("laufzeit_hour")
-                    minute = form.cleaned_data.get("laufzeit_minute")
-
-                    if not fahrzeug_id or not amount_fuel:
-                        continue
-
-                    laufzeit = (
-                        timedelta(hours=int(hour), minutes=int(minute))
-                        if hour and minute
-                        else None
-                    )
-                    if amount_fuel > 0:
-                        if hour is not None and minute is not None:
-                            laufzeit = timedelta(hours=int(hour), minutes=int(minute))
-
-                    if amount_fuel:
-                        Betankung.objects.create(
-                            fahrzeug_id=fahrzeug_id,
-                            user=user,
-                            amount_fuel=amount_fuel,
-                            laufzeit=laufzeit,
-                            daten_eingabe_von="Kübelwaschplatz",  # or however you're setting it
-                        )
-
-            else:
-                tank_form = BetankungFormSet(initial=initial_data)
 
             # Loop through each form in the formset
             for form in formset:
@@ -181,7 +194,7 @@ def open_pdf_redirect(request, log_id):
         {
             "pdf_url": pdf_url,
             "home_url": home_url,
-            "tank_id": tank_id,  # Optional: you can pass this to the template if needed
+            # "tank_id": tank_id,  # Optional: you can pass this to the template if needed
         },
     )
 
@@ -190,24 +203,24 @@ def generate_pdf(request, log_id):
     log = KuebelSession.objects.get(id=log_id)
     eintraege = KuebelEintrag.objects.filter(log=log)
 
+    raw_tanks = log.tank_session.betankungen.all() if log.tank_session else []
+
     def print_hh_mm(td):
         total_minutes = td.total_seconds() // 60
         hours = int(total_minutes // 60)
         minutes = int(total_minutes % 60)
         return f"{hours:02d}:{minutes:02d}"
 
-    # prepare tank data with formatted laufzeit
+    # Now format the tank data
     tank_data = []
-    if log.tank:
-        tank_data.append(
-            {
-                "fahrzeug": log.tank.fahrzeug,
-                "amount_fuel": log.tank.amount_fuel,
-                "laufzeit": (
-                    print_hh_mm(log.tank.laufzeit) if log.tank.laufzeit else "N/A"
-                ),
-            }
-        )
+    for tank in raw_tanks:
+        tank_data.append({
+            "fahrzeug": tank.fahrzeug.name,  # or str(tank.fahrzeug)
+            "amount_fuel": tank.amount_fuel,
+            "laufzeit": print_hh_mm(tank.laufzeit) if tank.laufzeit else "00:00",
+        })
+
+    print('Tank_data vor HTML-String:', tank_data)
 
     html_string = render_to_string(
         "him2_kuebelwaschplatz/pdf_template.html",

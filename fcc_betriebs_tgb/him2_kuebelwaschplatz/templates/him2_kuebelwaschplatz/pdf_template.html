@@ -74,28 +74,9 @@
   <p><strong>Mitarbeiter:</strong> {{ mitarbeiter }}</p>
   <p><strong>Kommentar:</strong> {{ comments }}</p>
 
-  {% if tank_data %}
-  <h4>Tankdaten</h4>
-  <table>
-    <thead>
-      <tr>
-        <th>Fahrzeug</th>
-        <th>Menge (L)</th>
-        <th>Laufzeit</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for tank in tank_data %}
-        <tr>
-          <td>{{ tank.fahrzeug }}</td>
-          <td>{{ tank.amount_fuel }}</td>
-          <td>{{ tank.laufzeit }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endif %}
+  
 </div>
+  <h5>Kübelaktivitäten</h5>
     <div class="table-container">
       <table>
         <thead>
@@ -126,5 +107,29 @@
         </tbody>
       </table>
     </div>
+
+    {% if tank_data %}
+  <div style="margin-bottom: 20px;"></div>
+    <h5>Tankdaten</h5>
+  <table>
+    <thead>
+      <tr>
+        <th>Fahrzeug</th>
+        <th>Menge (L)</th>
+        <th>Laufzeit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tank in tank_data %}
+        <tr>
+          <td>{{ tank.fahrzeug }}</td>
+          <td>{{ tank.amount_fuel }}</td>
+          <td>{{ tank.laufzeit }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
   </body>
 </html>

@@ -114,6 +114,36 @@
       </table>
       
 
+<div class="container mt-4">
+  <div class="row justify-content-center">
+ 
+    <table class="table table-striped">
+      {{ tank_form.management_form }}      
+      <thead>
+        <tr>
+          <th style="width: 200px;">Fahrzeug</th>
+          <th>Diesel getankt [L]</th>
+          <th>Laufzeit [hh]</th>
+          <th>Laufzeit [mm]</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+      <!-- <td colspan="9">{{ form.kuebel_art.value }}</td>  -->
+      
+      {% for form in tank_form %}
+              <tr>
+                {{ form.fahrzeug_id }} 
+                <td style="width: 200px;">{{ form.fahrzeug_name }}</td>
+                <td style="background-color: #a8c8e4; width: 200px;">{{ form.amount_fuel }}</td>
+                <td>{{ form.laufzeit_hour }}</td>
+                <td>{{ form.laufzeit_minute }}</td>
+              </tr>
+            {% endfor %}
+      </tbody>
+      </table>
+  
+
   <button type="submit" class="btn btn-primary">Speichern</button>
 </form>
 </div>

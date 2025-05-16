@@ -4,7 +4,7 @@ from django.db import models
 # import datetime
 # from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User  ## Session User
-from him2_referenzdaten.models import PresseBallenTyp, Schicht, Mitarbeiter
+from him2_referenzdaten.models import PresseBallenTyp, Schicht, Mitarbeiter, BetankungSession
 from django.core.exceptions import ValidationError
 
 
@@ -75,6 +75,14 @@ class StundenEingabeSession(models.Model):
     )
     created_date_mitarbeiter = models.DateField(null=False, blank=False)
     comments = models.TextField(blank=True, null=True, verbose_name="Kommentar")
+
+    tank_session = models.ForeignKey(
+        BetankungSession,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="presse_stunden"
+    )
 
     def __str__(self):
         return f"Session # {self.id} vom {self.created_date}, erstellt von {self.user}"

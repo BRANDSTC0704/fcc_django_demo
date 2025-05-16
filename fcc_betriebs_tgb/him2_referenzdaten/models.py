@@ -128,6 +128,36 @@ class Mitarbeiter(models.Model):
         else:
             return f"{self.first_name} {self.last_name} ({self.funktion})".strip()
 
+class BetankungSession(models.Model):
+    """Model containing tanking-sessions. 
+    Session is linked with different apps.
+
+    Args:
+        models: Django models object.
+
+    Returns:
+        none
+    """
+
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT
+    )  # soll immer gespeichert bleiben
+    daten_eingabe_von = models.CharField(
+        max_length=40, verbose_name="von welcher App:"
+    )  # die jeweilige App - muss beim Anlegen hard kodiert werden
+    created_at_tank = models.DateTimeField(
+        auto_now_add=True, editable=False, null=False, blank=False
+    )  # hängt zwar meist bei session, ist aber gut, dass redundand
+
+    class Meta:
+        ordering = ["id"]  # preserves insert order
+        verbose_name = "Betankung Session HIM2"
+        verbose_name_plural = "Betankung Sessions HIM2"
+
+    def __str__(self):
+
+        return f"{self.created_at} von {self.user} in app {self.daten_eingabe_von}".strip()
+
 
 class Betankung(models.Model):
     """Model containting trucks and their respective tanking. Can be filled from forms within different apps.
@@ -139,6 +169,14 @@ class Betankung(models.Model):
         none
     """
 
+    tank_session = models.ForeignKey(
+        BetankungSession,
+        on_delete=models.CASCADE,
+        related_name="betankungen",
+        null=True,
+        blank=True
+    )
+
     fahrzeug = models.ForeignKey(
         Fahrzeug,
         verbose_name="Fahrzeug",
@@ -146,15 +184,6 @@ class Betankung(models.Model):
         null=True,
         on_delete=models.PROTECT,
     )
-    user = models.ForeignKey(
-        User, on_delete=models.PROTECT
-    )  # soll immer gespeichert bleiben
-    daten_eingabe_von = models.CharField(
-        max_length=40, verbose_name="von welcher App:"
-    )  # die jeweilige App - muss beim Anlegen hard kodiert werden
-    created_at_tank = models.DateTimeField(
-        auto_now_add=True, editable=False, null=False, blank=False
-    )  # hängt zwar meist bei session, ist aber gut, dass redundand
     amount_fuel = models.FloatField(
         default=0, validators=[MinValueValidator(0)], verbose_name="Diesel [L]"
     )
@@ -166,5 +195,4 @@ class Betankung(models.Model):
         verbose_name_plural = "Betankungen HIM2"
 
     def __str__(self):
-
-        return f"{self.created_at} {self.fahrzeug} {self.daten_eingabe_von} ({self.amount_fuel} l)".strip()
+        return f"{self.fahrzeug} - {self.amount_fuel}L"
